@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true">
+	<appender name="MINIMUM" class="ch.qos.logback.core.FileAppender">
+		<file>/tmp/minimum.log</file>
+		<encoder>
+			<Pattern> %-5level %d{HH:mm:ss.SSS} %logger{0} - %msg%n
+			</Pattern>
+		</encoder>
+	</appender>
+	<logger name="ch.meemin">
+		<appender-ref ref="MINIMUM" />
+	</logger>
+</configuration>
