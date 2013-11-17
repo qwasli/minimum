@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.SettingImage;
-import ch.meemin.minimum.entities.settings.SettingImage.Type;
 import ch.meemin.minimum.entities.subscriptions.MasterSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.entities.subscriptions.TimeSubscription;
@@ -91,8 +90,7 @@ public class CustomerInfoPDF {
 		} else {
 			background = Image.getInstance(si.getContent());
 		}
-
-		pdfWriter.getDirectContentUnder().addImage(background, PageSize.A4.getWidth(), 0, 0, PageSize.A4.getHeight(), 0, 0);
+		pdfWriter.getDirectContentUnder().addImage(background, pageSize.getWidth(), 0, 0, pageSize.getHeight(), 0, 0);
 
 		Font tF = FontFactory.getFont(PdfCreator.DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 24f, Font.BOLD);
 		Phrase title = new Phrase(customer.getName(), tF);
@@ -181,19 +179,23 @@ public class CustomerInfoPDF {
 		cb.roundRectangle(LEFT_M + cardSize.getWidth(), BOTTOM_M, cardSize.getWidth(), cardSize.getHeight(),
 				Utilities.millimetersToPoints(3));
 		cb.stroke();
-
+		// cb.saveState();
+		cb.beginText();
 		float nameH = cardSize.getHeight() * 3 / 4;
-		cb.moveTo(LEFT_M + 15f, BOTTOM_M + nameH);
 		cb.setFontAndSize(font, 18f);
-		cb.showText(customer.getName());
+		cb.showTextAligned(0, customer.getName(), LEFT_M + 15f, BOTTOM_M + nameH, 0);
+		cb.endText();
 
 		if (subscription instanceof TimeSubscription) {
-			cb.moveTo(LEFT_M + 15f, BOTTOM_M + nameH - 20f);
 			cb.setFontAndSize(font, 12f);
-			cb.showText(lang.getText("expiry") + ":");
-			cb.moveTo(LEFT_M + 15f, BOTTOM_M + nameH - 35f);
+			cb.beginText();
+			cb.showTextAligned(0, lang.getText("expiry") + ":", LEFT_M + 15f, BOTTOM_M + nameH - 20f, 0);
+			cb.endText();
 			cb.setFontAndSize(font, 16f);
-			cb.showText(lang.formatDate(((TimeSubscription) subscription).getExpiry()));
+			cb.beginText();
+			String t = lang.formatDate(((TimeSubscription) subscription).getExpiry());
+			cb.showTextAligned(0, t, LEFT_M + 15f, BOTTOM_M + nameH - 35f, 0);
+			cb.endText();
 		}
 
 		if (minimum.getSettings().isShowPhotoOnCard() && customer.getPhoto() != null) {
@@ -236,4 +238,5 @@ public class CustomerInfoPDF {
 		table.addCell(new Phrase(title, titleFont));
 		table.addCell(new Phrase(info, infoFont));
 	}
+
 }
