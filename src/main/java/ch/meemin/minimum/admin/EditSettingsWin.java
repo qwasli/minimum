@@ -120,6 +120,7 @@ public class EditSettingsWin extends Window {
 		formLayout.addComponent(form.buildAndBind(lang.getText("adminPassword"), "adminPassword"));
 
 		formLayout.addComponent(form.buildAndBind(lang.getText("directLogin"), "directLogin"));
+		formLayout.addComponent(form.buildAndBind(lang.getText("minutesForWarning"), "minutesForWarning"));
 		formLayout.addComponent(form.buildAndBind(lang.getText("useSubscriptionID"), "useSubscriptionID"));
 		formLayout.addComponent(form.buildAndBind(lang.getText("normalPrize"), "normalPrize"));
 		StudentValueChangeListener svcl = new StudentValueChangeListener();
