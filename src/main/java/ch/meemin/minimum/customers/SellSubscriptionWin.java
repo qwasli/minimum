@@ -106,7 +106,7 @@ public class SellSubscriptionWin extends Window {
 			if (!tSubs.isEmpty()) {
 				HorizontalLayout hl = new HorizontalLayout();
 				for (TimeSubscriptions ts : tSubs) {
-					hl.addComponent(new SelectButton(ts, ts.getName(), this));
+					hl.addComponent(new SelectButton(ts, ts.getName() + " (" + ts.getPrice(settings, customer) + ")", this));
 				}
 				layout.addComponent(hl);
 				hl.setSpacing(true);
@@ -114,7 +114,7 @@ public class SellSubscriptionWin extends Window {
 			if (!pSubs.isEmpty()) {
 				HorizontalLayout hl = new HorizontalLayout();
 				for (PrepaidSubscriptions ps : pSubs) {
-					hl.addComponent(new SelectButton(ps, ps.getName(), this));
+					hl.addComponent(new SelectButton(ps, ps.getName() + " (" + ps.getPrice(settings, customer) + ")", this));
 				}
 				layout.addComponent(hl);
 				hl.setSpacing(true);

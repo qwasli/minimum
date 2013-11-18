@@ -33,6 +33,17 @@ public abstract class Subscriptions {
 
 	public abstract Subscription createSubscription(Customer customer);
 
+	public String getPrice(Settings settings, Customer customer) {
+		String price;
+		if (settings.isUseStudentField() && customer.isStudent())
+			price = getStudentPrize();
+		else if (settings.isUseBirthDayField() && customer.age() <= settings.getUnderAgeLimit())
+			price = getUnderAgePrize();
+		else
+			price = getNormalPrize();
+		return StringUtils.trimToEmpty(price);
+	}
+
 	public void setNormalPrize(String normalPrize) {
 		this.normalPrize = StringUtils.trimToNull(normalPrize);
 	}

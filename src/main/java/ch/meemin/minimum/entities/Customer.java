@@ -20,6 +20,10 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import org.joda.time.LocalDate;
+import org.joda.time.Years;
+
 import ch.meemin.minimum.entities.subscriptions.BasicSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 
@@ -104,4 +108,11 @@ public class Customer extends AbstractEntity implements Serializable {
 		return image;
 	}
 
+	public int age() {
+		if (birthDate != null) {
+			Years y = Years.yearsBetween(new LocalDate(birthDate.getTime()), new LocalDate());
+			return y.getYears();
+		} else
+			return 0;
+	}
 }
