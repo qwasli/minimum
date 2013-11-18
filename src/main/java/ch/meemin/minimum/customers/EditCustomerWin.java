@@ -61,7 +61,7 @@ public class EditCustomerWin extends Window {
 			container.commit();
 			Minimum minimum = (Minimum) getUI();
 			close();
-			if (minimum.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION) && newCustomer)
+			if (!minimum.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION) && newCustomer)
 				new SellSubscriptionWin(minimum, container.getItem(id));
 			else
 				minimum.selectCustomer(id, true);
@@ -100,6 +100,7 @@ public class EditCustomerWin extends Window {
 		formLayout.addComponent(form.buildAndBind(lang.getText("name"), "name"));
 		if (minimum.getSettings().is(Flag.USE_BIRTHDAY)) {
 			dateField = form.buildAndBind(lang.getText("birthDate"), "birthDate", DateField.class);
+			dateField.setRequired(true);
 			formLayout.addComponent(dateField);
 
 		}
@@ -140,7 +141,6 @@ public class EditCustomerWin extends Window {
 	}
 
 	private void checkStudentAge(final Integer studentAgeLimit, Boolean value) {
-		dateField.setRequired(value);
 		if (value)
 			dateField.addValidator(new Validator() {
 

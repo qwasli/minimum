@@ -72,8 +72,30 @@ public class Settings extends AbstractEntity {
 	}
 
 	@Getter
+	private String childrenPrize = null;
+
+	public void setChildrenPrize(String childrenPrize) {
+		this.childrenPrize = StringUtils.trimToNull(childrenPrize);
+	}
+
+	@Getter
+	private String seniorPrize = null;
+
+	public void setSeniorPrize(String seniorPrize) {
+		this.seniorPrize = StringUtils.trimToNull(seniorPrize);
+	}
+
+	@Getter
 	@Setter
-	private Integer underAgeLimit = 16;
+	private Integer childAgeLimit = 12;
+
+	@Getter
+	@Setter
+	private Integer underAgeLimit = 24;
+
+	@Getter
+	@Setter
+	private Integer seniorAgeLimit = null;
 
 	@Getter
 	@Setter

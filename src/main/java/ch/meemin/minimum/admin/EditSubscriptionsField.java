@@ -4,6 +4,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 import ch.meemin.minimum.entities.settings.Duration.TimeSpan;
+import ch.meemin.minimum.entities.settings.Settings;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.settings.Subscriptions;
 import ch.meemin.minimum.lang.Lang;
 
@@ -43,12 +45,13 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 	protected void prepareTable(Lang lang, final Class<T> clazz, BeanItemContainer<T> dataSource) {
 		table = new Table("", dataSource);
 		table.setWidth(100, Unit.PERCENTAGE);
+		table.setColumnCollapsingAllowed(true);
 		table.setPageLength(5);
 		table.addGeneratedColumn("remove", new ColumnGenerator() {
 
 			@Override
 			public Object generateCell(Table source, final Object itemId, Object columnId) {
-				return new Button("", new ClickListener() {
+				return new Button("X", new ClickListener() {
 
 					@Override
 					public void buttonClick(ClickEvent event) {
@@ -120,4 +123,44 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 		}
 	}
 
+	protected void setVisibleColumns(String... cols) {
+		Object[] vCols = new Object[cols.length + 6];
+		String[] cHeads = new String[cols.length + 6];
+		vCols[0] = "name";
+		cHeads[0] = lang.getText("name");
+		int i = 1;
+		while (i <= cols.length) {
+			vCols[i] = cols[i - 1];
+			cHeads[i] = lang.getText(cols[i - 1]);
+			i++;
+		}
+		vCols[i] = "normalPrize";
+		cHeads[i++] = lang.getText("normalPrize");
+		vCols[i] = "studentPrize";
+		cHeads[i++] = lang.getText("studentPrize");
+		vCols[i] = "childrenPrize";
+		cHeads[i++] = lang.getText("childrenPrize");
+		vCols[i] = "underAgePrize";
+		cHeads[i++] = lang.getText("underAgePrize");
+		vCols[i] = "seniorPrize";
+		cHeads[i++] = lang.getText("seniorPrize");
+		table.setVisibleColumns(vCols);
+		table.setColumnHeaders(cHeads);
+	}
+
+	public void collapsColumns(Settings settings) {
+		if (!settings.is(Flag.USE_STUDENT)) {
+			table.setColumnCollapsed("studentPrize", true);
+		}
+		if (!settings.is(Flag.USE_BIRTHDAY)) {
+			table.setColumnCollapsed("childrenPrize", true);
+			table.setColumnCollapsed("underAgePrize", true);
+			table.setColumnCollapsed("seniorPrize", true);
+		} else {
+
+			table.setColumnCollapsed("childrenPrize", settings.getChildAgeLimit() == null);
+			table.setColumnCollapsed("underAgePrize", settings.getUnderAgeLimit() == null);
+			table.setColumnCollapsed("seniorPrize", settings.getSeniorAgeLimit() == null);
+		}
+	}
 }

@@ -26,6 +26,10 @@ public abstract class Subscriptions {
 	protected String studentPrize;
 	@Getter
 	protected String underAgePrize;
+	@Getter
+	protected String childrenPrize;
+	@Getter
+	protected String seniorPrize;
 
 	@Override
 	public String toString() {
@@ -38,8 +42,14 @@ public abstract class Subscriptions {
 		String price;
 		if (settings.is(Flag.USE_STUDENT) && customer.isStudent())
 			price = getStudentPrize();
-		else if (settings.is(Flag.USE_BIRTHDAY) && customer.age() <= settings.getUnderAgeLimit())
+		else if (!settings.is(Flag.USE_BIRTHDAY))
+			price = getNormalPrize();
+		else if (settings.getChildAgeLimit() != null && customer.age() <= settings.getChildAgeLimit())
+			price = getChildrenPrize();
+		else if (settings.getUnderAgeLimit() != null && customer.age() <= settings.getUnderAgeLimit())
 			price = getUnderAgePrize();
+		else if (settings.getSeniorAgeLimit() != null && customer.age() >= settings.getSeniorAgeLimit())
+			price = getSeniorPrize();
 		else
 			price = getNormalPrize();
 		return StringUtils.trimToEmpty(price);
@@ -57,4 +67,11 @@ public abstract class Subscriptions {
 		this.underAgePrize = StringUtils.trimToNull(underAgePrize);
 	}
 
+	public void setChildrenPrize(String childrenPrize) {
+		this.childrenPrize = StringUtils.trimToNull(childrenPrize);
+	}
+
+	public void setSeniorPrize(String seniorPrize) {
+		this.seniorPrize = StringUtils.trimToNull(seniorPrize);
+	}
 }

@@ -11,11 +11,6 @@ public class EditTimeSubscriptionsField extends EditSubscriptionsField<TimeSubsc
 		BeanItemContainer<TimeSubscriptions> dataSource = new BeanItemContainer<>(TimeSubscriptions.class);
 		dataSource.addNestedContainerBean("duration");
 		prepareTable(lang, TimeSubscriptions.class, dataSource);
-		table.setVisibleColumns(new String[] { "name", "duration.amount", "duration.timeSpan", "normalPrize",
-				"studentPrize", "underAgePrize", "remove" });
-		table.setColumnHeaders(new String[] { lang.getText("name"), lang.getText("duration.amount"),
-				lang.getText("duration.timeSpan"), lang.getText("normalPrize"), lang.getText("studentPrize"),
-				lang.getText("underAgePrize"), lang.getText("Remove") });
-
+		setVisibleColumns("duration.amount", "duration.timeSpan");
 	}
 }
