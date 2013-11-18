@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.meemin.minimum.entities.Customer;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 
 @MappedSuperclass
@@ -35,9 +36,9 @@ public abstract class Subscriptions {
 
 	public String getPrice(Settings settings, Customer customer) {
 		String price;
-		if (settings.isUseStudentField() && customer.isStudent())
+		if (settings.is(Flag.USE_STUDENT) && customer.isStudent())
 			price = getStudentPrize();
-		else if (settings.isUseBirthDayField() && customer.age() <= settings.getUnderAgeLimit())
+		else if (settings.is(Flag.USE_BIRTHDAY) && customer.age() <= settings.getUnderAgeLimit())
 			price = getUnderAgePrize();
 		else
 			price = getNormalPrize();

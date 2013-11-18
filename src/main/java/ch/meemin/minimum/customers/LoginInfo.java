@@ -1,6 +1,8 @@
 package ch.meemin.minimum.customers;
 
 import ch.meemin.minimum.Minimum;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
+import ch.meemin.minimum.entities.subscriptions.BasicSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.utils.Props;
@@ -60,14 +62,16 @@ public class LoginInfo extends CustomComponent implements ClickListener {
 		this.item = item;
 		Subscription sub = item.getEntity();
 		Button b = new Button(null, this);
+		b.setVisible(true);
 		b.setPrimaryStyleName(Props.MINIMUMBUTTON);
 		b.setWidth(200, Unit.PIXELS);
 		b.setHeight(70, Unit.PIXELS);
 		if (sub.valid())
 			b.setCaption(lang.getText("LogIn"));
-		else
+		else if (sub instanceof BasicSubscription && minimum.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION))
 			b.setCaption(lang.getText("HasPayd", minimum.getSettings().getNormalPrize()));
-
+		else
+			b.setVisible(false);
 		hl.addComponent(b);
 
 	}

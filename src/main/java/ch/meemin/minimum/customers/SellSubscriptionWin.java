@@ -7,6 +7,7 @@ import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.PrepaidSubscriptions;
 import ch.meemin.minimum.entities.settings.Settings;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.settings.Subscriptions;
 import ch.meemin.minimum.entities.settings.TimeSubscriptions;
 import ch.meemin.minimum.entities.subscriptions.MasterSubscription;
@@ -100,7 +101,7 @@ public class SellSubscriptionWin extends Window {
 			setBuffered(false);
 			setImmediate(true);
 			layout.setSpacing(true);
-			if (settings.isUseMastersubscription()) {
+			if (settings.is(Flag.USE_MASTER_SUBSCRIPTION)) {
 				layout.addComponent(new SelectButton(null, lang.getText("MasterSubscription"), this));
 			}
 			if (!tSubs.isEmpty()) {

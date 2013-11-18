@@ -6,6 +6,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.Customer;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.utils.CommitClickListener;
 import ch.meemin.minimum.utils.DiscardClickListener;
@@ -60,7 +61,7 @@ public class EditCustomerWin extends Window {
 			container.commit();
 			Minimum minimum = (Minimum) getUI();
 			close();
-			if (minimum.getSettings().isIgnoreBasicSubscription() && newCustomer)
+			if (minimum.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION) && newCustomer)
 				new SellSubscriptionWin(minimum, container.getItem(id));
 			else
 				minimum.selectCustomer(id, true);
@@ -97,12 +98,12 @@ public class EditCustomerWin extends Window {
 		form.setItemDataSource(item);
 
 		formLayout.addComponent(form.buildAndBind(lang.getText("name"), "name"));
-		if (minimum.getSettings().isUseBirthDayField()) {
+		if (minimum.getSettings().is(Flag.USE_BIRTHDAY)) {
 			dateField = form.buildAndBind(lang.getText("birthDate"), "birthDate", DateField.class);
 			formLayout.addComponent(dateField);
 
 		}
-		if (minimum.getSettings().isUseStudentField()) {
+		if (minimum.getSettings().is(Flag.USE_STUDENT)) {
 			Field<?> studentField = form.buildAndBind(lang.getText("student"), "student");
 
 			final Integer studentAgeLimit = minimum.getSettings().getStudentAgeLimit();
@@ -122,7 +123,7 @@ public class EditCustomerWin extends Window {
 		formLayout.addComponent(form.buildAndBind(lang.getText("email"), "email"));
 		formLayout.addComponent(form.buildAndBind(lang.getText("phone"), "phone"));
 		formLayout.addComponent(form.buildAndBind(lang.getText("address"), "address", TextArea.class));
-		if (minimum.getSettings().isUseNewsletterField())
+		if (minimum.getSettings().is(Flag.USE_NEWSLETTER))
 			formLayout.addComponent(form.buildAndBind(lang.getText("newsletter"), "newsletter"));
 
 		okButton = new Button(lang.getText((newCustomer) ? "Create" : "OK"), new CommitClickListener(form));

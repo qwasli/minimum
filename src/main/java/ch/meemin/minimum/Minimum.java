@@ -22,6 +22,7 @@ import ch.meemin.minimum.customers.SubscriptionInfo;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.Visit;
 import ch.meemin.minimum.entities.settings.Settings;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.provider.CustomerProvider;
@@ -197,7 +198,7 @@ public class Minimum extends UI implements ValueChangeListener {
 				loginInfo.showLoginAfterWarnButton(item);
 				loginInfo.show(Props.ICON_WARN, lang.getText("TimeWarn"), false);
 			} else {
-				customer.checkIn(settings.isIgnoreBasicSubscription());
+				customer.checkIn(settings.is(Flag.USE_BASIC_SUBSCRIPTION));
 				customerProvider.updateEntity(customer);
 				loginInfo.show(Props.ICON_OK, "", true);
 			}
@@ -217,7 +218,7 @@ public class Minimum extends UI implements ValueChangeListener {
 		Long subId = cItem.getEntity().getCurrentSubscription().getId();
 		EntityItem<Subscription> item = subscriptionContainer.getItem(subId);
 		subscriptionInfo.setSubscription(item, cItem);
-		if (!doNotLogin && settings.isDirectLogin())
+		if (!doNotLogin && settings.is(Flag.DIRECTLOGIN))
 			login(item, false);
 		else
 			loginInfo.showLoginButton(item);
@@ -243,7 +244,7 @@ public class Minimum extends UI implements ValueChangeListener {
 		EntityItem<Customer> cItem = customerContainer.getItem(c.getId());
 		showCustomer.setCustomer(cItem);
 		subscriptionInfo.setSubscription(sItem, cItem);
-		if (!doNotLogin && settings.isDirectLogin())
+		if (!doNotLogin && settings.is(Flag.DIRECTLOGIN))
 			login(sItem, false);
 		else
 			loginInfo.showLoginButton(sItem);
@@ -259,7 +260,7 @@ public class Minimum extends UI implements ValueChangeListener {
 		}
 		try {
 			Long id = new Long(val);
-			if (settings.isUseSubscriptionID())
+			if (settings.is(Flag.SUBSCRIPTIONIDONCARD))
 				minimum.selectSubscription(id, false);
 			else
 				minimum.selectCustomer(id, false);

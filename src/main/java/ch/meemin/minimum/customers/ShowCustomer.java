@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.AbstractEntity;
 import ch.meemin.minimum.entities.Customer;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.pdf.PdfButton;
 import ch.meemin.minimum.pdf.PdfButton.Style;
@@ -128,12 +129,12 @@ public class ShowCustomer extends CustomComponent implements ValueChangeListener
 
 		resetAndAddTitle(customer.getName(), customer.getImage());
 
-		if (minimum.getSettings().isUseBirthDayField() && customer.getBirthDate() != null) {
+		if (minimum.getSettings().is(Flag.USE_BIRTHDAY) && customer.getBirthDate() != null) {
 			Years age = Years.yearsBetween(new DateTime(customer.getBirthDate()), new DateTime());
 			addInfo(lang.getText("Age"), new Label(lang.getText("NumYears", new Integer(age.getYears()))));
 		}
 
-		if (minimum.getSettings().isUseStudentField()) {
+		if (minimum.getSettings().is(Flag.USE_STUDENT)) {
 			addInfo(lang.getText("student"), new Label(lang.getText(customer.isStudent() ? "Yes" : "No")));
 		}
 

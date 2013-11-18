@@ -67,6 +67,7 @@ public class SubscriptionInfo extends CustomComponent implements ClickListener, 
 		label.setValue(text);
 
 		editButton.setCaption(sub.valid() || sub.isSuspended() ? lang.getText("Edit") : lang.getText("SellSubscription"));
+		editButton.setVisible(!sub.isReplaced());
 		layout.removeAllComponents();
 		layout.addComponents(label, editButton);
 
