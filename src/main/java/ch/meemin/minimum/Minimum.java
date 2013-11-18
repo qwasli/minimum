@@ -223,7 +223,7 @@ public class Minimum extends UI implements ValueChangeListener {
 			loginInfo.showLoginButton(item);
 	}
 
-	public void selectSubscription(Long id) {
+	public void selectSubscription(Long id, boolean doNotLogin) {
 		loginInfo.clear();
 		if (!subscriptionContainer.containsId(id)) {
 			Notification.show(lang.getText("SubscriptionNotFound"), "", Type.WARNING_MESSAGE);
@@ -243,7 +243,7 @@ public class Minimum extends UI implements ValueChangeListener {
 		EntityItem<Customer> cItem = customerContainer.getItem(c.getId());
 		showCustomer.setCustomer(cItem);
 		subscriptionInfo.setSubscription(sItem, cItem);
-		if (settings.isDirectLogin())
+		if (!doNotLogin && settings.isDirectLogin())
 			login(sItem, false);
 		else
 			loginInfo.showLoginButton(sItem);
@@ -260,7 +260,7 @@ public class Minimum extends UI implements ValueChangeListener {
 		try {
 			Long id = new Long(val);
 			if (settings.isUseSubscriptionID())
-				minimum.selectSubscription(id);
+				minimum.selectSubscription(id, false);
 			else
 				minimum.selectCustomer(id, false);
 			searchField.setValue(null);

@@ -115,8 +115,9 @@ public class EditSubscriptionWin extends Window {
 			Subscription sub = subItem.getEntity();
 			sub.replace();
 			sub = minimum.getSubscriptionProvider().updateEntity(sub);
-			subItem.refresh();
-			minimum.getCustomerContainer().refreshItem(sub.getCustomer().getId());
+			minimum.selectSubscription(sub.getReplacedBy().getId(), true);
+			// subItem.refresh();
+			// minimum.getCustomerContainer().refreshItem(sub.getCustomer().getId());
 			EditSubscriptionWin.this.close();
 			Notification.show(lang.getText("SubscriptionReplaced"));
 		}
