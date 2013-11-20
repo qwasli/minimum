@@ -196,7 +196,8 @@
 						</manifest>
 					</archive>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<packagingExcludes>VAADIN/widgetsets/WEB-INF/</packagingExcludes>
+					<packagingExcludes>**/VAADIN/widgetsets/WEB-INF/** ,
+						**/VAADIN/gwt-unitCache/**</packagingExcludes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -230,6 +231,8 @@
 					<style>OBF</style>
 					<strict>true</strict>
 					<runTarget>http://localhost:8080/</runTarget>
+					<persistentunitcachedir>${project.build.directory}</persistentunitcachedir>
+					<deploy>${project.build.directory}/gwt-deploy</deploy>
 				</configuration>
 				<executions>
 					<execution>
