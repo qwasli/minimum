@@ -42,6 +42,7 @@ public class EditSubscriptionWin extends Window {
 		this.minimum = minimum;
 		this.lang = minimum.getLang();
 		this.subItem = subItem;
+		this.subItem.refresh();
 		setModal(true);
 		setSizeUndefined();
 		cancelButton = new Button(lang.getText("Cancel"), new CancelClick());
