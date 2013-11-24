@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.FetchType;
 import javax.persistence.MapKeyEnumerated;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
 import lombok.Getter;
@@ -136,8 +137,7 @@ public class Settings extends AbstractEntity {
 			flags.put(flag, value);
 	}
 
-	@ElementCollection
-	@CollectionTable(name = "images")
+	@OneToMany(mappedBy = "settings")
 	@OrderColumn
 	@Getter
 	@Setter

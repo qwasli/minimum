@@ -1,16 +1,25 @@
 package ch.meemin.minimum.entities.settings;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import ch.meemin.minimum.entities.AbstractEntity;
 
-@Embeddable
-public class SettingImage {
+@Entity
+public class SettingImage extends AbstractEntity {
 	public enum Type {
 		PDF_BACKROUND,
 		LOGO;
 	}
+
+	@Getter
+	@Setter
+	private Settings settings;
+
+	@Getter
+	@Setter
+	private String name;
 
 	@Getter
 	@Setter
