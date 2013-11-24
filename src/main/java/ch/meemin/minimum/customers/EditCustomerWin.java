@@ -5,6 +5,8 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateUtils;
 
 import ch.meemin.minimum.Minimum;
+import ch.meemin.minimum.admin.ValidatePasswordWindow;
+import ch.meemin.minimum.admin.ValidatePasswordWindow.PasswordValidationListener;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.lang.Lang;
@@ -28,9 +30,11 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
@@ -121,7 +125,10 @@ public class EditCustomerWin extends Window {
 			}
 			formLayout.addComponent(studentField);
 		}
-		formLayout.addComponent(form.buildAndBind(lang.getText("email"), "email"));
+		Field<?> mailField = form.buildAndBind(lang.getText("email"), "email");
+		mailField.setRequired(minimum.getSettings().is(Flag.REQUIREEMAIL));
+
+		formLayout.addComponent(mailField);
 		formLayout.addComponent(form.buildAndBind(lang.getText("phone"), "phone"));
 		formLayout.addComponent(form.buildAndBind(lang.getText("address"), "address", TextArea.class));
 		if (minimum.getSettings().is(Flag.USE_NEWSLETTER))
@@ -134,6 +141,17 @@ public class EditCustomerWin extends Window {
 		Button cancelButton = new Button(lang.getText("Cancel"), new DiscardClickListener(form));
 		cancelButton.setClickShortcut(KeyCode.ESCAPE);
 		footer.addComponent(cancelButton);
+
+		if (!newCustomer) {
+
+			footer.setWidth(100, Unit.PERCENTAGE);
+			Label spacer = new Label();
+			footer.addComponent(spacer);
+			footer.setExpandRatio(spacer, 1f);
+			Button deleteButton = new Button(lang.getText("Delete"), new DelCustomerListener(item));
+			footer.addComponent(deleteButton);
+		}
+
 		setContent(formLayout);
 
 		ui.addWindow(this);
@@ -180,6 +198,31 @@ public class EditCustomerWin extends Window {
 				return (T) df;
 			}
 			return super.createField(type, fieldType);
+		}
+	}
+
+	private class DelCustomerListener implements Button.ClickListener {
+		private EntityItem<Customer> cItem;
+
+		public DelCustomerListener(EntityItem<Customer> cItem) {
+			this.cItem = cItem;
+		}
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			final Minimum minimum = (Minimum) event.getButton().getUI();
+			new ValidatePasswordWindow(minimum, new PasswordValidationListener() {
+
+				@Override
+				public void passwordValidated() {
+					container.removeItem(cItem.getItemId());
+					minimum.clear();
+					EditCustomerWin.this.close();
+				}
+
+				@Override
+				public void passwordNotValidated() {}
+			});
 		}
 	}
 }

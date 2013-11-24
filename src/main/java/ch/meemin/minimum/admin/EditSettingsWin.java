@@ -142,6 +142,7 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 
 		basicSettings.addComponent(createFlagField(settings, Flag.SUBSCRIPTIONIDONCARD));
 		basicSettings.addComponent(createFlagField(settings, Flag.USE_STUDENT));
+		basicSettings.addComponent(createFlagField(settings, Flag.REQUIREEMAIL));
 		studentAgeLimit = (Field<String>) form.buildAndBind(lang.getText("studentAgeLimit"), "studentAgeLimit");
 		studentAgeLimit.addValueChangeListener(this);
 		basicSettings.addComponent(studentAgeLimit);

@@ -33,7 +33,8 @@ public class Settings extends AbstractEntity {
 		USE_NEWSLETTER(true),
 		DIRECTLOGIN(true),
 		SUBSCRIPTIONIDONCARD(true),
-		PHOTOONCARD(true);
+		PHOTOONCARD(true),
+		REQUIREEMAIL(true);
 
 		private Boolean defaultValue;
 
