@@ -207,8 +207,14 @@ public class Minimum extends UI implements ValueChangeListener {
 		}
 	}
 
+	public void clear() {
+		showCustomer.clear();
+		subscriptionInfo.clear();
+	}
+
 	public void selectCustomer(Long id, boolean doNotLogin) {
 		loginInfo.clear();
+
 		if (!customerContainer.containsId(id)) {
 			Notification.show(lang.getText("CustomerNotFound"), "", Type.WARNING_MESSAGE);
 			return;

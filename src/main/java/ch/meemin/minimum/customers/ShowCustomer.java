@@ -114,6 +114,16 @@ public class ShowCustomer extends CustomComponent implements ValueChangeListener
 		infoGrid.addComponent(info);
 	}
 
+	public void clear() {
+		if (this.customerItem != null)
+			customerItem.removeValueChangeListener(this);
+		this.customerItem = null;
+		infoGrid.removeAllComponents();
+		buttons.removeAllComponents();
+		titel.setValue("");
+		photoComponent.clear();
+	}
+
 	public void setCustomer(EntityItem<Customer> customerItem) {
 		if (this.customerItem != null)
 			customerItem.removeValueChangeListener(this);

@@ -84,6 +84,11 @@ public class PhotoComponent extends CustomComponent implements Receiver, Succeed
 		replacePhoto.setCaption(lang.getText("Cancel"));
 	}
 
+	public void clear() {
+		this.customerItem = null;
+		this.layout.removeAllComponents();
+	}
+
 	public void setCustomer(EntityItem<Customer> customerItem) {
 		this.customerItem = customerItem;
 		Customer customer = customerItem.getEntity();
