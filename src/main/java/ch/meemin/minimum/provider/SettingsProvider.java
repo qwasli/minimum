@@ -52,9 +52,6 @@ public class SettingsProvider extends MutableLocalEntityProvider<Settings> {
 		pss.setCredit(11);
 		pss.setName("11er");
 		settings.getPrepaidSubscriptions().add(pss);
-		settings.setDirectLogin(true);
-		settings.setUseSubscriptionID(true);
-		settings.setMinutesForWarning(1);
 		em.persist(settings);
 		em.flush();
 		return settings;

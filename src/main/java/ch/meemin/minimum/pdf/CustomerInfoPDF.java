@@ -11,6 +11,7 @@ import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.SettingImage;
 import ch.meemin.minimum.entities.settings.SettingImage.Type;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.MasterSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.entities.subscriptions.TimeSubscription;
@@ -91,8 +92,7 @@ public class CustomerInfoPDF {
 		} else {
 			background = Image.getInstance(si.getContent());
 		}
-
-		pdfWriter.getDirectContentUnder().addImage(background, PageSize.A4.getWidth(), 0, 0, PageSize.A4.getHeight(), 0, 0);
+		pdfWriter.getDirectContentUnder().addImage(background, pageSize.getWidth(), 0, 0, pageSize.getHeight(), 0, 0);
 
 		Font tF = FontFactory.getFont(PdfCreator.DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 24f, Font.BOLD);
 		Phrase title = new Phrase(customer.getName(), tF);
@@ -127,10 +127,10 @@ public class CustomerInfoPDF {
 		if (!StringUtils.isBlank(customer.getPhone()))
 			addInfo(lang.getText("phone"), customer.getPhone(), table);
 
-		if (minimum.getSettings().isUseBirthDayField() && customer.getBirthDate() != null)
+		if (minimum.getSettings().is(Flag.USE_BIRTHDAY) && customer.getBirthDate() != null)
 			addInfo(lang.getText("birthDate"), lang.formatDate(customer.getBirthDate()), table);
 
-		if (minimum.getSettings().isUseStudentField())
+		if (minimum.getSettings().is(Flag.USE_STUDENT))
 			addInfo(lang.getText("student"), lang.getText(customer.isStudent() ? "Yes" : "No"), table);
 
 		if (subscription instanceof MasterSubscription)
@@ -181,22 +181,26 @@ public class CustomerInfoPDF {
 		cb.roundRectangle(LEFT_M + cardSize.getWidth(), BOTTOM_M, cardSize.getWidth(), cardSize.getHeight(),
 				Utilities.millimetersToPoints(3));
 		cb.stroke();
-
+		// cb.saveState();
+		cb.beginText();
 		float nameH = cardSize.getHeight() * 3 / 4;
-		cb.moveTo(LEFT_M + 15f, BOTTOM_M + nameH);
 		cb.setFontAndSize(font, 18f);
-		cb.showText(customer.getName());
+		cb.showTextAligned(0, customer.getName(), LEFT_M + 15f, BOTTOM_M + nameH, 0);
+		cb.endText();
 
 		if (subscription instanceof TimeSubscription) {
-			cb.moveTo(LEFT_M + 15f, BOTTOM_M + nameH - 20f);
 			cb.setFontAndSize(font, 12f);
-			cb.showText(lang.getText("expiry") + ":");
-			cb.moveTo(LEFT_M + 15f, BOTTOM_M + nameH - 35f);
+			cb.beginText();
+			cb.showTextAligned(0, lang.getText("expiry") + ":", LEFT_M + 15f, BOTTOM_M + nameH - 20f, 0);
+			cb.endText();
 			cb.setFontAndSize(font, 16f);
-			cb.showText(lang.formatDate(((TimeSubscription) subscription).getExpiry()));
+			cb.beginText();
+			String t = lang.formatDate(((TimeSubscription) subscription).getExpiry());
+			cb.showTextAligned(0, t, LEFT_M + 15f, BOTTOM_M + nameH - 35f, 0);
+			cb.endText();
 		}
 
-		if (minimum.getSettings().isShowPhotoOnCard() && customer.getPhoto() != null) {
+		if (minimum.getSettings().is(Flag.PHOTOONCARD) && customer.getPhoto() != null) {
 			float maxH = nameH - 5f;
 			float maxW = (cardSize.getWidth() / 2);
 			Image photo = Image.getInstance(customer.getPhoto().getContent());
@@ -213,7 +217,7 @@ public class CustomerInfoPDF {
 	private void addBarcode(PdfContentByte cb, Rectangle CardSize) throws DocumentException {
 		BarcodeInter25 i25 = new BarcodeInter25();
 		String code = "";
-		if (minimum.getSettings().isUseSubscriptionID())
+		if (minimum.getSettings().is(Flag.SUBSCRIPTIONIDONCARD))
 			code += customer.getCurrentSubscription().getId().toString();
 		else
 			code += customer.getId().toString();
@@ -236,4 +240,5 @@ public class CustomerInfoPDF {
 		table.addCell(new Phrase(title, titleFont));
 		table.addCell(new Phrase(info, infoFont));
 	}
+
 }

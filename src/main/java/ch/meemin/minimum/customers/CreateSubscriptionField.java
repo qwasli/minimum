@@ -6,6 +6,7 @@ import java.util.List;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.PrepaidSubscriptions;
 import ch.meemin.minimum.entities.settings.Settings;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.settings.TimeSubscriptions;
 import ch.meemin.minimum.entities.subscriptions.MasterSubscription;
 import ch.meemin.minimum.entities.subscriptions.PrepaidSubscription;
@@ -34,7 +35,7 @@ class CreateSubscriptionField extends CustomField<Subscription> {
 		typeSelect.setImmediate(true);
 		typeSelect.setNullSelectionAllowed(false);
 		layout.addComponent(typeSelect);
-		if (settings.isUseMastersubscription()) {
+		if (settings.is(Flag.USE_MASTER_SUBSCRIPTION)) {
 			typeSelect.addItem(MasterSubscription.class);
 			typeSelect.setItemCaption(MasterSubscription.class, lang.getText("MasterSubscription"));
 		}

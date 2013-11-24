@@ -1,5 +1,7 @@
 package ch.meemin.minimum.admin;
 
+import lombok.AllArgsConstructor;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,16 +20,17 @@ import com.vaadin.ui.Window;
 
 public class ValidatePasswordWindow extends Window {
 
-	public ValidatePasswordWindow(final Minimum minimum, final Window windowToOpen) {
+	public ValidatePasswordWindow(final Minimum minimum, final PasswordValidationListener pvl) {
 		setModal(true);
 		setClosable(true);
 
 		final Lang lang = minimum.getLang();
 		final String pw = minimum.getSettings().getAdminPassword();
-		if (StringUtils.isBlank(pw)) {
-			minimum.addWindow(windowToOpen);
+		if (StringUtils.isBlank(minimum.getSettings().getAdminPassword())) {
+			pvl.passwordValidated();
 			return;
 		}
+
 		final PasswordField pwField = new PasswordField(lang.getText("Password"));
 		pwField.setRequired(true);
 		pwField.setImmediate(false);
@@ -46,9 +49,8 @@ public class ValidatePasswordWindow extends Window {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if (pwField.isValid()) {
+					pvl.passwordValidated();
 					close();
-					minimum.addWindow(windowToOpen);
-					windowToOpen.focus();
 				}
 			}
 		});
@@ -57,6 +59,7 @@ public class ValidatePasswordWindow extends Window {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				pvl.passwordNotValidated();
 				close();
 			}
 		});
@@ -66,5 +69,31 @@ public class ValidatePasswordWindow extends Window {
 		setContent(vl);
 		pwField.focus();
 		minimum.addWindow(this);
+	}
+
+	public ValidatePasswordWindow(final Minimum minimum, final Window windowToOpen) {
+		this(minimum, new WindowOpen(minimum, windowToOpen));
+
+	}
+
+	public interface PasswordValidationListener {
+		public void passwordValidated();
+
+		public void passwordNotValidated();
+	}
+
+	@AllArgsConstructor
+	private static class WindowOpen implements PasswordValidationListener {
+		private Minimum minimum;
+		private Window windowToOpen;
+
+		@Override
+		public void passwordNotValidated() {}
+
+		@Override
+		public void passwordValidated() {
+			minimum.addWindow(windowToOpen);
+			windowToOpen.focus();
+		}
 	}
 }

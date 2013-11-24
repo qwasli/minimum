@@ -45,7 +45,7 @@ public class EclipseLinkBean {
 		File f = new File(base, "dbbackup3.zip");
 		if (f.exists())
 			f.delete();
-		for (int i = 3; i >= 1; i--) {
+		for (int i = 60; i >= 1; i--) {
 			f = new File(base, "dbbackup" + i + ".zip");
 			if (f.exists())
 				f.renameTo(new File(base, "dbbackup" + (i + 1) + ".zip"));

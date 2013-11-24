@@ -42,6 +42,7 @@ public class EditSubscriptionWin extends Window {
 		this.minimum = minimum;
 		this.lang = minimum.getLang();
 		this.subItem = subItem;
+		this.subItem.refresh();
 		setModal(true);
 		setSizeUndefined();
 		cancelButton = new Button(lang.getText("Cancel"), new CancelClick());
@@ -115,8 +116,9 @@ public class EditSubscriptionWin extends Window {
 			Subscription sub = subItem.getEntity();
 			sub.replace();
 			sub = minimum.getSubscriptionProvider().updateEntity(sub);
-			subItem.refresh();
-			minimum.getCustomerContainer().refreshItem(sub.getCustomer().getId());
+			minimum.selectSubscription(sub.getReplacedBy().getId(), true);
+			// subItem.refresh();
+			// minimum.getCustomerContainer().refreshItem(sub.getCustomer().getId());
 			EditSubscriptionWin.this.close();
 			Notification.show(lang.getText("SubscriptionReplaced"));
 		}

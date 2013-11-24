@@ -7,12 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.settings.SettingImage;
 import ch.meemin.minimum.entities.settings.SettingImage.Type;
 import ch.meemin.minimum.entities.settings.Settings;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.utils.CommitClickListener;
 import ch.meemin.minimum.utils.DiscardClickListener;
@@ -20,6 +23,7 @@ import ch.meemin.minimum.utils.EntityFieldGroup;
 import ch.meemin.minimum.utils.FormLayout;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
+import com.vaadin.addon.jpacontainer.EntityItemProperty;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Buffered.SourceException;
 import com.vaadin.data.Property;
@@ -37,10 +41,12 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
@@ -55,15 +61,19 @@ import com.vaadin.ui.themes.Reindeer;
  * This is the window used to add new contacts to the 'address book'. It does not do proper validation - you can add
  * weird stuff.
  */
-public class EditSettingsWin extends Window {
+public class EditSettingsWin extends Window implements ValueChangeListener {
 	private static final long serialVersionUID = 1L;
 	private final JPAContainer<Settings> container;
 	private final Lang lang;
-	private Field<Boolean> useStudentField;
-	private Field<Boolean> useBirthDayField;
 	private Field<String> studentAgeLimit;
-	private Field<?> ageLimit;
+	private List<Field<?>> ageLimits = new ArrayList<Field<?>>();
+	private Tab general, basic, pdf, time, prepaid;
 	private final Button okButton;
+	private EditTimeSubscriptionsField tsField;
+	private EditPrepaidSubscriptionsField psField;
+	private Settings settings;
+
+	private EnumMap<Flag, CheckBox> flagFields = new EnumMap<Settings.Flag, CheckBox>(Flag.class);
 
 	private final FieldGroup form = new EntityFieldGroup<Settings>(Settings.class) {
 		private static final long serialVersionUID = -1026191871445717584L;
@@ -72,6 +82,9 @@ public class EditSettingsWin extends Window {
 		public void commit() throws CommitException {
 			super.commit();
 			EntityItem<Settings> item = (EntityItem<Settings>) getItemDataSource();
+
+			EntityItemProperty f = item.getItemProperty("flags");
+			f.setValue(f.getValue()); // This set flags as changed
 			Settings c = item.getEntity();
 			container.commit();
 			((Minimum) getUI()).loadSettings();
@@ -111,36 +124,52 @@ public class EditSettingsWin extends Window {
 		footer.addComponent(cancelButton);
 		vLayout.addComponent(footer);
 
-		FormLayout formLayout = new FormLayout();
-		formLayout.setSizeUndefined();
-		formLayout.setDescription(lang.getText("SettingsDescription"));
+		FormLayout basicSettings = new FormLayout();
+		basicSettings.setSizeUndefined();
+		basicSettings.setDescription(lang.getText("SettingsDescription"));
 		form.setFieldFactory(new FieldFactory());
 		EntityItem<Settings> item = container.getItem(1L);
 		form.setItemDataSource(item);
-		formLayout.addComponent(form.buildAndBind(lang.getText("adminPassword"), "adminPassword"));
+		settings = item.getEntity();
+		basicSettings.addComponent(form.buildAndBind(lang.getText("adminPassword"), "adminPassword"));
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_BASIC_SUBSCRIPTION));
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_MASTER_SUBSCRIPTION));
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_TIME_SUBSCRIPTION));
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_PREPAID_SUBSCRIPTION));
 
-		formLayout.addComponent(form.buildAndBind(lang.getText("directLogin"), "directLogin"));
-		formLayout.addComponent(form.buildAndBind(lang.getText("useSubscriptionID"), "useSubscriptionID"));
-		formLayout.addComponent(form.buildAndBind(lang.getText("normalPrize"), "normalPrize"));
-		StudentValueChangeListener svcl = new StudentValueChangeListener();
-		useStudentField = (Field<Boolean>) form.buildAndBind(lang.getText("useStudentField"), "useStudentField");
-		useStudentField.addValueChangeListener(svcl);
-		formLayout.addComponent(useStudentField);
-		formLayout.addComponent(form.buildAndBind(lang.getText("studentPrize"), "studentPrize"));
-		useBirthDayField = (Field<Boolean>) form.buildAndBind(lang.getText("useBirthDayField"), "useBirthDayField");
-		useBirthDayField.addValueChangeListener(svcl);
-		formLayout.addComponent(useBirthDayField);
-		ageLimit = form.buildAndBind(lang.getText("underAgeLimit"), "underAgeLimit");
-		formLayout.addComponent(ageLimit);
+		basicSettings.addComponent(createFlagField(settings, Flag.DIRECTLOGIN));
+		basicSettings.addComponent(form.buildAndBind(lang.getText("minutesForWarning"), "minutesForWarning"));
+
+		basicSettings.addComponent(createFlagField(settings, Flag.SUBSCRIPTIONIDONCARD));
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_STUDENT));
+		basicSettings.addComponent(createFlagField(settings, Flag.REQUIREEMAIL));
 		studentAgeLimit = (Field<String>) form.buildAndBind(lang.getText("studentAgeLimit"), "studentAgeLimit");
-		studentAgeLimit.addValueChangeListener(svcl);
-		formLayout.addComponent(studentAgeLimit);
-		formLayout.addComponent(form.buildAndBind(lang.getText("underAgePrize"), "underAgePrize"));
-		formLayout.addComponent(form.buildAndBind(lang.getText("useNewsletterField"), "useNewsletterField"));
+		studentAgeLimit.addValueChangeListener(this);
+		basicSettings.addComponent(studentAgeLimit);
 
-		tabSheet.addTab(formLayout, lang.getText("Settings"));
-		Field<Boolean> showPhotoOnCard = (Field<Boolean>) form.buildAndBind(lang.getText("showPhotoOnCard"),
-				"showPhotoOnCard");
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_BIRTHDAY));
+		Field<?> al = form.buildAndBind(lang.getText("underAgeLimit"), "underAgeLimit");
+		ageLimits.add(al);
+		basicSettings.addComponent(al);
+		al = form.buildAndBind(lang.getText("childAgeLimit"), "childAgeLimit");
+		ageLimits.add(al);
+		basicSettings.addComponent(al);
+		al = form.buildAndBind(lang.getText("seniorAgeLimit"), "seniorAgeLimit");
+		ageLimits.add(al);
+		basicSettings.addComponent(al);
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_NEWSLETTER));
+
+		general = tabSheet.addTab(basicSettings, lang.getText("BasicSettings"));
+
+		FormLayout basicSubsSettings = new FormLayout();
+		basicSubsSettings.addComponent(form.buildAndBind(lang.getText("normalPrize"), "normalPrize"));
+		basicSubsSettings.addComponent(form.buildAndBind(lang.getText("studentPrize"), "studentPrize"));
+		basicSubsSettings.addComponent(form.buildAndBind(lang.getText("childrenPrize"), "childrenPrize"));
+		basicSubsSettings.addComponent(form.buildAndBind(lang.getText("underAgePrize"), "underAgePrize"));
+		basicSubsSettings.addComponent(form.buildAndBind(lang.getText("seniorPrize"), "seniorPrize"));
+
+		basic = tabSheet.addTab(basicSubsSettings, lang.getText("BasicSubscriptionSettings"));
+
 		Button downloadButton = new Button(lang.getText("downloadBackground"));
 		StreamResource sr = getPDFStream();
 		FileDownloader fileDownloader = new FileDownloader(sr);
@@ -149,40 +178,55 @@ public class EditSettingsWin extends Window {
 		ImageUpload rec = new ImageUpload();
 		Upload upload = new Upload(null, rec);
 		upload.addSucceededListener(rec);
+		Field<Boolean> showPhotoOnCard = createFlagField(item.getEntity(), Flag.PHOTOONCARD);
 
 		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, downloadButton, upload);
-		tabSheet.addTab(hl, lang.getText("PDF"));
+		pdf = tabSheet.addTab(hl, lang.getText("PDF"));
 
-		tabSheet.addTab(form.buildAndBind(lang.getText("timeSubscriptions"), "timeSubscriptions",
-				EditTimeSubscriptionsField.class));
-		tabSheet.addTab(form.buildAndBind(lang.getText("prepaidSubscriptions"), "prepaidSubscriptions",
-				EditPrepaidSubscriptionsField.class));
+		tsField = form.buildAndBind(lang.getText("timeSubscriptions"), "timeSubscriptions",
+				EditTimeSubscriptionsField.class);
+		time = tabSheet.addTab(tsField);
+		psField = form.buildAndBind(lang.getText("prepaidSubscriptions"), "prepaidSubscriptions",
+				EditPrepaidSubscriptionsField.class);
+		prepaid = tabSheet.addTab(psField);
 		form.setItemDataSource(item);
 
 		setContent(vLayout);
+		valueChange(null);
 		new ValidatePasswordWindow(minimum, this);
 	}
 
-	private class StudentValueChangeListener implements ValueChangeListener {
-		@Override
-		public void valueChange(ValueChangeEvent event) {
-			Boolean useStudent = useStudentField.getValue();
-			Boolean useBirthday = useBirthDayField.getValue();
-			String studentLimit = studentAgeLimit.getValue();
+	private CheckBox createFlagField(Settings settings, Flag flag) {
+		CheckBox cb = new CheckBox(lang.getText(flag.name()), new FlagDataSource(settings, flag));
+		cb.addValueChangeListener(this);
+		cb.setDescription(lang.getText(flag.name() + "-desc"));
+		this.flagFields.put(flag, cb);
+		return cb;
+	}
 
-			studentAgeLimit.setEnabled(useStudent);
+	@Override
+	public void valueChange(ValueChangeEvent event) {
 
-			if (useStudent && studentLimit != null) {
-				useBirthDayField.setValue(true);
-				useBirthDayField.commit();
-				useBirthDayField.setEnabled(false);
-				useBirthday = true;
-			} else
-				useBirthDayField.setEnabled(true);
+		Boolean useStudent = flagFields.get(Flag.USE_STUDENT).getValue();
+		Boolean useBirthday = flagFields.get(Flag.USE_BIRTHDAY).getValue();
+		String studentLimit = studentAgeLimit.getValue();
 
-			ageLimit.setEnabled(useBirthday);
+		studentAgeLimit.setEnabled(useStudent);
 
-		}
+		if (useStudent && studentLimit != null) {
+			flagFields.get(Flag.USE_BIRTHDAY).setEnabled(false);
+			useBirthday = true;
+		} else
+			flagFields.get(Flag.USE_BIRTHDAY).setEnabled(true);
+		for (Field al : ageLimits)
+			al.setEnabled(useBirthday);
+
+		prepaid.setEnabled(flagFields.get(Flag.USE_PREPAID_SUBSCRIPTION).getValue());
+		basic.setEnabled(flagFields.get(Flag.USE_BASIC_SUBSCRIPTION).getValue());
+		time.setEnabled(flagFields.get(Flag.USE_TIME_SUBSCRIPTION).getValue());
+
+		psField.collapsColumns(settings);
+		tsField.collapsColumns(settings);
 	}
 
 	private class FieldFactory extends DefaultFieldGroupFieldFactory {

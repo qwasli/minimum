@@ -43,6 +43,13 @@ public class SubscriptionInfo extends CustomComponent implements ClickListener, 
 		// ((ValueChangeNotifier) subsProperty).addValueChangeListener(this);
 	}
 
+	public void clear() {
+		if (this.subItem != null)
+			this.subItem.removeValueChangeListener(this);
+		this.subItem = null;
+		this.layout.removeAllComponents();
+	}
+
 	public void setSubscription(EntityItem<Subscription> subItem, EntityItem<Customer> cItem) {
 
 		this.cItem = cItem;
@@ -67,6 +74,7 @@ public class SubscriptionInfo extends CustomComponent implements ClickListener, 
 		label.setValue(text);
 
 		editButton.setCaption(sub.valid() || sub.isSuspended() ? lang.getText("Edit") : lang.getText("SellSubscription"));
+		editButton.setVisible(!sub.isReplaced());
 		layout.removeAllComponents();
 		layout.addComponents(label, editButton);
 
