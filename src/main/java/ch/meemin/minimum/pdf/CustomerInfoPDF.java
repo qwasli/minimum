@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.SettingImage;
-import ch.meemin.minimum.entities.settings.SettingImage.Type;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.MasterSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
@@ -84,7 +83,7 @@ public class CustomerInfoPDF {
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, out);
 		document.open();
 		document.newPage();
-		SettingImage si = minimum.getSettings().imageByType(Type.PDF_BACKROUND);
+		SettingImage si = subscription.getBackground();
 		Image background;
 		if (si == null) {
 			String path = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/pdfbackground.png";
