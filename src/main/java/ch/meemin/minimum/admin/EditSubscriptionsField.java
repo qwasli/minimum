@@ -25,6 +25,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
 public class EditSubscriptionsField<T extends Subscriptions> extends CustomField<List> {
 
@@ -56,7 +57,7 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 
 			@Override
 			public Object generateCell(Table source, final Object itemId, Object columnId) {
-				return new Button("X", new ClickListener() {
+				Button b = new Button("X", new ClickListener() {
 
 					@Override
 					public void buttonClick(ClickEvent event) {
@@ -64,6 +65,8 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 						table.removeItem(itemId);
 					}
 				});
+				b.addStyleName(Reindeer.BUTTON_SMALL);
+				return b;
 			}
 		});
 		table.setTableFieldFactory(new SubScriptionsFieldFactory());
@@ -140,14 +143,16 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 	}
 
 	protected void setVisibleColumns(String... cols) {
-		Object[] vCols = new Object[cols.length + 7];
-		String[] cHeads = new String[cols.length + 7];
-		vCols[0] = "name";
-		cHeads[0] = lang.getText("name");
-		int i = 1;
-		while (i <= cols.length) {
-			vCols[i] = cols[i - 1];
-			cHeads[i] = lang.getText(cols[i - 1]);
+		Object[] vCols = new Object[cols.length + 8];
+		String[] cHeads = new String[cols.length + 8];
+		vCols[0] = "remove";
+		cHeads[0] = "";
+		vCols[1] = "name";
+		cHeads[1] = lang.getText("name");
+		int i = 2;
+		while (i < cols.length + 2) {
+			vCols[i] = cols[i - 2];
+			cHeads[i] = lang.getText(cols[i - 2]);
 			i++;
 		}
 		vCols[i] = "background";
