@@ -24,6 +24,7 @@ import lombok.Setter;
 import ch.meemin.minimum.entities.AbstractEntity;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.Visit;
+import ch.meemin.minimum.entities.settings.SettingImage;
 import ch.meemin.minimum.entities.settings.Subscriptions;
 import ch.meemin.minimum.lang.Lang;
 
@@ -39,11 +40,18 @@ public abstract class Subscription extends AbstractEntity implements Serializabl
 
 	public Subscription(Customer customer, Subscriptions type) {
 		this.customer = customer;
-		if (type != null)
+		if (type != null) {
 			this.typeName = type.getName();
+			this.background = type.getBackground();
+		}
 	}
 
 	private String typeName;
+
+	@Getter
+	@Setter
+	@ManyToOne
+	private SettingImage background;
 
 	@ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE })
 	@NotNull

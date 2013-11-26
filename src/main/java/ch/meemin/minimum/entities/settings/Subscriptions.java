@@ -1,5 +1,6 @@
 package ch.meemin.minimum.entities.settings;
 
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
@@ -19,6 +20,12 @@ public abstract class Subscriptions {
 	@Setter
 	@NotNull
 	private String name;
+
+	@Getter
+	@Setter
+	@ManyToOne
+	private SettingImage background;
+
 	@Getter
 	@NotNull
 	protected String normalPrize;

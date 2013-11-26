@@ -15,10 +15,6 @@ public class SettingImage extends AbstractEntity {
 
 	@Getter
 	@Setter
-	private Settings settings;
-
-	@Getter
-	@Setter
 	private String name;
 
 	@Getter

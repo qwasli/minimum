@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -137,7 +138,7 @@ public class Settings extends AbstractEntity {
 			flags.put(flag, value);
 	}
 
-	@OneToMany(mappedBy = "settings")
+	@OneToMany(cascade = CascadeType.ALL)
 	@OrderColumn
 	@Getter
 	@Setter
