@@ -36,7 +36,8 @@ import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class BackgroundsField extends CustomField<List<SettingImage>> implements Receiver, SucceededListener {
+@SuppressWarnings("rawtypes")
+public class BackgroundsField extends CustomField<List> implements Receiver, SucceededListener {
 
 	private SettingImage tmpImage;
 	private ByteArrayOutputStream os;
@@ -79,13 +80,13 @@ public class BackgroundsField extends CustomField<List<SettingImage>> implements
 	}
 
 	@Override
-	protected void setInternalValue(List<SettingImage> newValue) {
-		super.setInternalValue(newValue);
+	protected void setInternalValue(List newValue) {
 		preview.removeAllComponents();
 		if (newValue != null)
-			for (SettingImage img : newValue) {
-				addImagePreview(img);
+			for (Object img : newValue) {
+				addImagePreview(SettingImage.class.cast(img));
 			}
+		super.setInternalValue(newValue);
 	}
 
 	private void addImagePreview(final SettingImage img) {
@@ -158,7 +159,7 @@ public class BackgroundsField extends CustomField<List<SettingImage>> implements
 	}
 
 	@Override
-	public Class<? extends List<SettingImage>> getType() {
-		return (Class<? extends List<SettingImage>>) (new ArrayList<SettingImage>()).getClass();
+	public Class<? extends List> getType() {
+		return List.class;
 	}
 }
