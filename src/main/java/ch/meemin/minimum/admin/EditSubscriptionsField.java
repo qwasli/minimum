@@ -4,6 +4,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 import ch.meemin.minimum.entities.settings.Duration.TimeSpan;
+import ch.meemin.minimum.entities.settings.SettingImage;
+import ch.meemin.minimum.entities.settings.SettingImage.Type;
 import ch.meemin.minimum.entities.settings.Settings;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.settings.Subscriptions;
@@ -33,9 +35,12 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 
 	private final Class<T> clazz;
 
-	EditSubscriptionsField(Lang lang, final Class<T> clazz) {
+	private Settings settings;
+
+	EditSubscriptionsField(Lang lang, final Class<T> clazz, Settings settings) {
 		this.clazz = clazz;
 		this.lang = lang;
+		this.settings = settings;
 		layout = new VerticalLayout();
 		layout.setSizeFull();
 		BeanItemContainer<T> dataSource = new BeanItemContainer<>(clazz);
@@ -116,6 +121,17 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 				timeSpanSelect.setNullSelectionAllowed(false);
 				return timeSpanSelect;
 			}
+			if (propertyId.equals("background")) {
+				NativeSelect bgSelect = new NativeSelect();
+				for (SettingImage si : settings.getImages()) {
+					if (Type.PDF_BACKROUND.equals(si.getType())) {
+						bgSelect.addItem(si);
+						bgSelect.setItemCaption(si, si.getName());
+					}
+				}
+				bgSelect.setNullSelectionAllowed(false);
+				return bgSelect;
+			}
 			AbstractTextField field = (AbstractTextField) super.createField(container, itemId, propertyId, uiContext);
 			field.setNullRepresentation("");
 			field.setWidth(80, Unit.PIXELS);
@@ -124,8 +140,8 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 	}
 
 	protected void setVisibleColumns(String... cols) {
-		Object[] vCols = new Object[cols.length + 6];
-		String[] cHeads = new String[cols.length + 6];
+		Object[] vCols = new Object[cols.length + 7];
+		String[] cHeads = new String[cols.length + 7];
 		vCols[0] = "name";
 		cHeads[0] = lang.getText("name");
 		int i = 1;
@@ -134,6 +150,8 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 			cHeads[i] = lang.getText(cols[i - 1]);
 			i++;
 		}
+		vCols[i] = "background";
+		cHeads[i++] = lang.getText("background");
 		vCols[i] = "normalPrize";
 		cHeads[i++] = lang.getText("normalPrize");
 		vCols[i] = "studentPrize";
@@ -146,6 +164,11 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 		cHeads[i++] = lang.getText("seniorPrize");
 		table.setVisibleColumns(vCols);
 		table.setColumnHeaders(cHeads);
+	}
+
+	public void refresh() {
+		table.refreshRowCache();
+		table.markAsDirty();
 	}
 
 	public void collapsColumns(Settings settings) {

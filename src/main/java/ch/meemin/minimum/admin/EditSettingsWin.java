@@ -1,19 +1,10 @@
 package ch.meemin.minimum.admin;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
 import ch.meemin.minimum.Minimum;
-import ch.meemin.minimum.entities.settings.SettingImage;
-import ch.meemin.minimum.entities.settings.SettingImage.Type;
 import ch.meemin.minimum.entities.settings.Settings;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.lang.Lang;
@@ -26,7 +17,6 @@ import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.EntityItemProperty;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Buffered.SourceException;
-import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.DefaultFieldGroupFieldFactory;
@@ -36,9 +26,6 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.server.FileDownloader;
-import com.vaadin.server.StreamResource;
-import com.vaadin.server.VaadinService;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -49,13 +36,8 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.Reindeer;
 
 /**
  * This is the window used to add new contacts to the 'address book'. It does not do proper validation - you can add
@@ -170,17 +152,19 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 
 		basic = tabSheet.addTab(basicSubsSettings, lang.getText("BasicSubscriptionSettings"));
 
-		Button downloadButton = new Button(lang.getText("downloadBackground"));
-		StreamResource sr = getPDFStream();
-		FileDownloader fileDownloader = new FileDownloader(sr);
-		fileDownloader.extend(downloadButton);
-		downloadButton.setStyleName(Reindeer.BUTTON_LINK);
-		ImageUpload rec = new ImageUpload();
-		Upload upload = new Upload(null, rec);
-		upload.addSucceededListener(rec);
 		Field<Boolean> showPhotoOnCard = createFlagField(item.getEntity(), Flag.PHOTOONCARD);
 
-		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, downloadButton, upload);
+		BackgroundsField bgField = form.buildAndBind(lang.getText("Backgrounds"), "images", BackgroundsField.class);
+		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, bgField);
+		bgField.addValueChangeListener(new ValueChangeListener() {
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				tsField.refresh();
+				psField.refresh();
+			}
+		});
+
 		pdf = tabSheet.addTab(hl, lang.getText("PDF"));
 
 		tsField = form.buildAndBind(lang.getText("timeSubscriptions"), "timeSubscriptions",
@@ -250,73 +234,20 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 				return (T) ta;
 			}
 			if (EditTimeSubscriptionsField.class.isAssignableFrom(fieldType)) {
-				return (T) new EditTimeSubscriptionsField(lang);
+				return (T) new EditTimeSubscriptionsField(lang, settings);
 			}
 			if (EditPrepaidSubscriptionsField.class.isAssignableFrom(fieldType)) {
-				return (T) new EditPrepaidSubscriptionsField(lang);
+				return (T) new EditPrepaidSubscriptionsField(lang, settings);
 			}
 			if (DateField.class.isAssignableFrom(fieldType)) {
 				DateField df = new DateField();
 				df.setResolution(Resolution.DAY);
 				return (T) df;
 			}
+			if (BackgroundsField.class.isAssignableFrom(fieldType))
+				return (T) new BackgroundsField(lang, settings);
+
 			return super.createField(type, fieldType);
-		}
-	}
-
-	private StreamResource getPDFStream() {
-		StreamResource.StreamSource source = new StreamResource.StreamSource() {
-
-			@Override
-			public InputStream getStream() {
-				SettingImage oldBG = ((EntityItem<Settings>) form.getItemDataSource()).getEntity().imageByType(
-						Type.PDF_BACKROUND);
-				if (oldBG != null)
-					return new ByteArrayInputStream(oldBG.getContent());
-				else
-					try {
-						return new FileInputStream(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath()
-								+ "/pdfbackground.png");
-					} catch (FileNotFoundException e) {
-						return null;
-					}
-			}
-		};
-		StreamResource resource = new StreamResource(source, "bg.png");
-		return resource;
-	}
-
-	private class ImageUpload implements Receiver, SucceededListener {
-		ByteArrayOutputStream os;
-		SettingImage image = new SettingImage();
-
-		@Override
-		public OutputStream receiveUpload(String filename, String mimeType) {
-			// Create upload stream
-			image.setType(Type.PDF_BACKROUND);
-			image.setMimeType(mimeType);
-			os = new ByteArrayOutputStream();
-			return os; // Return the output stream to write to
-		}
-
-		@Override
-		public void uploadSucceeded(SucceededEvent event) {
-			// Show the uploaded file in the image viewer
-			image.setContent(os.toByteArray());
-			try {
-				os.close();
-				Property imagesProp = form.getItemDataSource().getItemProperty("images");
-				List<SettingImage> images = (List<SettingImage>) imagesProp.getValue();
-				SettingImage oldBG = ((EntityItem<Settings>) form.getItemDataSource()).getEntity().imageByType(
-						Type.PDF_BACKROUND);
-				if (oldBG != null)
-					images.remove(oldBG);
-				images.add(image);
-				imagesProp.setValue(images);
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 

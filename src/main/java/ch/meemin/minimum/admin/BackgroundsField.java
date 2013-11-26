@@ -97,8 +97,9 @@ public class BackgroundsField extends CustomField<List<SettingImage>> implements
 			public void buttonClick(ClickEvent event) {
 				List<SettingImage> val = new ArrayList<>(BackgroundsField.this.getValue());
 				val.remove(img);
-				BackgroundsField.super.setInternalValue(val);
-				preview.removeComponent(event.getButton().getParent());
+				setValue(val);
+				// BackgroundsField.super.setInternalValue(val);
+				// preview.removeComponent(event.getButton().getParent());
 			}
 		});
 		VerticalLayout vl = new VerticalLayout(image, b);
@@ -133,7 +134,6 @@ public class BackgroundsField extends CustomField<List<SettingImage>> implements
 		tmpImage = new SettingImage();
 		tmpImage.setName(nameField.getValue());
 		tmpImage.setType(Type.PDF_BACKROUND);
-		tmpImage.setSettings(settings);
 		tmpImage.setMimeType(mimeType);
 		os = new ByteArrayOutputStream();
 		return os; // Return the output stream to write to
@@ -147,8 +147,9 @@ public class BackgroundsField extends CustomField<List<SettingImage>> implements
 			os.close();
 			List<SettingImage> val = new ArrayList<SettingImage>(getValue());
 			val.add(tmpImage);
-			addImagePreview(tmpImage);
-			super.setInternalValue(val);
+			setValue(val);
+			// addImagePreview(tmpImage);
+			// super.setInternalValue(val);
 			tmpImage = null;
 			nameField.setValue(null);
 		} catch (IOException e) {
@@ -158,6 +159,6 @@ public class BackgroundsField extends CustomField<List<SettingImage>> implements
 
 	@Override
 	public Class<? extends List<SettingImage>> getType() {
-		return (Class<? extends List<SettingImage>>) List.class;
+		return (Class<? extends List<SettingImage>>) (new ArrayList<SettingImage>()).getClass();
 	}
 }
