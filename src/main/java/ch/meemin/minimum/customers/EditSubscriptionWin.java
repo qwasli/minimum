@@ -102,8 +102,7 @@ public class EditSubscriptionWin extends Window {
 			else
 				sub.suspend();
 			sub = (TimeSubscription) minimum.getSubscriptionProvider().updateEntity(sub);
-			subItem.refresh();
-			minimum.getCustomerContainer().refreshItem(sub.getCustomer().getId());
+			minimum.selectSubscription(sub.getId(), true);
 			EditSubscriptionWin.this.close();
 		}
 	}
