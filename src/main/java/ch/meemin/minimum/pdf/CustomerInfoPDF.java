@@ -77,7 +77,18 @@ public class CustomerInfoPDF {
 
 	public void writePDFProtocol(PipedOutputStream out) throws DocumentException, MalformedURLException, IOException {
 		Rectangle pageSize = PageSize.A4;
-		Rectangle cardSize = PageSize.ID_1;
+		Integer cHmm = minimum.getSettings().getCardHeight();
+		Integer cWmm = minimum.getSettings().getCardWidth();
+		Float cHp, cWp;
+		if (cHmm == null || cHmm == 0)
+			cHp = PageSize.ID_1.getHeight();
+		else
+			cHp = Utilities.millimetersToPoints(cHmm);
+		if (cHmm == null || cWmm == 0)
+			cWp = PageSize.ID_1.getWidth();
+		else
+			cWp = Utilities.millimetersToPoints(cWmm);
+		Rectangle cardSize = new Rectangle(cWp, cHp);
 
 		Document document = new Document(pageSize, LEFT_M, RIGHT_M, TOP_M, BOTTOM_M);
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, out);
@@ -224,13 +235,13 @@ public class CustomerInfoPDF {
 			code = "0" + code;
 		i25.setCode(code);
 		i25.setSize(14);
-		i25.setBarHeight(40);
+		i25.setBarHeight(CardSize.getHeight() / 2 - 14f);
 		i25.setBaseline(18);
 		i25.setX(1);
 		float w = i25.getBarcodeSize().getRight();
-		i25.setX(128 / w);
+		i25.setX(CardSize.getWidth() * 2 / 3 / w);
 		Image barcode = i25.createImageWithBarcode(cb, Color.BLACK, Color.BLACK);
-		barcode.setAbsolutePosition(50f + CardSize.getWidth(), 35f + CardSize.getHeight() / 2);
+		barcode.setAbsolutePosition(LEFT_M + CardSize.getWidth() + 10f, BOTTOM_M + CardSize.getHeight() / 3);
 		cb.addImage(barcode);
 		cb.stroke();
 	}
