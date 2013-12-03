@@ -239,7 +239,7 @@ public class Minimum extends UI implements ValueChangeListener {
 		EntityItem<Subscription> sItem = subscriptionContainer.getItem(id);
 		Subscription sub = sItem.getEntity();
 		if (sub.isReplaced()) {
-			Notification.show(lang.getText("ReplacedSubscription"), "", Type.ERROR_MESSAGE);
+			Notification.show(lang.getText("ReplacedSubscription"), "", Type.WARNING_MESSAGE);
 			return;
 		}
 		Customer c = sub.getCustomer();
