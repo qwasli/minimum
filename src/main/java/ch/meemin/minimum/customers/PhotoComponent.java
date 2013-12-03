@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.teemu.webcam.Webcam;
@@ -17,6 +16,7 @@ import ch.meemin.minimum.entities.Photo;
 import ch.meemin.minimum.lang.Lang;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
+import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
@@ -24,6 +24,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Image;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.SucceededEvent;
@@ -97,6 +98,7 @@ public class PhotoComponent extends CustomComponent implements Receiver, Succeed
 		if (image != null) {
 			addImage(image);
 		} else {
+			Notification.show(lang.getText("NoPhotoWarning"), Notification.Type.WARNING_MESSAGE);
 			addWebcam();
 		}
 		layout.addComponent(replacePhoto);
@@ -148,15 +150,8 @@ public class PhotoComponent extends CustomComponent implements Receiver, Succeed
 				photo.setName("beer.jpg");
 				photo.setMimeType("image/jpeg");
 				String path = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/beer.jpg";
-				try {
-					photo.setContent(FileUtils.readFileToByteArray(new File(path)));
-					customerItem.getItemProperty("photo").setValue(photo);
-					customerItem.commit();
-					Image img = customerItem.getEntity().getImage();
-					addImage(img);
-				} catch (IOException e) {
-					LOG.warn("Could not set default Image", e);
-				}
+				Image img = new Image(null, new FileResource(new File(path)));
+				addImage(img);
 			}
 		} else
 			addWebcam();
