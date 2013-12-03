@@ -32,6 +32,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextArea;
@@ -155,7 +156,14 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		Field<Boolean> showPhotoOnCard = createFlagField(item.getEntity(), Flag.PHOTOONCARD);
 
 		BackgroundsField bgField = form.buildAndBind(lang.getText("Backgrounds"), "images", BackgroundsField.class);
-		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, bgField);
+
+		Field<?> cH = form.buildAndBind(null, "cardHeight");
+		cH.setWidth(30, Unit.PIXELS);
+		Field<?> cW = form.buildAndBind(null, "cardWidth");
+		cW.setWidth(30, Unit.PIXELS);
+		HorizontalLayout hxw = new HorizontalLayout(cH, new Label("x"), cW, new Label(lang.getText("HxWinMM")));
+		hxw.setSpacing(true);
+		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, bgField, hxw);
 		bgField.addValueChangeListener(new ValueChangeListener() {
 
 			@Override
