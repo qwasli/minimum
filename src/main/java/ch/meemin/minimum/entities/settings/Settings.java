@@ -84,6 +84,13 @@ public class Settings extends AbstractEntity {
 	@Getter
 	private String seniorPrize = null;
 
+	@Getter
+	@Setter
+	private Integer cardHeight = null;
+	@Getter
+	@Setter
+	private Integer cardWidth = null;
+
 	public void setSeniorPrize(String seniorPrize) {
 		this.seniorPrize = StringUtils.trimToNull(seniorPrize);
 	}
