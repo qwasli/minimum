@@ -7056,3 +7056,12 @@ body .minimum.v-app .v-app-loading {
 	position: relative;
 	top: 1px;
 }
+
+.minimum .v-Notification-warning {
+	background: none repeat scroll 0 0 #B40000;
+	border-radius: 4px 4px 4px 4px;
+	color: #FFFFFF;
+	font-size: 16px;
+	font-weight: bold;
+	border: 3px solid #CA3030;
+}
