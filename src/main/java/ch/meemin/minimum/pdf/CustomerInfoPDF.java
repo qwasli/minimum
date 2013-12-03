@@ -193,25 +193,30 @@ public class CustomerInfoPDF {
 		cb.stroke();
 		// cb.saveState();
 		cb.beginText();
-		float nameH = cardSize.getHeight() * 3 / 4;
-		cb.setFontAndSize(font, 18f);
-		cb.showTextAligned(0, customer.getName(), LEFT_M + 15f, BOTTOM_M + nameH, 0);
+
+		Float nameSize = 18f;
+		String name = customer.getName();
+		while (font.getWidthPoint(name, nameSize) > (cardSize.getWidth() - 15f))
+			nameSize -= 0.5f;
+		cb.setFontAndSize(font, nameSize);
+		float namePos = cardSize.getHeight() * 3 / 4;
+		cb.showTextAligned(0, name, LEFT_M + 15f, BOTTOM_M + namePos, 0);
 		cb.endText();
 
 		if (subscription instanceof TimeSubscription) {
 			cb.setFontAndSize(font, 12f);
 			cb.beginText();
-			cb.showTextAligned(0, lang.getText("expiry") + ":", LEFT_M + 15f, BOTTOM_M + nameH - 20f, 0);
+			cb.showTextAligned(0, lang.getText("expiry") + ":", LEFT_M + 15f, BOTTOM_M + namePos - 20f, 0);
 			cb.endText();
 			cb.setFontAndSize(font, 16f);
 			cb.beginText();
 			String t = lang.formatDate(((TimeSubscription) subscription).getExpiry());
-			cb.showTextAligned(0, t, LEFT_M + 15f, BOTTOM_M + nameH - 35f, 0);
+			cb.showTextAligned(0, t, LEFT_M + 15f, BOTTOM_M + namePos - 35f, 0);
 			cb.endText();
 		}
 
 		if (minimum.getSettings().is(Flag.PHOTOONCARD) && customer.getPhoto() != null) {
-			float maxH = nameH - 5f;
+			float maxH = namePos - 5f;
 			float maxW = (cardSize.getWidth() / 2);
 			Image photo = Image.getInstance(customer.getPhoto().getContent());
 			float hRel = maxH / photo.getHeight();
