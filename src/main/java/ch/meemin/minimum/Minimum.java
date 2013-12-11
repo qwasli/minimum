@@ -233,6 +233,7 @@ public class Minimum extends UI implements ValueChangeListener {
 	public void selectSubscription(Long id, boolean doNotLogin) {
 		loginInfo.clear();
 		if (!subscriptionContainer.containsId(id)) {
+			LOG.warn("ID not found: " + id);
 			Notification.show(lang.getText("SubscriptionNotFound"), "", Type.WARNING_MESSAGE);
 			return;
 		}
@@ -264,16 +265,21 @@ public class Minimum extends UI implements ValueChangeListener {
 			minimum.getAllCustomers().clearFilter();
 			return;
 		}
-		try {
-			Long id = new Long(val);
-			if (settings.is(Flag.SUBSCRIPTIONIDONCARD))
-				minimum.selectSubscription(id, false);
-			else
-				minimum.selectCustomer(id, false);
-			searchField.setValue(null);
-		} catch (NumberFormatException e) {
+		if (val.matches("[0-9]+"))
+			try {
+				if (val.length() >= 14)
+					val = val.substring(0, 14);
+				Long id = new Long(val);
+				if (settings.is(Flag.SUBSCRIPTIONIDONCARD))
+					minimum.selectSubscription(id, false);
+				else
+					minimum.selectCustomer(id, false);
+				searchField.setValue(null);
+			} catch (NumberFormatException e) {
+				minimum.getAllCustomers().setFilter(val);
+			}
+		else
 			minimum.getAllCustomers().setFilter(val);
-		}
 		searchField.selectAll();
 	}
 
