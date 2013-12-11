@@ -48,6 +48,7 @@ public class SellSubscriptionWin extends Window {
 		@Override
 		public void commit() throws CommitException {
 			super.commit();
+			((EntityItem<Customer>) getItemDataSource()).commit();
 			Minimum minimum = (Minimum) getUI();
 			minimum.selectCustomer(getEntity().getId(), true);
 			close();

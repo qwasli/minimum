@@ -1,12 +1,10 @@
 package ch.meemin.minimum.entities;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -18,37 +16,16 @@ import lombok.Getter;
 @MappedSuperclass
 public abstract class AbstractEntity {
 
-	private static Long ID = -1L;
+	private static AtomicLong ID = new AtomicLong(System.currentTimeMillis());
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pkGen")
-	@TableGenerator(allocationSize = 1000, initialValue = 0, name = "pkGen", table = "PRIMARY_KEYS")
-	private Long id = null;
+	@Getter
+	private Long id = ID.incrementAndGet();
+
 	@Getter
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt = new Date();;
-
-	public Long getId() {
-		if (id == null)
-			return tempID;
-		return id;
-	}
-
-	@Transient
-	private Long tempID = ID--;
-
-	// @PrePersist
-	// public void clearNewIDsToNull() throws NoSuchFieldException,
-	// SecurityException, IllegalArgumentException,
-	// IllegalAccessException {
-	// if (id <= 0) {
-	// id = null;
-	// Class<?> c = this.getClass();
-	// Field _id = c.getDeclaredField("_persistence_primaryKey");
-	// _id.set(this, null);
-	// }
-	// }
+	private Date createdAt = new Date();
 
 	@Version
 	@Getter
@@ -84,9 +61,5 @@ public abstract class AbstractEntity {
 			}
 		}
 		return super.equals(obj);
-	}
-
-	public boolean isUnpersisted() {
-		return this.id == null;
 	}
 }

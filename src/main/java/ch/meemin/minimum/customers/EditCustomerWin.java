@@ -59,14 +59,16 @@ public class EditCustomerWin extends Window {
 			super.commit();
 			EntityItem<Customer> item = (EntityItem<Customer>) getItemDataSource();
 			Long id = (Long) item.getItemId();
-			Customer c = item.getEntity();
-			if (!item.isPersistent())
-				id = (Long) container.addEntity(c);
+			if (!item.isPersistent()) {
+				id = (Long) container.addEntity(item.getEntity());
+				item = container.getItem(id);
+			}
+			item.commit();
 			container.commit();
 			Minimum minimum = (Minimum) getUI();
 			close();
 			if (!minimum.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION) && newCustomer)
-				new SellSubscriptionWin(minimum, container.getItem(id));
+				new SellSubscriptionWin(minimum, item);
 			else
 				minimum.selectCustomer(id, true);
 
