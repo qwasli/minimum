@@ -47,15 +47,18 @@ public class TimeSubscription extends Subscription {
 		doReplace(ts);
 	}
 
+	@Override
 	public boolean isSuspended() {
 		return expiry == null;
 	}
 
+	@Override
 	public void suspend() {
 		balance.calculateBalance(new Date(), expiry);
 		expiry = null;
 	}
 
+	@Override
 	public void reactivate() {
 		expiry = balance.calculateExpiry();
 	}

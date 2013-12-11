@@ -99,6 +99,8 @@ public abstract class Subscription extends AbstractEntity implements Serializabl
 
 	protected void doReplace(Subscription sub) {
 		sub.customer = customer;
+		sub.background = background;
+		sub.typeName = typeName;
 		this.replacedBy = sub;
 		sub.replacing = this;
 		if (this.equals(customer.getCurrentSubscription()))
