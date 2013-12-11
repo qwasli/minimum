@@ -5,7 +5,7 @@
 	<groupId>ch.meemin</groupId>
 	<artifactId>minimum</artifactId>
 	<packaging>war</packaging>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<name>Minimum Log in</name>
 
 	<properties>
