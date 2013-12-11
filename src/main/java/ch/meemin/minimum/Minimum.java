@@ -243,10 +243,10 @@ public class Minimum extends UI implements ValueChangeListener {
 			return;
 		}
 		Customer c = sub.getCustomer();
-		if (!c.getCurrentSubscription().equals(sub)) {
-			Notification.show(lang.getText("NotCurrentSubscription"), "", Type.WARNING_MESSAGE);
-			return;
-		}
+		// if (!c.getCurrentSubscription().equals(sub)) {
+		// Notification.show(lang.getText("NotCurrentSubscription"), "", Type.WARNING_MESSAGE);
+		// return;
+		// }
 		EntityItem<Customer> cItem = customerContainer.getItem(c.getId());
 		showCustomer.setCustomer(cItem);
 		subscriptionInfo.setSubscription(sItem, cItem);
