@@ -101,6 +101,9 @@ public class Minimum extends UI implements ValueChangeListener {
 
 	private final VerticalLayout layout = new VerticalLayout();
 
+	private long LastScanTime = 0;
+	private Long lastScanID = 0L;
+
 	@Override
 	public void setLocale(Locale locale) {
 		super.setLocale(locale);
@@ -267,13 +270,22 @@ public class Minimum extends UI implements ValueChangeListener {
 		}
 		if (val.matches("[0-9]+"))
 			try {
-				if (val.length() >= 14)
+				if (val.length() >= 14) {
+					LOG.info("Double scan " + val);
 					val = val.substring(0, 14);
+				}
 				Long id = new Long(val);
+				if (id.equals(lastScanID) && (LastScanTime + 2000) >= System.currentTimeMillis()) {
+					LOG.info("Too fast rescan " + val);
+					searchField.setValue(null);
+					return;
+				}
 				if (settings.is(Flag.SUBSCRIPTIONIDONCARD))
 					minimum.selectSubscription(id, false);
 				else
 					minimum.selectCustomer(id, false);
+				lastScanID = id;
+				LastScanTime = System.currentTimeMillis();
 				searchField.setValue(null);
 			} catch (NumberFormatException e) {
 				minimum.getAllCustomers().setFilter(val);
