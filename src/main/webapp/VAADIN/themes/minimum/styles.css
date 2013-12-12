@@ -7057,6 +7057,35 @@ body .minimum.v-app .v-app-loading {
 	top: 1px;
 }
 
+.minimum .minimumdatefield {
+	padding-right: 48px;
+}
+
+.minimum .minimumdatefield input.v-datefield-textfield {
+	font-size: 20px;
+	height: 48px;
+	padding: 3px 3px 4px;
+}
+
+.minimum .minimumdatefield button.v-datefield-button {
+	width: 48px;
+	margin-right: -48px;
+	height: 48px;
+	background: transparent;
+	border: none;
+	padding: 0;
+	background-image: url(popup-btn-pressed.png);/** sprite-ref: verticals */
+	background-repeat: no-repeat;
+	cursor: pointer;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+.minimum .minimumdatefield button.v-datefield-button:active {
+	background-image: url(popup-btn-pressed.png);/** sprite-ref: verticals */
+}
+
 .minimum .v-Notification-warning {
 	background: none repeat scroll 0 0 #B40000;
 	border-radius: 4px 4px 4px 4px;
