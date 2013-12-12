@@ -34,10 +34,13 @@ public class SubscriptionInfo extends CustomComponent implements ClickListener, 
 		this.lang = lang;
 		this.minimum = minimum;
 		editButton.setPrimaryStyleName(Props.MINIMUMBUTTON);
-		editButton.setHeight(35, Unit.PIXELS);
+		editButton.setHeight(50, Unit.PIXELS);
 
 		label.setStyleName(Reindeer.LABEL_H1);
+		label.setSizeUndefined();
+		setWidth(100, Unit.PERCENTAGE);
 		layout.setSpacing(true);
+		layout.setWidth(100, Unit.PERCENTAGE);
 		setCompositionRoot(layout);
 		// if (subsProperty instanceof ValueChangeNotifier)
 		// ((ValueChangeNotifier) subsProperty).addValueChangeListener(this);
@@ -76,7 +79,9 @@ public class SubscriptionInfo extends CustomComponent implements ClickListener, 
 		editButton.setCaption(sub.valid() || sub.isSuspended() ? lang.getText("Edit") : lang.getText("SellSubscription"));
 		editButton.setVisible(!sub.isReplaced());
 		layout.removeAllComponents();
-		layout.addComponents(label, editButton);
+		Label spacer = new Label();
+		layout.addComponents(label, spacer, editButton);
+		layout.setExpandRatio(spacer, 1f);
 
 	}
 

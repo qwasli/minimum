@@ -68,7 +68,7 @@ public class ShowCustomer extends CustomComponent implements ValueChangeListener
 		Label spacer = new Label();
 		buttons.setSpacing(true);
 		infoLayout = new VerticalLayout(titel, buttons, subscriptionInfo, spacer, loginInfo);
-		// infoLayout.setSpacing(true);
+		infoLayout.setSpacing(true);
 		infoLayout.setExpandRatio(titel, 0);
 		infoLayout.setExpandRatio(buttons, 0);
 		infoLayout.setExpandRatio(subscriptionInfo, 0);
@@ -156,8 +156,7 @@ public class ShowCustomer extends CustomComponent implements ValueChangeListener
 				Style.NORMAL);
 
 		button.setPrimaryStyleName(Props.MINIMUMBUTTON);
-		button.setHeight(100, Unit.PERCENTAGE);
-		button.setHeight(35, Unit.PIXELS);
+		button.setHeight(50, Unit.PIXELS);
 
 		buttons.addComponent(button);
 
@@ -169,8 +168,7 @@ public class ShowCustomer extends CustomComponent implements ValueChangeListener
 			}
 		});
 		button.setPrimaryStyleName(Props.MINIMUMBUTTON);
-		button.setHeight(100, Unit.PERCENTAGE);
-		button.setHeight(35, Unit.PIXELS);
+		button.setHeight(50, Unit.PIXELS);
 		buttons.addComponent(button);
 
 	}

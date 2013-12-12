@@ -54,7 +54,7 @@ public class PhotoComponent extends CustomComponent implements Receiver, Succeed
 		layout.setSizeUndefined();
 		layout.setHeight(100, Unit.PERCENTAGE);
 		layout.setMargin(new MarginInfo(false, false, false, true));
-		layout.setSpacing(true);
+		layout.setSpacing(false);
 
 		webcam = new Webcam();
 		webcam.setHeight(100, Unit.PERCENTAGE);

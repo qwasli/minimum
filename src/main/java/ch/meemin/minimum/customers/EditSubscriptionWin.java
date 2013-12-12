@@ -6,6 +6,7 @@ import ch.meemin.minimum.entities.subscriptions.PrepaidSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.entities.subscriptions.TimeSubscription;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.utils.Props;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.EntityItemProperty;
@@ -47,21 +48,28 @@ public class EditSubscriptionWin extends Window {
 		setSizeUndefined();
 		cancelButton = new Button(lang.getText("Cancel"), new CancelClick());
 		cancelButton.setClickShortcut(KeyCode.ESCAPE);
-
+		styleButton(cancelButton);
 		markLostButton = new Button(lang.getText("MarkLost"), new MarkLostClick());
+		styleButton(markLostButton);
 		VerticalLayout layout;
 		if (subItem.getEntity() instanceof TimeSubscription) {
 			integerField = null;
 			TimeSubscription sub = (TimeSubscription) subItem.getEntity();
 			suspendButton = new Button(lang.getText(sub.isSuspended() ? "Reactivate" : "Suspend"), new SuspendClick());
-			HorizontalLayout hl = new HorizontalLayout();
+			styleButton(suspendButton);
+			layout = new VerticalLayout(suspendButton, markLostButton, cancelButton);
 			if (!sub.isSuspended()) {
+				VerticalLayout hl = new VerticalLayout();
 				EntityItemProperty expiry = subItem.getItemProperty("expiry");
 				dateField = new DateField(expiry);
+				dateField.setStyleName(Props.MINIMUMDATEFIELD);
+				dateField.setWidth(250, Unit.PIXELS);
 				hl.addComponent(dateField);
-				hl.addComponent(new Button(lang.getText("modifyExpiry"), new CommitItemClick()));
+				Button mEButton = new Button(lang.getText("modifyExpiry"), new CommitItemClick());
+				styleButton(mEButton);
+				hl.addComponent(mEButton);
+				layout.addComponent(hl, 1);
 			}
-			layout = new VerticalLayout(suspendButton, hl, markLostButton, cancelButton);
 		} else if (subItem.getEntity() instanceof PrepaidSubscription) {
 			HorizontalLayout hl = new HorizontalLayout();
 			EntityItemProperty credit = subItem.getItemProperty("credit");
@@ -72,13 +80,24 @@ public class EditSubscriptionWin extends Window {
 		} else {
 			layout = new VerticalLayout(markLostButton, cancelButton);
 		}
+		layout.setSpacing(true);
+		layout.setMargin(true);
 		setContent(layout);
 		new ValidatePasswordWindow(minimum, this);
 	}
 
+	private void styleButton(Button button) {
+		button.setPrimaryStyleName(Props.MINIMUMBUTTON);
+		button.setWidth(250, Unit.PIXELS);
+		button.setHeight(50, Unit.PIXELS);
+	}
+
 	@Override
 	public void focus() {
-		cancelButton.focus();
+		if (dateField != null)
+			dateField.focus();
+		else
+			cancelButton.focus();
 	}
 
 	private class CancelClick implements ClickListener {

@@ -14,6 +14,7 @@ import ch.meemin.minimum.utils.CommitClickListener;
 import ch.meemin.minimum.utils.DiscardClickListener;
 import ch.meemin.minimum.utils.EntityFieldGroup;
 import ch.meemin.minimum.utils.FormLayout;
+import ch.meemin.minimum.utils.Props;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
@@ -137,10 +138,12 @@ public class EditCustomerWin extends Window {
 			formLayout.addComponent(form.buildAndBind(lang.getText("newsletter"), "newsletter"));
 
 		okButton = new Button(lang.getText((newCustomer) ? "Create" : "OK"), new CommitClickListener(form));
+		okButton.setPrimaryStyleName(Props.MINIMUMBUTTON);
 		okButton.setClickShortcut(KeyCode.ENTER);
 		HorizontalLayout footer = formLayout.createDefaultFooter();
 		footer.addComponent(okButton);
 		Button cancelButton = new Button(lang.getText("Cancel"), new DiscardClickListener(form));
+		cancelButton.setPrimaryStyleName(Props.MINIMUMBUTTON);
 		cancelButton.setClickShortcut(KeyCode.ESCAPE);
 		footer.addComponent(cancelButton);
 

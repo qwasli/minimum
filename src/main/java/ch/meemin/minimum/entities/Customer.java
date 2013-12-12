@@ -99,7 +99,7 @@ public class Customer extends AbstractEntity implements Serializable {
 	public Image getImage() {
 		if (photo == null)
 			return null;
-		Image image = new Image("", new StreamResource(new StreamSource() {
+		Image image = new Image(null, new StreamResource(new StreamSource() {
 			@Override
 			public InputStream getStream() {
 				return new ByteArrayInputStream(photo.getContent());
