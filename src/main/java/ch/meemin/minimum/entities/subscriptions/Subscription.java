@@ -109,6 +109,7 @@ public abstract class Subscription extends AbstractEntity implements Serializabl
 
 	public Visit checkIn() {
 		Visit visit = new Visit(this);
+		this.customer.setLastVisit(visit);
 		visits.add(visit);
 		return visit;
 	}

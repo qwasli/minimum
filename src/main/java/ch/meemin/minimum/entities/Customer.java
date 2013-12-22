@@ -91,7 +91,7 @@ public class Customer extends AbstractEntity implements Serializable {
 	}
 
 	public void checkIn(boolean ignoreBasicSub) {
-		this.lastVisit = currentSubscription.checkIn();
+		currentSubscription.checkIn();
 		if (!(currentSubscription instanceof BasicSubscription) && !currentSubscription.valid() && ignoreBasicSub)
 			currentSubscription = new BasicSubscription(this);
 	}
