@@ -17,6 +17,7 @@ import ch.meemin.minimum.admin.AdminBar;
 import ch.meemin.minimum.customers.AllCustomers;
 import ch.meemin.minimum.customers.EditCustomerWin;
 import ch.meemin.minimum.customers.LoginInfo;
+import ch.meemin.minimum.customers.LoginInfo.Status;
 import ch.meemin.minimum.customers.ShowCustomer;
 import ch.meemin.minimum.customers.SubscriptionInfo;
 import ch.meemin.minimum.entities.Customer;
@@ -199,14 +200,14 @@ public class Minimum extends UI implements ValueChangeListener {
 					new DateTime()) : null;
 			if (!ignoreTimeWarn && wM > 0 && minutesBetween != null && minutesBetween.isLessThan(warnMin)) {
 				loginInfo.showLoginAfterWarnButton(item);
-				loginInfo.show(Props.ICON_WARN, lang.getText("TimeWarn"), false);
+				loginInfo.show(Status.WARN, lang.getText("TimeWarn"), false);
 			} else {
 				customer.checkIn(settings.is(Flag.USE_BASIC_SUBSCRIPTION));
 				customerProvider.updateEntity(customer);
-				loginInfo.show(Props.ICON_OK, "", true);
+				loginInfo.show(Status.OK, "", true);
 			}
 		} else {
-			loginInfo.show(Props.ICON_NOT_OK, lang.getText("InvalidSubscription"), true);
+			loginInfo.show(Status.NOTOK, lang.getText("InvalidSubscription"), true);
 		}
 	}
 
@@ -234,16 +235,17 @@ public class Minimum extends UI implements ValueChangeListener {
 	}
 
 	public void selectSubscription(Long id, boolean doNotLogin) {
-		loginInfo.clear();
 		if (!subscriptionContainer.containsId(id)) {
 			LOG.warn("ID not found: " + id);
 			Notification.show(lang.getText("SubscriptionNotFound"), "", Type.WARNING_MESSAGE);
+			loginInfo.clear();
 			return;
 		}
 		EntityItem<Subscription> sItem = subscriptionContainer.getItem(id);
 		Subscription sub = sItem.getEntity();
 		if (sub.isReplaced()) {
 			Notification.show(lang.getText("ReplacedSubscription"), "", Type.WARNING_MESSAGE);
+			loginInfo.show(Status.NOTOK, "", true);
 			return;
 		}
 		Customer c = sub.getCustomer();

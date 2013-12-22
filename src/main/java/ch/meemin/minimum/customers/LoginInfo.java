@@ -1,5 +1,8 @@
 package ch.meemin.minimum.customers;
 
+import java.util.EnumMap;
+import java.util.EnumSet;
+
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.BasicSubscription;
@@ -8,6 +11,7 @@ import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.utils.Props;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -18,8 +22,21 @@ import com.vaadin.ui.Label;
 
 public class LoginInfo extends CustomComponent implements ClickListener {
 	HorizontalLayout hl = new HorizontalLayout();
+
+	public enum Status {
+		OK(new ThemeResource("icons/128/ok2.png")),
+		WARN(new ThemeResource("icons/128/warn2.png")),
+		NOTOK(new ThemeResource("icons/128/notOK2.png"));
+		ThemeResource ir;
+
+		Status(ThemeResource ir) {
+			this.ir = ir;
+		}
+	}
+
 	private final Minimum minimum;
 	private final Lang lang;
+	private EnumMap<Status, Image> images = new EnumMap<LoginInfo.Status, Image>(Status.class);
 
 	private EntityItem<Subscription> item;
 	private boolean ignoreWarn;
@@ -29,12 +46,14 @@ public class LoginInfo extends CustomComponent implements ClickListener {
 		this.minimum = minimum;
 		hl.setSizeFull();
 		setCompositionRoot(hl);
+		for (Status st : EnumSet.allOf(Status.class))
+			images.put(st, new Image("", st.ir));
 	}
 
-	public void show(Image icon, String info, boolean clear) {
+	public void show(Status status, String info, boolean clear) {
 		if (clear)
 			hl.removeAllComponents();
-		hl.addComponent(icon);
+		hl.addComponent(images.get(status));
 		Label l = new Label(info);
 		l.setStyleName("smileyinfo");
 		hl.addComponent(l);
