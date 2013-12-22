@@ -63,7 +63,7 @@ public class SubscriptionInfo extends CustomComponent implements ClickListener, 
 		refresh();
 	}
 
-	private void refresh() {
+	public void refresh() {
 		Subscription sub = subItem.getEntity();
 		String text = sub.getTypeName(lang);
 		if (sub instanceof PrepaidSubscription) {

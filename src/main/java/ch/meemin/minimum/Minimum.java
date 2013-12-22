@@ -202,8 +202,14 @@ public class Minimum extends UI implements ValueChangeListener {
 				loginInfo.showLoginAfterWarnButton(item);
 				loginInfo.show(Status.WARN, lang.getText("TimeWarn"), false);
 			} else {
-				customer.checkIn(settings.is(Flag.USE_BASIC_SUBSCRIPTION));
-				customerProvider.updateEntity(customer);
+				if (settings.is(Flag.SUBSCRIPTIONIDONCARD)) {
+					sub.checkIn();
+					subscriptionProvider.updateEntity(sub);
+				} else {
+					customer.checkIn(settings.is(Flag.USE_BASIC_SUBSCRIPTION));
+					customerProvider.updateEntity(customer);
+				}
+				subscriptionInfo.refresh();
 				loginInfo.show(Status.OK, "", true);
 			}
 		} else {
@@ -254,8 +260,8 @@ public class Minimum extends UI implements ValueChangeListener {
 		// return;
 		// }
 		EntityItem<Customer> cItem = customerContainer.getItem(c.getId());
-		showCustomer.setCustomer(cItem);
 		subscriptionInfo.setSubscription(sItem, cItem);
+		showCustomer.setCustomer(cItem);
 		if (!doNotLogin && settings.is(Flag.DIRECTLOGIN))
 			login(sItem, false);
 		else
