@@ -243,6 +243,8 @@ public class CustomerInfoPDF {
 		i25.setBarHeight(CardSize.getHeight() / 2 - 14f);
 		i25.setBaseline(18);
 		i25.setX(1);
+		// i25.setChecksumText(true);
+		// i25.setGenerateChecksum(true);
 		float w = i25.getBarcodeSize().getRight();
 		i25.setX(CardSize.getWidth() * 2 / 3 / w);
 		Image barcode = i25.createImageWithBarcode(cb, Color.BLACK, Color.BLACK);
