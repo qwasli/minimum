@@ -15,7 +15,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -71,11 +70,15 @@ public class EditSubscriptionWin extends Window {
 				layout.addComponent(hl, 1);
 			}
 		} else if (subItem.getEntity() instanceof PrepaidSubscription) {
-			HorizontalLayout hl = new HorizontalLayout();
+			VerticalLayout hl = new VerticalLayout();
 			EntityItemProperty credit = subItem.getItemProperty("credit");
 			integerField = new TextField(credit);
+			integerField.setStyleName(Props.MINIMUMTEXTFIELD);
+			integerField.setWidth(250, Unit.PIXELS);
 			hl.addComponent(integerField);
-			hl.addComponent(new Button(lang.getText("modifyCredit"), new CommitItemClick()));
+			Button modifyButton = new Button(lang.getText("modifyCredit"), new CommitItemClick());
+			styleButton(modifyButton);
+			hl.addComponent(modifyButton);
 			layout = new VerticalLayout(markLostButton, hl, cancelButton);
 		} else {
 			layout = new VerticalLayout(markLostButton, cancelButton);

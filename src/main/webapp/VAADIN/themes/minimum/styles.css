@@ -7057,6 +7057,12 @@ body .minimum.v-app .v-app-loading {
 	top: 1px;
 }
 
+.minimum input.minimumtextfield {
+	font-size: 20px;
+	height: 48px !important;
+	padding: 3px 3px 4px;
+}
+
 .minimum .minimumdatefield {
 	padding-right: 48px;
 }
