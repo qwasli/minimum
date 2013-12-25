@@ -1,18 +1,21 @@
 package ch.meemin.minimum;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.jpa.JpaHelper;
 import org.slf4j.Logger;
@@ -31,27 +34,66 @@ public class EclipseLinkBean {
 	@PersistenceContext
 	private EntityManager em;
 
-	@Resource(name = "minimum/basePath")
-	private String basePath;
+	private Properties props;
+	private String backupPath;
+	private Integer numberOfBackups;
+
+	private void checkProps() {
+		try {
+			props = InitialContext.doLookup("minimum/Properties");
+		} catch (Exception e1) {
+			LOG.warn("Problem geting properties", e1);
+		}
+
+		if (props != null) {
+			backupPath = props.getProperty("backupPath");
+			String nob = props.getProperty("numberOfBackups");
+			if (nob != null)
+				try {
+					numberOfBackups = Integer.parseInt(nob);
+				} catch (NumberFormatException e) {
+					numberOfBackups = null;
+				}
+			else
+				numberOfBackups = null;
+		} else
+			LOG.info("Props are not set");
+
+		if (StringUtils.isBlank(backupPath))
+			backupPath = ".";
+		try {
+			File bd = new File(backupPath);
+			if (!bd.exists())
+				bd.mkdirs();
+			File sample = new File(bd, "empty");
+			/*
+			 * Create and delete a dummy file in order to check file permissions. Maybe there is a safer way for this check.
+			 */
+			sample.createNewFile();
+			sample.delete();
+		} catch (IOException e) {
+			backupPath = ".";
+		}
+
+		if (numberOfBackups == null)
+			numberOfBackups = 60;
+	}
 
 	@Schedule(minute = "1", hour = "1,13")
 	public void backup() {
-		LOG.info("Starting Backup");
-		if (basePath == null) {
-			LOG.warn("BasePath ist not set, will backup to application directory");
-			basePath = ".";
-		}
-		File base = new File(basePath);
-		File f = new File(base, "dbbackup3.zip");
+		checkProps();
+		LOG.info("Starting Backup to: " + backupPath);
+		File base = new File(backupPath);
+		File f = new File(base, "dbbackup" + numberOfBackups + ".zip");
 		if (f.exists())
 			f.delete();
-		for (int i = 60; i >= 1; i--) {
+		for (int i = numberOfBackups; i >= 1; i--) {
 			f = new File(base, "dbbackup" + i + ".zip");
 			if (f.exists())
 				f.renameTo(new File(base, "dbbackup" + (i + 1) + ".zip"));
 		}
 		try {
-			this.em.createNativeQuery("BACKUP TO '" + basePath + "/dbbackup1.zip'").executeUpdate();
+			this.em.createNativeQuery("BACKUP TO '" + base.getAbsolutePath() + "/dbbackup1.zip'").executeUpdate();
 		} catch (Exception e) {
 			LOG.warn("Backup failed", e);
 		}
