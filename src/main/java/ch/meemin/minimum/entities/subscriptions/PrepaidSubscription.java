@@ -1,6 +1,8 @@
 package ch.meemin.minimum.entities.subscriptions;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import ch.meemin.minimum.entities.settings.PrepaidSubscriptions;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NamedQueries({ @NamedQuery(name = PrepaidSubscription.Q.CountValid, query = PrepaidSubscription.Q.CountValidQ) })
 public class PrepaidSubscription extends Subscription {
 
 	public PrepaidSubscription(Customer customer, PrepaidSubscriptions type) {
@@ -41,5 +44,12 @@ public class PrepaidSubscription extends Subscription {
 
 	@Override
 	public void suspend() {}
+
+	public class Q {
+
+		public static final String CountValid = "PrepaidSubscription.CountValid";
+		protected static final String CountValidQ = "SELECT s.typeName, COUNT(s) FROM PrepaidSubscription s WHERE s.typeName IS NOT NULL AND s.credit > 0 AND s.replacedBy IS NULL GROUP BY s.typeName";
+
+	}
 
 }

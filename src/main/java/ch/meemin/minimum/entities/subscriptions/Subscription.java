@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -35,6 +37,7 @@ import ch.meemin.minimum.lang.Lang;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@NamedQueries({ @NamedQuery(name = Subscription.Q.CountByTypName, query = Subscription.Q.CountByTypNameQ) })
 public abstract class Subscription extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -125,5 +128,11 @@ public abstract class Subscription extends AbstractEntity implements Serializabl
 			return typeName;
 		else
 			return lang.getText(this.getClass().getSimpleName());
+	}
+
+	public class Q {
+		public static final String CountByTypName = "Subscription.CountByTypName";
+		protected static final String CountByTypNameQ = "SELECT s.typeName, COUNT(s) FROM Subscription s WHERE s.typeName IS NOT NULL AND s.createdAt >= :from AND s.createdAt <= :to AND NOT EXISTS (SELECT ss FROM Subscription ss WHERE ss.replacedBy = s) GROUP BY s.typeName";
+
 	}
 }

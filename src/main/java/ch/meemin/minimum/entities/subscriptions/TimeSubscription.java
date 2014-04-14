@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,6 +20,7 @@ import ch.meemin.minimum.entities.settings.TimeSubscriptions;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NamedQueries({ @NamedQuery(name = TimeSubscription.Q.CountValid, query = TimeSubscription.Q.CountValidQ) })
 public class TimeSubscription extends Subscription {
 
 	@Getter
@@ -61,5 +64,14 @@ public class TimeSubscription extends Subscription {
 	@Override
 	public void reactivate() {
 		expiry = balance.calculateExpiry();
+	}
+
+	public class Q {
+		/**
+		 * @param date
+		 */
+		public static final String CountValid = "TimeSubscription.CountValid";
+		protected static final String CountValidQ = "SELECT s.typeName,  COUNT(s) FROM TimeSubscription s WHERE s.typeName IS NOT NULL AND s.createdAt <= :date AND s.expiry >= :date AND s.replacedBy IS NULL GROUP BY s.typeName";
+
 	}
 }
