@@ -26,6 +26,8 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -141,6 +143,11 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		ageLimits.add(al);
 		basicSettings.addComponent(al);
 		basicSettings.addComponent(createFlagField(settings, Flag.USE_NEWSLETTER));
+
+		Button backup = new Button(lang.get("DownloadBackup"));
+		FileDownloader fd = new FileDownloader(new StreamResource(new BackupStreamSource(), "backup.zip"));
+		fd.extend(backup);
+		basicSettings.addComponent(backup);
 
 		general = tabSheet.addTab(basicSettings, lang.getText("BasicSettings"));
 

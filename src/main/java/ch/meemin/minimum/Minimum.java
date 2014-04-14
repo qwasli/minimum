@@ -3,6 +3,7 @@ package ch.meemin.minimum;
 import java.util.Collection;
 import java.util.Locale;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import lombok.Getter;
@@ -80,6 +81,11 @@ public class Minimum extends UI implements ValueChangeListener {
 	@Getter
 	@Inject
 	private SettingsProvider settingsProvider;
+
+	@Getter
+	@Inject
+	private Instance<EclipseLinkBean> eclipseLinkBean;
+
 	@Getter
 	private JPAContainer<Customer> customerContainer;
 	@Getter

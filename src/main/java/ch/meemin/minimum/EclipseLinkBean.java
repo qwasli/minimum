@@ -1,6 +1,8 @@
 package ch.meemin.minimum;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,11 +95,30 @@ public class EclipseLinkBean {
 				f.renameTo(new File(base, "dbbackup" + (i + 1) + ".zip"));
 		}
 		try {
-			this.em.createNativeQuery("BACKUP TO '" + base.getAbsolutePath() + "/dbbackup1.zip'").executeUpdate();
+			String path = base.getAbsolutePath() + "/dbbackup1.zip";
+			backup(path);
 		} catch (Exception e) {
 			LOG.warn("Backup failed", e);
 		}
 
+	}
+
+	public void backup(String path) {
+		this.em.createNativeQuery("BACKUP TO " + "'" + path + "'").executeUpdate();
+	}
+
+	public FileInputStream createBackupStream() {
+		File base = new File(backupPath);
+		File f = new File(base, "dbbackup-tmp.zip");
+		if (f.exists())
+			f.delete();
+		backup(f.getAbsolutePath());
+		try {
+			return new FileInputStream(f);
+		} catch (FileNotFoundException e) {
+			LOG.warn("Problem with tmp backup", e);
+			return null;
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
