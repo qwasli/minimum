@@ -23,7 +23,11 @@ public class Lang implements Serializable {
 	private ResourceBundle resourceBundle = ResourceBundle.getBundle(Lang.class.getCanonicalName(), locale);
 
 	private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", DE_CH);
-	private final SimpleDateFormat sdfwt = new SimpleDateFormat("dd.MM.yyyy", DE_CH);
+	private final SimpleDateFormat sdfwt = new SimpleDateFormat("dd.MM.yyyy kk:mm", DE_CH);
+
+	public final String get(final String key) {
+		return getText(key);
+	}
 
 	public final String getText(final String key, final Object... params) {
 		String value;

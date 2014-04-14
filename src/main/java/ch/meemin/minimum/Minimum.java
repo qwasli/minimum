@@ -29,6 +29,7 @@ import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.provider.CustomerProvider;
 import ch.meemin.minimum.provider.SettingsProvider;
 import ch.meemin.minimum.provider.SubscriptionProvider;
+import ch.meemin.minimum.provider.VisitProvider;
 import ch.meemin.minimum.utils.Props;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
@@ -75,6 +76,9 @@ public class Minimum extends UI implements ValueChangeListener {
 	private SubscriptionProvider subscriptionProvider;
 	@Getter
 	@Inject
+	private VisitProvider visitProvider;
+	@Getter
+	@Inject
 	private SettingsProvider settingsProvider;
 	@Getter
 	private JPAContainer<Customer> customerContainer;
@@ -109,6 +113,10 @@ public class Minimum extends UI implements ValueChangeListener {
 	public void setLocale(Locale locale) {
 		super.setLocale(locale);
 		lang.setLocale(locale);
+	}
+
+	public static Minimum getCurrent() {
+		return (Minimum) UI.getCurrent();
 	}
 
 	@Override
