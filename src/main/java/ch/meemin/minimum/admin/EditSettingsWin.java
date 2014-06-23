@@ -169,8 +169,17 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		Field<?> cW = form.buildAndBind(null, "cardWidth");
 		cW.setWidth(30, Unit.PIXELS);
 		HorizontalLayout hxw = new HorizontalLayout(cH, new Label("x"), cW, new Label(lang.getText("HxWinMM")));
-		hxw.setSpacing(true);
-		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, bgField, hxw);
+		Field<?> cX = form.buildAndBind(null, "cardX");
+		cX.setWidth(30, Unit.PIXELS);
+		Field<?> cY = form.buildAndBind(null, "cardY");
+		cY.setWidth(30, Unit.PIXELS);
+		HorizontalLayout xy = new HorizontalLayout(cX, new Label("x"), cY, new Label(lang.getText("PosinMM")));
+		xy.setSpacing(true);
+
+		Field printBorder = createFlagField(settings, Flag.PRINTCARDBORDER);
+
+		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, bgField, hxw, xy, printBorder);
+
 		bgField.addValueChangeListener(new ValueChangeListener() {
 
 			@Override
