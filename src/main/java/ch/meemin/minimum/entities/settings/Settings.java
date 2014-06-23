@@ -36,7 +36,8 @@ public class Settings extends AbstractEntity {
 		DIRECTLOGIN(true),
 		SUBSCRIPTIONIDONCARD(true),
 		PHOTOONCARD(true),
-		REQUIREEMAIL(true);
+		REQUIREEMAIL(true),
+		PRINTCARDBORDER(true);
 
 		private Boolean defaultValue;
 
@@ -90,6 +91,13 @@ public class Settings extends AbstractEntity {
 	@Getter
 	@Setter
 	private Integer cardWidth = null;
+
+	@Getter
+	@Setter
+	private Integer cardX = null;
+	@Getter
+	@Setter
+	private Integer cardY = null;
 
 	public void setSeniorPrize(String seniorPrize) {
 		this.seniorPrize = StringUtils.trimToNull(seniorPrize);

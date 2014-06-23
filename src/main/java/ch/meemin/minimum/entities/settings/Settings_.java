@@ -8,7 +8,7 @@ import javax.persistence.metamodel.MapAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2014-04-05T13:45:27.336+0200")
+@Generated(value="Dali", date="2014-06-21T20:29:07.750+0200")
 @StaticMetamodel(Settings.class)
 public class Settings_ extends AbstractEntity_ {
 	public static volatile SingularAttribute<Settings, String> adminPassword;
@@ -28,4 +28,6 @@ public class Settings_ extends AbstractEntity_ {
 	public static volatile ListAttribute<Settings, TimeSubscriptions> timeSubscriptions;
 	public static volatile ListAttribute<Settings, PrepaidSubscriptions> prepaidSubscriptions;
 	public static volatile ListAttribute<Settings, SettingImage> images;
+	public static volatile SingularAttribute<Settings, Integer> cardX;
+	public static volatile SingularAttribute<Settings, Integer> cardY;
 }
