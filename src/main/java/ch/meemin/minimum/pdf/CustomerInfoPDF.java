@@ -77,18 +77,6 @@ public class CustomerInfoPDF {
 
 	public void writePDFProtocol(PipedOutputStream out) throws DocumentException, MalformedURLException, IOException {
 		Rectangle pageSize = PageSize.A4;
-		Integer cHmm = minimum.getSettings().getCardHeight();
-		Integer cWmm = minimum.getSettings().getCardWidth();
-		Float cHp, cWp;
-		if (cHmm == null || cHmm == 0)
-			cHp = PageSize.ID_1.getHeight();
-		else
-			cHp = Utilities.millimetersToPoints(cHmm);
-		if (cHmm == null || cWmm == 0)
-			cWp = PageSize.ID_1.getWidth();
-		else
-			cWp = Utilities.millimetersToPoints(cWmm);
-		Rectangle cardSize = new Rectangle(cWp, cHp);
 
 		Document document = new Document(pageSize, LEFT_M, RIGHT_M, TOP_M, BOTTOM_M);
 		PdfWriter pdfWriter = PdfWriter.getInstance(document, out);
@@ -117,7 +105,32 @@ public class CustomerInfoPDF {
 		addPhoto(document);
 
 		PdfContentByte cb = pdfWriter.getDirectContent();
-		addCard(cardSize, tF.getBaseFont(), cb);
+
+		Integer cHmm = minimum.getSettings().getCardHeight();
+		Integer cWmm = minimum.getSettings().getCardWidth();
+		Float cHp, cWp;
+		if (cHmm == null || cHmm == 0)
+			cHp = PageSize.ID_1.getHeight();
+		else
+			cHp = Utilities.millimetersToPoints(cHmm);
+		if (cHmm == null || cWmm == 0)
+			cWp = PageSize.ID_1.getWidth();
+		else
+			cWp = Utilities.millimetersToPoints(cWmm);
+		Rectangle cardSize = new Rectangle(cWp, cHp);
+
+		Integer cXmm = minimum.getSettings().getCardX();
+		Integer cYmm = minimum.getSettings().getCardY();
+		Float cX, cY;
+		if (cYmm == null || cXmm == 0)
+			cX = LEFT_M;
+		else
+			cX = Utilities.millimetersToPoints(cXmm);
+		if (cYmm == null || cYmm == 0)
+			cY = BOTTOM_M;
+		else
+			cY = Utilities.millimetersToPoints(cYmm);
+		addCard(cardSize, minimum.getSettings().is(Flag.PRINTCARDBORDER), cX, cY, tF.getBaseFont(), cb);
 
 		document.close();
 	}
@@ -179,39 +192,41 @@ public class CustomerInfoPDF {
 		}
 	}
 
-	private void addCard(Rectangle cardSize, BaseFont font, PdfContentByte cb) throws BadElementException,
-			MalformedURLException, IOException, DocumentException {
-		cb.setColorStroke(Color.BLACK);
-		cb.setLineWidth(Utilities.millimetersToPoints(0.3f));
+	private void addCard(Rectangle cardSize, boolean printBorder, Float cX, Float cY, BaseFont font, PdfContentByte cb)
+			throws BadElementException, MalformedURLException, IOException, DocumentException {
+		if (printBorder) {
+			cb.setColorStroke(Color.BLACK);
+			cb.setLineWidth(Utilities.millimetersToPoints(0.3f));
 
-		// Frontside
-		cb.roundRectangle(LEFT_M, BOTTOM_M, cardSize.getWidth(), cardSize.getHeight(), Utilities.millimetersToPoints(3));
-		cb.stroke();
-		// Backside
-		cb.roundRectangle(LEFT_M + cardSize.getWidth(), BOTTOM_M, cardSize.getWidth(), cardSize.getHeight(),
-				Utilities.millimetersToPoints(3));
-		cb.stroke();
-		// cb.saveState();
+			// Frontside
+			cb.roundRectangle(cX, cY, cardSize.getWidth(), cardSize.getHeight(), Utilities.millimetersToPoints(3));
+			cb.stroke();
+			// Backside
+			cb.roundRectangle(cX + cardSize.getWidth(), cY, cardSize.getWidth(), cardSize.getHeight(),
+					Utilities.millimetersToPoints(3));
+			cb.stroke();
+			// cb.saveState();
+		}
+
 		cb.beginText();
-
 		Float nameSize = 18f;
 		String name = customer.getName();
 		while (font.getWidthPoint(name, nameSize) > (cardSize.getWidth() - 15f))
 			nameSize -= 0.5f;
 		cb.setFontAndSize(font, nameSize);
 		float namePos = cardSize.getHeight() * 3 / 4;
-		cb.showTextAligned(0, name, LEFT_M + 15f, BOTTOM_M + namePos, 0);
+		cb.showTextAligned(0, name, cX + 15f, cY + namePos, 0);
 		cb.endText();
 
 		if (subscription instanceof TimeSubscription) {
 			cb.setFontAndSize(font, 12f);
 			cb.beginText();
-			cb.showTextAligned(0, lang.getText("expiry") + ":", LEFT_M + 15f, BOTTOM_M + namePos - 20f, 0);
+			cb.showTextAligned(0, lang.getText("expiry") + ":", cX + 15f, cY + namePos - 20f, 0);
 			cb.endText();
 			cb.setFontAndSize(font, 16f);
 			cb.beginText();
 			String t = lang.formatDate(((TimeSubscription) subscription).getExpiry());
-			cb.showTextAligned(0, t, LEFT_M + 15f, BOTTOM_M + namePos - 35f, 0);
+			cb.showTextAligned(0, t, cX + 15f, cY + namePos - 35f, 0);
 			cb.endText();
 		}
 
@@ -223,13 +238,13 @@ public class CustomerInfoPDF {
 			float wRel = maxW / photo.getWidth();
 			float fact = (hRel < wRel) ? hRel : wRel;
 			float w = fact * photo.getWidth();
-			cb.addImage(photo, w, 0f, 0f, fact * photo.getHeight(), LEFT_M + cardSize.getWidth() - w - 5f, BOTTOM_M + 2f);
+			cb.addImage(photo, w, 0f, 0f, fact * photo.getHeight(), cX + cardSize.getWidth() - w - 5f, cY + 2f);
 		}
 
-		addBarcode(cb, cardSize);
+		addBarcode(cb, cardSize, cX, cY);
 	}
 
-	private void addBarcode(PdfContentByte cb, Rectangle CardSize) throws DocumentException {
+	private void addBarcode(PdfContentByte cb, Rectangle cardSize, Float cardX, Float cardY) throws DocumentException {
 		BarcodeInter25 i25 = new BarcodeInter25();
 		String code = "";
 		if (minimum.getSettings().is(Flag.SUBSCRIPTIONIDONCARD))
@@ -240,15 +255,15 @@ public class CustomerInfoPDF {
 			code = "0" + code;
 		i25.setCode(code);
 		i25.setSize(14);
-		i25.setBarHeight(CardSize.getHeight() / 2 - 14f);
+		i25.setBarHeight(cardSize.getHeight() / 2 - 14f);
 		i25.setBaseline(18);
 		i25.setX(1);
 		// i25.setChecksumText(true);
 		// i25.setGenerateChecksum(true);
 		float w = i25.getBarcodeSize().getRight();
-		i25.setX(CardSize.getWidth() * 2 / 3 / w);
+		i25.setX(cardSize.getWidth() * 2 / 3 / w);
 		Image barcode = i25.createImageWithBarcode(cb, Color.BLACK, Color.BLACK);
-		barcode.setAbsolutePosition(LEFT_M + CardSize.getWidth() + 10f, BOTTOM_M + CardSize.getHeight() / 3);
+		barcode.setAbsolutePosition(cardX + cardSize.getWidth() + 10f, cardY + cardSize.getHeight() / 3);
 		cb.addImage(barcode);
 		cb.stroke();
 	}
