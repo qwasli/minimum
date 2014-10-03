@@ -1,62 +1,78 @@
 package ch.meemin.minimum.report;
 
+import javax.inject.Inject;
+
 import lombok.AllArgsConstructor;
 
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
-import ch.meemin.minimum.Minimum;
+import ch.meemin.minimum.CurrentSettings;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.provider.SubscriptionProvider;
 
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.ValoTheme;
 
-@AllArgsConstructor
-public class SubscriptionPopupContent implements PopupView.Content {
+public class SubscriptionPopupContent {
+	@Inject
 	private Lang lang;
-	private Subscription sub;
+	@Inject
+	private SubscriptionProvider subsProvider;
+	@Inject
+	private CurrentSettings currSet;
 
-	@Override
-	public String getMinimizedValueAsHTML() {
-		return lang.get("info");
+	public PopupView.Content get(Long id) {
+		return new Content(id);
 	}
 
-	@Override
-	public Component getPopupComponent() {
-		Minimum min = Minimum.getCurrent();
-		GridLayout gl = new GridLayout();
-		gl.setMargin(true);
-		gl.setSpacing(true);
-		gl.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
-		gl.setColumns(2);
+	@AllArgsConstructor
+	private class Content implements PopupView.Content {
+		private Long id;
 
-		gl.addComponent(createHeader(lang.get("SoldDate")));
-		gl.addComponent(new Label(lang.formatDate(sub.getCreatedAt(), true)));
-
-		Customer customer = sub.getCustomer();
-
-		gl.addComponent(createHeader(lang.get("Customer")));
-		gl.addComponent(new Label(customer.getName()));
-
-		if (min.getSettings().is(Flag.USE_BIRTHDAY) && customer.getBirthDate() != null) {
-			Years age = Years.yearsBetween(new DateTime(customer.getBirthDate()), new DateTime(sub.getCreatedAt()));
-			gl.addComponent(createHeader(lang.get("AgeAtSoldDate")));
-			gl.addComponent(new Label(new Label(lang.getText("NumYears", new Integer(age.getYears())))));
+		@Override
+		public String getMinimizedValueAsHTML() {
+			return lang.get("info");
 		}
 
-		return gl;
-	}
+		@Override
+		public Component getPopupComponent() {
+			Subscription sub = subsProvider.getSubscription(id);
+			FormLayout gl = new FormLayout();
+			gl.setStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+			gl.setMargin(true);
+			gl.setSpacing(true);
 
-	private Label createHeader(String text) {
-		Label header = new Label(text);
-		header.addStyleName(Reindeer.LABEL_H2);
-		return header;
+			Label l = new Label(lang.formatDate(sub.getCreatedAt(), true));
+			l.setCaption(lang.get("SoldDate"));
+			gl.addComponent(l);
+
+			Customer customer = sub.getCustomer();
+
+			l = new Label(customer.getName());
+			l.setCaption(lang.get("Customer"));
+			gl.addComponent(l);
+
+			if (currSet.getSettings().is(Flag.USE_BIRTHDAY) && customer.getBirthDate() != null) {
+				Years age = Years.yearsBetween(new DateTime(customer.getBirthDate()), new DateTime(sub.getCreatedAt()));
+				l = new Label(lang.getText("NumYears", new Integer(age.getYears())));
+				l.setCaption(lang.get("AgeAtSoldDate"));
+				gl.addComponent(l);
+			}
+
+			return gl;
+		}
+
+		private Label createHeader(String text) {
+			Label header = new Label(text);
+			header.addStyleName(ValoTheme.LABEL_H2);
+			return header;
+		}
 	}
 }

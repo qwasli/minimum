@@ -2,18 +2,19 @@ package ch.meemin.minimum.admin;
 
 import java.io.InputStream;
 
+import lombok.AllArgsConstructor;
 import ch.meemin.minimum.EclipseLinkBean;
-import ch.meemin.minimum.Minimum;
 
 import com.vaadin.server.StreamResource.StreamSource;
 
+@AllArgsConstructor
 public class BackupStreamSource implements StreamSource {
+
+	private EclipseLinkBean eclipseLinkBean;
 
 	@Override
 	public InputStream getStream() {
-		Minimum min = Minimum.getCurrent();
-		EclipseLinkBean elb = min.getEclipseLinkBean().get();
-		return elb.createBackupStream();
+		return eclipseLinkBean.createBackupStream();
 	}
 
 }

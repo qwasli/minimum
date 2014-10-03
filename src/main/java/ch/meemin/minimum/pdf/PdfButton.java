@@ -1,14 +1,12 @@
 package ch.meemin.minimum.pdf;
 
 import com.vaadin.server.FileDownloader;
-import com.vaadin.server.ThemeResource;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class PdfButton extends Button {
 	private static final long serialVersionUID = -2225636470702920255L;
-
-	private static ThemeResource PDFICON = new ThemeResource("icons/16/document-pdf.png");
 
 	public enum Style {
 		NORMAL,
@@ -18,20 +16,19 @@ public class PdfButton extends Button {
 
 	public PdfButton(FileDownloader fd) {
 		super();
-		setIcon(PDFICON);
-		setStyleName(Reindeer.BUTTON_SMALL);
+		setIcon(FontAwesome.FILE_PDF_O);
+		setStyleName(ValoTheme.BUTTON_SMALL);
 		fd.extend(this);
 	}
 
 	public PdfButton(FileDownloader fd, String caption, Style style) {
 		super(caption);
-		setIcon(PDFICON);
 		switch (style) {
 		case LINK:
-			setStyleName(Reindeer.BUTTON_LINK);
+			setStyleName(ValoTheme.BUTTON_LINK);
 			break;
 		case SMALL:
-			setStyleName(Reindeer.BUTTON_SMALL);
+			setStyleName(ValoTheme.BUTTON_SMALL);
 			break;
 		default:
 		}

@@ -3,9 +3,10 @@ package ch.meemin.minimum;
 import java.util.Collection;
 import java.util.Locale;
 
-import javax.enterprise.inject.Instance;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,20 +21,14 @@ import ch.meemin.minimum.customers.EditCustomerWin;
 import ch.meemin.minimum.customers.LoginInfo;
 import ch.meemin.minimum.customers.LoginInfo.Status;
 import ch.meemin.minimum.customers.ShowCustomer;
-import ch.meemin.minimum.customers.SubscriptionInfo;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.Visit;
-import ch.meemin.minimum.entities.settings.Settings;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.provider.CustomerProvider;
-import ch.meemin.minimum.provider.SettingsProvider;
 import ch.meemin.minimum.provider.SubscriptionProvider;
-import ch.meemin.minimum.provider.VisitProvider;
-import ch.meemin.minimum.utils.Props;
 
-import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
@@ -60,7 +55,7 @@ import com.vaadin.ui.Window.CloseListener;
  * The Application's "main" class
  */
 @SuppressWarnings("serial")
-@CDIUI
+@CDIUI("")
 @Theme("minimum")
 @Widgetset("ch.meemin.minimum.MinimumWidgetSet")
 public class Minimum extends UI implements ValueChangeListener {
@@ -69,46 +64,39 @@ public class Minimum extends UI implements ValueChangeListener {
 	@Getter
 	private Lang lang = new Lang();
 
-	@Getter
 	@Inject
 	private CustomerProvider customerProvider;
-	@Getter
 	@Inject
 	private SubscriptionProvider subscriptionProvider;
-	@Getter
-	@Inject
-	private VisitProvider visitProvider;
-	@Getter
-	@Inject
-	private SettingsProvider settingsProvider;
-
-	@Getter
-	@Inject
-	private Instance<EclipseLinkBean> eclipseLinkBean;
 
 	@Getter
 	private JPAContainer<Customer> customerContainer;
 	@Getter
 	private JPAContainer<Subscription> subscriptionContainer;
 
-	@Getter
-	private Settings settings;
-
-	@Getter
+	@Inject
 	private AllCustomers allCustomers;
-	@Getter
+
 	private TextField searchField;
-
 	private Button createCustomerButton;
-	@Getter
-	private ShowCustomer showCustomer;
-	@Getter
-	private SubscriptionInfo subscriptionInfo;
-	@Getter
-	private LoginInfo loginInfo;
 
-	@Getter
+	@Inject
+	private ShowCustomer showCustomer;
+	@Inject
 	private AdminBar adminBar;
+
+	@Inject
+	private EditCustomerWin editCustomerWin;
+
+	@Inject
+	private CurrentSettings currSet;
+
+	@Inject
+	private javax.enterprise.event.Event<SelectEvent> selectEvent;
+	@Inject
+	private javax.enterprise.event.Event<LoginSelectedEvent> loginEvent;
+	@Inject
+	private javax.enterprise.event.Event<LoggedInEvent> loggedInEvent;
 
 	private final VerticalLayout layout = new VerticalLayout();
 
@@ -135,7 +123,6 @@ public class Minimum extends UI implements ValueChangeListener {
 		subscriptionContainer = new JPAContainer<Subscription>(Subscription.class);
 		subscriptionContainer.setEntityProvider(subscriptionProvider);
 
-		loadSettings();
 		MyErrorHandler errorHandler = new MyErrorHandler();
 		setErrorHandler(errorHandler);
 		getSession().setErrorHandler(errorHandler);
@@ -158,22 +145,14 @@ public class Minimum extends UI implements ValueChangeListener {
 
 		HorizontalLayout hl = new HorizontalLayout();
 		hl.setWidth(100, Unit.PERCENTAGE);
-		allCustomers = new AllCustomers(this, customerContainer);
 		hl.addComponent(allCustomers);
 		hl.setExpandRatio(allCustomers, 1f);
 		createCustomerButton = new Button(lang.getText("CreateCustomer"), new CreateCustomer());
 		createCustomerButton.setHeight(120, Unit.PIXELS);
-		createCustomerButton.setWidth(120, Unit.PIXELS);
-		createCustomerButton.setPrimaryStyleName(Props.MINIMUMBUTTON);
 		hl.addComponent(createCustomerButton);
 		layout.addComponent(hl);
 
-		subscriptionInfo = new SubscriptionInfo(lang, this);
-		loginInfo = new LoginInfo(lang, this);
-		showCustomer = new ShowCustomer(lang, this, subscriptionInfo, loginInfo);
-
 		layout.addComponent(showCustomer);
-		adminBar = new AdminBar(lang);
 		layout.setExpandRatio(showCustomer, 1.0f);
 		layout.addComponent(adminBar);
 		searchField.focus();
@@ -199,95 +178,72 @@ public class Minimum extends UI implements ValueChangeListener {
 		}
 	}
 
-	public void loadSettings() {
-		settings = settingsProvider.getSettings();
-	}
+	public void login(@Observes LoginSelectedEvent event) {
 
-	public void login(EntityItem<Subscription> item, boolean ignoreTimeWarn) {
-		Subscription sub = item.getEntity();
-		Customer customer = sub.getCustomer();
+		Subscription sub = null;
+		Customer customer = null;
+		if (lastScanID == null)
+			return;
+		if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD)) {
+			sub = subscriptionProvider.getSubscription(lastScanID);
+			customer = sub.getCustomer();
+		} else {
+			customer = customerProvider.getCustomer(lastScanID);
+			sub = customer.getCurrentSubscription();
+		}
+
 		if (sub.valid()) {
-			int wM = settings.getMinutesForWarning();
+			int wM = currSet.getSettings().getMinutesForWarning();
 			Minutes warnMin = Minutes.minutes(wM);
 			Visit lastVisit = sub.getLastVisit();
 			Minutes minutesBetween = lastVisit != null ? Minutes.minutesBetween(new DateTime(lastVisit.getCreatedAt()),
 					new DateTime()) : null;
-			if (!ignoreTimeWarn && wM > 0 && minutesBetween != null && minutesBetween.isLessThan(warnMin)) {
-				loginInfo.showLoginAfterWarnButton(item);
-				loginInfo.show(Status.WARN, lang.getText("TimeWarn"), false);
+			if (!event.isIgnoreTimeWarn() && wM > 0 && minutesBetween != null && minutesBetween.isLessThan(warnMin)) {
+				loggedInEvent.fire(new LoggedInEvent(Status.WARN));
 			} else {
-				if (settings.is(Flag.SUBSCRIPTIONIDONCARD)) {
+				if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD)) {
 					sub.checkIn();
 					subscriptionProvider.updateEntity(sub);
 				} else {
-					customer.checkIn(settings.is(Flag.USE_BASIC_SUBSCRIPTION));
+					customer.checkIn(currSet.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION));
 					customerProvider.updateEntity(customer);
 				}
-				subscriptionInfo.refresh();
-				loginInfo.show(Status.OK, "", true);
+				loggedInEvent.fire(new LoggedInEvent(Status.OK));
 			}
 		} else {
-			loginInfo.show(Status.NOTOK, lang.getText("InvalidSubscription"), true);
+			loggedInEvent.fire(new LoggedInEvent(Status.NOTOK));
 		}
 	}
 
-	public void clear() {
-		showCustomer.clear();
-		subscriptionInfo.clear();
-	}
-
-	public void selectCustomer(Long id, boolean doNotLogin) {
-		loginInfo.clear();
-
-		if (!customerContainer.containsId(id)) {
-			Notification.show(lang.getText("CustomerNotFound"), "", Type.WARNING_MESSAGE);
+	public void select(@Observes SelectEvent event) {
+		if (event.isClear()) {
+			lastScanID = null;
 			return;
 		}
-		EntityItem<Customer> cItem = customerContainer.getItem(id);
-		showCustomer.setCustomer(cItem);
-		Long subId = cItem.getEntity().getCurrentSubscription().getId();
-		EntityItem<Subscription> item = subscriptionContainer.getItem(subId);
-		subscriptionInfo.setSubscription(item, cItem);
-		if (!doNotLogin && settings.is(Flag.DIRECTLOGIN))
-			login(item, false);
-		else
-			loginInfo.showLoginButton(item);
-	}
-
-	public void selectSubscription(Long id, boolean doNotLogin) {
-		if (!subscriptionContainer.containsId(id)) {
-			LOG.warn("ID not found: " + id);
-			Notification.show(lang.getText("SubscriptionNotFound"), "", Type.WARNING_MESSAGE);
-			loginInfo.clear();
-			return;
+		Long id = event.getId();
+		if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD)) {
+			if (!subscriptionContainer.containsId(id)) {
+				LOG.warn("ID not found: " + id);
+				lastScanID = null;
+				Notification.show(lang.getText("SubscriptionNotFound"), "", Type.WARNING_MESSAGE);
+				return;
+			}
+		} else {
+			if (!customerContainer.containsId(id)) {
+				LOG.warn("ID not found: " + id);
+				lastScanID = null;
+				Notification.show(lang.getText("CustomerNotFound"), "", Type.WARNING_MESSAGE);
+				return;
+			}
 		}
-		EntityItem<Subscription> sItem = subscriptionContainer.getItem(id);
-		Subscription sub = sItem.getEntity();
-		if (sub.isReplaced()) {
-			Notification.show(lang.getText("ReplacedSubscription"), "", Type.WARNING_MESSAGE);
-			loginInfo.show(Status.NOTOK, "", true);
-			return;
-		}
-		Customer c = sub.getCustomer();
-		// if (!c.getCurrentSubscription().equals(sub)) {
-		// Notification.show(lang.getText("NotCurrentSubscription"), "", Type.WARNING_MESSAGE);
-		// return;
-		// }
-		EntityItem<Customer> cItem = customerContainer.getItem(c.getId());
-		subscriptionInfo.setSubscription(sItem, cItem);
-		showCustomer.setCustomer(cItem);
-		if (!doNotLogin && settings.is(Flag.DIRECTLOGIN))
-			login(sItem, false);
-		else
-			loginInfo.showLoginButton(sItem);
+		lastScanID = id;
 	}
 
 	@Override
 	public void valueChange(ValueChangeEvent event) {
-		Minimum minimum = (Minimum) getUI();
 		String val = searchField.getValue();
 		if (StringUtils.isBlank(val)) {
-			minimum.getAllCustomers().clearFilter();
+			allCustomers.clearFilter();
 			return;
 		}
 		if (val.matches("[0-9]+"))
@@ -302,25 +258,46 @@ public class Minimum extends UI implements ValueChangeListener {
 					searchField.setValue(null);
 					return;
 				}
-				if (settings.is(Flag.SUBSCRIPTIONIDONCARD))
-					minimum.selectSubscription(id, false);
-				else
-					minimum.selectCustomer(id, false);
-				lastScanID = id;
+				selectEvent.fire(new SelectEvent(id));
+				if (currSet.getSettings().is(Flag.DIRECTLOGIN))
+					loginEvent.fire(new LoginSelectedEvent(false));
 				LastScanTime = System.currentTimeMillis();
 				searchField.setValue(null);
 			} catch (NumberFormatException e) {
-				minimum.getAllCustomers().setFilter(val);
+				allCustomers.setFilter(val);
 			}
 		else
-			minimum.getAllCustomers().setFilter(val);
+			allCustomers.setFilter(val);
 		searchField.selectAll();
 	}
 
-	private static class CreateCustomer implements ClickListener {
+	private class CreateCustomer implements ClickListener {
 		@Override
 		public void buttonClick(ClickEvent event) {
-			new EditCustomerWin(event.getButton().getUI(), null);
+			editCustomerWin.show(null);
 		}
 	}
+
+	@AllArgsConstructor
+	public static class SelectEvent {
+		@Getter
+		Long id;
+
+		public boolean isClear() {
+			return id == null;
+		}
+	}
+
+	@AllArgsConstructor
+	public static class LoginSelectedEvent {
+		@Getter
+		boolean ignoreTimeWarn;
+	}
+
+	@AllArgsConstructor
+	public static class LoggedInEvent {
+		@Getter
+		LoginInfo.Status status;
+	}
+
 }

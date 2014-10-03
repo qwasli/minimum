@@ -1,31 +1,44 @@
 package ch.meemin.minimum.admin;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.report.ReportWindow;
 
+import com.vaadin.cdi.UIScoped;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.themes.Reindeer;
 
+@UIScoped
 public class AdminBar extends CustomComponent {
 
-	private final HorizontalLayout layout = new HorizontalLayout();
+	private HorizontalLayout layout = new HorizontalLayout();
+	@Inject
+	private Lang lang;
+	@Inject
+	private Instance<EditSettingsWin> esw;
+	// @Inject
+	// private ValidatePasswordWindow pwWin;
+	@Inject
+	private Instance<ReportWindow> reports;
 
-	public AdminBar(Lang lang) {
+	@PostConstruct
+	public void init() {
 		setCompositionRoot(layout);
 		setWidth(100, Unit.PERCENTAGE);
 		layout.setWidth(100, Unit.PERCENTAGE);
-		layout.setStyleName(Reindeer.LAYOUT_BLACK);
 
 		Button reportsButton = new Button(lang.getText("Reports"), new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				new ReportWindow();
+				reports.get().show();
 			}
 		});
 
@@ -33,7 +46,8 @@ public class AdminBar extends CustomComponent {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				new EditSettingsWin(getUI());
+				esw.get().show();
+				// pwWin.show(esw.get());
 			}
 		});
 		Label spacer = new Label();

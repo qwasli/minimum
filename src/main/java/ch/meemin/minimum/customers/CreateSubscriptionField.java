@@ -21,9 +21,9 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
 
 class CreateSubscriptionField extends CustomField<Subscription> {
-	private final VerticalLayout layout = new VerticalLayout();
-	private final Customer customer;
-	private final NativeSelect typeSelect = new NativeSelect();
+	private VerticalLayout layout = new VerticalLayout();
+	private Customer customer;
+	private NativeSelect typeSelect = new NativeSelect();
 	private NativeSelect secondComponent;
 
 	public CreateSubscriptionField(Lang lang, Settings settings, Customer customer) {

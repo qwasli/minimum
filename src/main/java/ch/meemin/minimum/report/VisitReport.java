@@ -4,7 +4,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
-import org.vaadin.maddon.label.Header;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.Visit;
@@ -22,16 +23,21 @@ import com.vaadin.data.util.filter.Compare.LessOrEqual;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class VisitReport extends CustomComponent implements ValueChangeListener {
 
 	VerticalLayout layout = new VerticalLayout();
+	@Inject
 	VisitProvider visitProvider;
+	@Inject
+	SubscriptionPopupContent popupContent;
 	DateField from, to;
 	Filter fromFilter, toFilter;
 	JPAContainer<Visit> visitContainer;
@@ -39,7 +45,8 @@ public class VisitReport extends CustomComponent implements ValueChangeListener 
 	Table countTable = new Table();
 	private Lang lang;
 
-	public VisitReport() {
+	@PostConstruct
+	public void init() {
 		Minimum min = Minimum.getCurrent();
 		this.lang = min.getLang();
 
@@ -47,11 +54,12 @@ public class VisitReport extends CustomComponent implements ValueChangeListener 
 		setCaption(lang.get("Visits"));
 
 		visitContainer = new JPAContainer(Visit.class);
-		visitProvider = min.getVisitProvider();
 		visitContainer.setEntityProvider(visitProvider);
 		visitContainer.addNestedContainerProperty("subscription.typeName");
 
-		layout.addComponent(new Header(lang.get("DateRange")).setHeaderLevel(2));
+		Label label = new Label(lang.get("DateRange"));
+		label.setStyleName(ValoTheme.LABEL_H2);
+		layout.addComponent(label);
 
 		from = new DateField(lang.get("From"));
 		from.addValueChangeListener(this);
@@ -68,11 +76,13 @@ public class VisitReport extends CustomComponent implements ValueChangeListener 
 
 		countTable.addContainerProperty("name", String.class, null);
 		countTable.addContainerProperty("count", Long.class, 0);
+		countTable.setPageLength(8);
 		countTable.setColumnHeaders(lang.get("Subscription"), lang.get("count"));
 		hl.addComponent(countTable);
 		fillCountTable();
-
-		layout.addComponent(new Header(lang.get("Visits")).setHeaderLevel(2));
+		label = new Label(lang.get("Visits"));
+		label.setStyleName(ValoTheme.LABEL_H2);
+		layout.addComponent(label);
 		layout.addComponent(hl);
 		setCompositionRoot(layout);
 	}
@@ -84,13 +94,13 @@ public class VisitReport extends CustomComponent implements ValueChangeListener 
 		table.setSortContainerPropertyId("subscription.typeName");
 		table.setSortContainerPropertyId("createdAt");
 		table.setSortAscending(false);
+		table.setPageLength(8);
 
 		table.addGeneratedColumn("info", new ColumnGenerator() {
 			@Override
 			public Object generateCell(Table source, Object itemId, Object columnId) {
-				PopupView pop = new PopupView(new SubscriptionPopupContent(lang, (((EntityItem<Visit>) source.getItem(itemId))
-						.getEntity()).getSubscription()));
-				return pop;
+				return new PopupView(popupContent.get((((EntityItem<Visit>) source.getItem(itemId)).getEntity())
+						.getSubscription().getId()));
 			}
 		});
 

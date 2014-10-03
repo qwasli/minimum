@@ -5,24 +5,30 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+
 import org.vaadin.teemu.webcam.Webcam;
 import org.vaadin.teemu.webcam.Webcam.CaptureSucceededEvent;
 import org.vaadin.teemu.webcam.Webcam.CaptureSucceededListener;
 
+import ch.meemin.minimum.CurrentSettings;
+import ch.meemin.minimum.Minimum.SelectEvent;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.Photo;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
+import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.provider.SubscriptionProvider;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
+import com.vaadin.cdi.UIScoped;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
@@ -31,13 +37,22 @@ import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 
-public class PhotoComponent extends CustomComponent implements Receiver, SucceededListener, CaptureSucceededListener,
+@UIScoped
+public class PhotoComponent extends VerticalLayout implements Receiver, SucceededListener, CaptureSucceededListener,
 		ClickListener {
-	private static final Logger LOG = LoggerFactory.getLogger(PhotoComponent.class);
 
 	ByteArrayOutputStream os;
+	@Inject
+	private CurrentSettings currentSettings;
+	@Inject
+	private SubscriptionProvider subsProvider;
+
+	@Inject
+	private Containers containers;
 
 	EntityItem<Customer> customerItem;
+
+	@Inject
 	Lang lang;
 	Photo photo;
 
@@ -46,15 +61,14 @@ public class PhotoComponent extends CustomComponent implements Receiver, Succeed
 	Upload upload;
 	Button replacePhoto = new Button(null, this);
 
-	VerticalLayout layout = new VerticalLayout();
-
-	public PhotoComponent(Lang lang) {
-		this.lang = lang;
+	@PostConstruct
+	public void init() {
 		setSizeUndefined();
-		layout.setSizeUndefined();
-		layout.setHeight(100, Unit.PERCENTAGE);
-		layout.setMargin(new MarginInfo(false, false, false, true));
-		layout.setSpacing(false);
+		setSizeUndefined();
+		setHeight(100, Unit.PERCENTAGE);
+		setMargin(false);
+		setSpacing(false);
+		setStyleName("photocomp");
 
 		webcam = new Webcam();
 		webcam.setHeight(100, Unit.PERCENTAGE);
@@ -64,44 +78,58 @@ public class PhotoComponent extends CustomComponent implements Receiver, Succeed
 		upload = new Upload(null, this);
 		upload.addSucceededListener(this);
 
-		setCompositionRoot(layout);
 	}
 
 	private void addImage(Image image) {
 		if (this.image != null)
-			layout.removeComponent(this.image);
-		layout.removeComponent(webcam);
+			removeComponent(this.image);
+		removeComponent(webcam);
 		this.image = image;
-		this.image.setHeight(100, Unit.PERCENTAGE);
-		layout.addComponentAsFirst(image);
-		layout.setExpandRatio(this.image, 1f);
+		this.image.setSizeUndefined();
+		this.image.addStyleName("photo");
+		addComponentAsFirst(image);
+		setExpandRatio(this.image, 1f);
 		replacePhoto.setCaption(lang.getText("replacePhoto"));
 	}
 
 	private void addWebcam() {
 		if (this.image != null)
-			layout.removeComponent(this.image);
-		layout.addComponentAsFirst(webcam);
+			removeComponent(this.image);
+		addComponentAsFirst(webcam);
 		replacePhoto.setCaption(lang.getText("Cancel"));
 	}
 
 	public void clear() {
 		this.customerItem = null;
-		this.layout.removeAllComponents();
+		this.removeAllComponents();
 	}
 
-	public void setCustomer(EntityItem<Customer> customerItem) {
-		this.customerItem = customerItem;
-		Customer customer = customerItem.getEntity();
-		layout.removeAllComponents();
-		Image image = customer.getImage();
+	public void setCustomer(@Observes SelectEvent event) {
+		if (event.isClear()) {
+			clear();
+			return;
+		}
+		Long id = event.getId();
+		if (currentSettings.getSettings().is(Flag.SUBSCRIPTIONIDONCARD)) {
+			Subscription sub = subsProvider.getSubscription(id);
+			if (sub == null) {
+				clear();
+				return;
+			} else
+				id = sub.getCustomer().getId();
+		}
+
+		removeAllComponents();
+
+		customerItem = containers.getCustContainer().getItem(id);
+		Image image = customerItem.getEntity().getImage();
 		if (image != null) {
 			addImage(image);
 		} else {
 			Notification.show(lang.getText("NoPhotoWarning"), Notification.Type.WARNING_MESSAGE);
 			addWebcam();
 		}
-		layout.addComponent(replacePhoto);
+		addComponent(replacePhoto);
 	}
 
 	@Override
@@ -140,7 +168,7 @@ public class PhotoComponent extends CustomComponent implements Receiver, Succeed
 
 	@Override
 	public void buttonClick(ClickEvent event) {
-		if (layout.getComponent(0).equals(webcam)) {
+		if (getComponent(0).equals(webcam)) {
 			Customer customer = customerItem.getEntity();
 			if (customer.getImage() != null)
 				addImage(customer.getImage());

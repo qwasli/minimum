@@ -4,10 +4,17 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-import ch.meemin.minimum.Minimum;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+
+import ch.meemin.minimum.CurrentSettings;
+import ch.meemin.minimum.EclipseLinkBean;
 import ch.meemin.minimum.entities.settings.Settings;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.provider.SettingsProvider;
 import ch.meemin.minimum.utils.CommitClickListener;
 import ch.meemin.minimum.utils.DiscardClickListener;
 import ch.meemin.minimum.utils.EntityFieldGroup;
@@ -16,6 +23,7 @@ import ch.meemin.minimum.utils.FormLayout;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.EntityItemProperty;
 import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.cdi.UIScoped;
 import com.vaadin.data.Buffered.SourceException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -36,6 +44,8 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
@@ -46,21 +56,32 @@ import com.vaadin.ui.Window;
  * This is the window used to add new contacts to the 'address book'. It does not do proper validation - you can add
  * weird stuff.
  */
+@UIScoped
 public class EditSettingsWin extends Window implements ValueChangeListener {
-	private static final long serialVersionUID = 1L;
-	private final JPAContainer<Settings> container;
-	private final Lang lang;
+
+	@Inject
+	private CurrentSettings currentSettings;
+	@Inject
+	private SettingsProvider settingsProvider;
+	@Inject
+	private EclipseLinkBean eclipseLinkBean;
+	@Inject
+	private ValidatePasswordWindow pwWin;
+	@Inject
+	private Lang lang;
+
+	private JPAContainer<Settings> container;
 	private Field<String> studentAgeLimit;
 	private List<Field<?>> ageLimits = new ArrayList<Field<?>>();
 	private Tab general, basic, pdf, time, prepaid;
-	private final Button okButton;
+	private Button okButton;
 	private EditTimeSubscriptionsField tsField;
 	private EditPrepaidSubscriptionsField psField;
 	private Settings settings;
 
 	private EnumMap<Flag, CheckBox> flagFields = new EnumMap<Settings.Flag, CheckBox>(Flag.class);
 
-	private final FieldGroup form = new EntityFieldGroup<Settings>(Settings.class) {
+	private FieldGroup form = new EntityFieldGroup<Settings>(Settings.class) {
 		private static final long serialVersionUID = -1026191871445717584L;
 
 		@Override
@@ -72,7 +93,7 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 			f.setValue(f.getValue()); // This set flags as changed
 			Settings c = item.getEntity();
 			container.commit();
-			((Minimum) getUI()).loadSettings();
+			currentSettings.loadSettings();
 			close();
 		}
 
@@ -83,14 +104,12 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		};
 	};
 
-	public EditSettingsWin(UI ui) {
-		super();
+	@PostConstruct
+	public void init() {
 
 		setModal(true);
-		Minimum minimum = (Minimum) ui;
-		this.lang = minimum.getLang();
 		container = new JPAContainer<Settings>(Settings.class);
-		container.setEntityProvider(minimum.getSettingsProvider());
+		container.setEntityProvider(settingsProvider);
 		setSizeUndefined();
 		VerticalLayout vLayout = new VerticalLayout();
 		vLayout.setSizeUndefined();
@@ -98,6 +117,13 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		tabSheet.setWidth(100, Unit.PERCENTAGE);
 		vLayout.addComponent(tabSheet);
 		vLayout.setExpandRatio(tabSheet, 1f);
+		tabSheet.addSelectedTabChangeListener(new SelectedTabChangeListener() {
+
+			@Override
+			public void selectedTabChange(SelectedTabChangeEvent event) {
+				center();
+			}
+		});
 
 		HorizontalLayout footer = new HorizontalLayout();
 		footer.setWidth(100, Unit.PERCENTAGE);
@@ -110,8 +136,9 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		vLayout.addComponent(footer);
 
 		FormLayout basicSettings = new FormLayout();
+		basicSettings.setSpacing(false);
 		basicSettings.setSizeUndefined();
-		basicSettings.setDescription(lang.getText("SettingsDescription"));
+		// basicSettings.setDescription(lang.getText("SettingsDescription"));
 		form.setFieldFactory(new FieldFactory());
 		EntityItem<Settings> item = container.getItem(1L);
 		form.setItemDataSource(item);
@@ -126,8 +153,8 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		basicSettings.addComponent(form.buildAndBind(lang.getText("minutesForWarning"), "minutesForWarning"));
 
 		basicSettings.addComponent(createFlagField(settings, Flag.SUBSCRIPTIONIDONCARD));
-		basicSettings.addComponent(createFlagField(settings, Flag.USE_STUDENT));
 		basicSettings.addComponent(createFlagField(settings, Flag.REQUIREEMAIL));
+		basicSettings.addComponent(createFlagField(settings, Flag.USE_STUDENT));
 		studentAgeLimit = (Field<String>) form.buildAndBind(lang.getText("studentAgeLimit"), "studentAgeLimit");
 		studentAgeLimit.addValueChangeListener(this);
 		basicSettings.addComponent(studentAgeLimit);
@@ -145,7 +172,7 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		basicSettings.addComponent(createFlagField(settings, Flag.USE_NEWSLETTER));
 
 		Button backup = new Button(lang.get("DownloadBackup"));
-		FileDownloader fd = new FileDownloader(new StreamResource(new BackupStreamSource(), "backup.zip"));
+		FileDownloader fd = new FileDownloader(new StreamResource(new BackupStreamSource(eclipseLinkBean), "backup.zip"));
 		fd.extend(backup);
 		basicSettings.addComponent(backup);
 
@@ -165,20 +192,22 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 		BackgroundsField bgField = form.buildAndBind(lang.getText("Backgrounds"), "images", BackgroundsField.class);
 
 		Field<?> cH = form.buildAndBind(null, "cardHeight");
-		cH.setWidth(30, Unit.PIXELS);
+		cH.setWidth(60, Unit.PIXELS);
 		Field<?> cW = form.buildAndBind(null, "cardWidth");
-		cW.setWidth(30, Unit.PIXELS);
+		cW.setWidth(60, Unit.PIXELS);
 		HorizontalLayout hxw = new HorizontalLayout(cH, new Label("x"), cW, new Label(lang.getText("HxWinMM")));
+		hxw.setSpacing(true);
 		Field<?> cX = form.buildAndBind(null, "cardX");
-		cX.setWidth(30, Unit.PIXELS);
+		cX.setWidth(60, Unit.PIXELS);
 		Field<?> cY = form.buildAndBind(null, "cardY");
-		cY.setWidth(30, Unit.PIXELS);
+		cY.setWidth(60, Unit.PIXELS);
 		HorizontalLayout xy = new HorizontalLayout(cX, new Label("x"), cY, new Label(lang.getText("PosinMM")));
 		xy.setSpacing(true);
 
 		Field printBorder = createFlagField(settings, Flag.PRINTCARDBORDER);
 
 		VerticalLayout hl = new VerticalLayout(showPhotoOnCard, bgField, hxw, xy, printBorder);
+		hl.setMargin(true);
 
 		bgField.addValueChangeListener(new ValueChangeListener() {
 
@@ -201,7 +230,14 @@ public class EditSettingsWin extends Window implements ValueChangeListener {
 
 		setContent(vLayout);
 		valueChange(null);
-		new ValidatePasswordWindow(minimum, this);
+	}
+
+	public void show() {
+		center();
+		if (StringUtils.isBlank(currentSettings.getSettings().getAdminPassword()))
+			UI.getCurrent().addWindow(this);
+		else
+			pwWin.show(this);
 	}
 
 	private CheckBox createFlagField(Settings settings, Flag flag) {

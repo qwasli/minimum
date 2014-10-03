@@ -1,103 +1,134 @@
 package ch.meemin.minimum.customers;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 
-import ch.meemin.minimum.Minimum;
+import ch.meemin.minimum.CurrentSettings;
+import ch.meemin.minimum.Minimum.LoggedInEvent;
+import ch.meemin.minimum.Minimum.LoginSelectedEvent;
+import ch.meemin.minimum.Minimum.SelectEvent;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.BasicSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.provider.SubscriptionProvider;
 import ch.meemin.minimum.utils.Props;
 
-import com.vaadin.addon.jpacontainer.EntityItem;
-import com.vaadin.server.ThemeResource;
+import com.vaadin.cdi.UIScoped;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 
-public class LoginInfo extends CustomComponent implements ClickListener {
-	HorizontalLayout hl = new HorizontalLayout();
-
+@UIScoped
+public class LoginInfo extends CssLayout {
 	public enum Status {
-		OK(new ThemeResource("icons/128/ok2.png")),
-		WARN(new ThemeResource("icons/128/warn2.png")),
-		NOTOK(new ThemeResource("icons/128/notOK2.png"));
-		ThemeResource ir;
+		OK("ok"),
+		WARN("warn"),
+		NOTOK("notok");
+		String style;
 
-		Status(ThemeResource ir) {
-			this.ir = ir;
+		Status(String style) {
+			this.style = style;
+		}
+
+		CustomComponent get() {
+			CustomComponent cc = new CustomComponent();
+			cc.setStyleName(style);
+			cc.addStyleName("statusicon");
+			return cc;
 		}
 	}
 
-	private final Minimum minimum;
-	private final Lang lang;
-	private EnumMap<Status, Image> images = new EnumMap<LoginInfo.Status, Image>(Status.class);
+	@Inject
+	private Lang lang;
+	@Inject
+	private CurrentSettings currentSettings;
+	@Inject
+	private SubscriptionProvider subsProvider;
 
-	private EntityItem<Subscription> item;
-	private boolean ignoreWarn;
+	@Inject
+	private javax.enterprise.event.Event<LoginSelectedEvent> loginEvent;
 
-	public LoginInfo(Lang lang, Minimum minimum) {
-		this.lang = lang;
-		this.minimum = minimum;
-		hl.setSizeFull();
-		setCompositionRoot(hl);
-		for (Status st : EnumSet.allOf(Status.class))
-			images.put(st, new Image("", st.ir));
+	private Button logginB, logInAnywayB;
+
+	private Label timeWarnLabel;
+
+	private Label invalidLabel;
+
+	@PostConstruct
+	public void init() {
+		setSizeFull();
+		// setHeight(50, Unit.PIXELS);
+		// setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
+		logInAnywayB = new Button(lang.getText("LogInAnyway"), new ForceLogin());
+		logInAnywayB.addStyleName(Props.MINIMUMBUTTON);
+		logInAnywayB.setWidth(100, Unit.PERCENTAGE);
+		logginB = new Button(lang.getText("LogIn"), new Login());
+		logginB.addStyleName(Props.MINIMUMBUTTON);
+		logginB.setWidth(100, Unit.PERCENTAGE);
+
+		timeWarnLabel = new Label(lang.getText("TimeWarn"));
+		invalidLabel = new Label(lang.getText("InvalidSubscription"));
+		addStyleName("logininfo");
+
 	}
 
-	public void show(Status status, String info, boolean clear) {
-		if (clear)
-			hl.removeAllComponents();
-		hl.addComponent(images.get(status));
-		Label l = new Label(info);
-		l.setStyleName("smileyinfo");
-		hl.addComponent(l);
-		hl.setExpandRatio(l, 1.0f);
-	}
+	public void selected(@Observes SelectEvent event) {
+		removeAllComponents();
+		if (event.isClear())
+			return;
+		Subscription sub = subsProvider.getBySetting(event.getId(),
+				currentSettings.getSettings().is(Flag.SUBSCRIPTIONIDONCARD));
 
-	public void clear() {
-		hl.removeAllComponents();
-	}
+		if (sub == null)
+			return;
 
-	public void showLoginAfterWarnButton(EntityItem<Subscription> item) {
-		this.item = item;
-		hl.removeAllComponents();
-		this.ignoreWarn = true;
-		Button b = new Button(lang.getText("LogInAnyway"), this);
-		b.setPrimaryStyleName(Props.MINIMUMBUTTON);
-		b.setWidth(100, Unit.PIXELS);
-		b.setHeight(70, Unit.PIXELS);
-		hl.addComponent(b);
-	}
-
-	public void showLoginButton(EntityItem<Subscription> item) {
-		this.ignoreWarn = false;
-		hl.removeAllComponents();
-		this.item = item;
-		Subscription sub = item.getEntity();
-		Button b = new Button(null, this);
-		b.setVisible(true);
-		b.setPrimaryStyleName(Props.MINIMUMBUTTON);
-		b.setWidth(200, Unit.PIXELS);
-		b.setHeight(70, Unit.PIXELS);
+		addComponent(logginB);
 		if (sub.valid())
-			b.setCaption(lang.getText("LogIn"));
-		else if (sub instanceof BasicSubscription && minimum.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION))
-			b.setCaption(lang.getText("HasPayd", minimum.getSettings().getNormalPrize()));
-		else
-			b.setVisible(false);
-		hl.addComponent(b);
+			logginB.setCaption(lang.getText("LogIn"));
+		else if (sub instanceof BasicSubscription && currentSettings.getSettings().is(Flag.USE_BASIC_SUBSCRIPTION))
+			logginB.setCaption(lang.getText("HasPayd", currentSettings.getSettings().getNormalPrize()));
+		else {
+			removeComponent(logginB);
+			if (sub.isReplaced()) {
+				Notification.show(lang.getText("ReplacedSubscription"), "", Type.WARNING_MESSAGE);
+				addComponent(Status.NOTOK.get());
+			}
+		}
+	}
+
+	public void selected(@Observes LoggedInEvent event) {
+		removeAllComponents();
+		addComponent(event.getStatus().get());
+		switch (event.getStatus()) {
+		case NOTOK:
+			addComponent(invalidLabel);
+			break;
+		case WARN:
+			addComponent(timeWarnLabel);
+			addComponent(logInAnywayB);
+			break;
+		}
 
 	}
 
-	@Override
-	public void buttonClick(ClickEvent event) {
-		item.refresh();
-		minimum.login(item, ignoreWarn);
+	private class Login implements ClickListener {
+		@Override
+		public void buttonClick(ClickEvent event) {
+			loginEvent.fire(new LoginSelectedEvent(false));
+		}
+	}
+
+	private class ForceLogin implements ClickListener {
+		@Override
+		public void buttonClick(ClickEvent event) {
+			loginEvent.fire(new LoginSelectedEvent(true));
+		}
 	}
 }

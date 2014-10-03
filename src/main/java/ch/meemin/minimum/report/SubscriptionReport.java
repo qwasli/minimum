@@ -2,35 +2,37 @@ package ch.meemin.minimum.report;
 
 import java.util.Map;
 
-import org.vaadin.maddon.label.Header;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.provider.SubscriptionProvider;
 
 import com.vaadin.data.Item;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class SubscriptionReport extends CustomComponent {
 
 	VerticalLayout layout = new VerticalLayout();
+	@Inject
 	SubscriptionProvider subsProvider;
 
+	@Inject
 	private Lang lang;
 
-	public SubscriptionReport() {
-		Minimum min = Minimum.getCurrent();
-		this.lang = min.getLang();
-
-		subsProvider = min.getSubscriptionProvider();
-
+	@PostConstruct
+	public void init() {
 		setSizeUndefined();
 		setCaption(lang.get("Subscriptions"));
-		layout.addComponent(new Header(lang.get("ValidSubscriptions")).setHeaderLevel(3));
+		Label label = new Label(lang.get("ValidSubscriptions"));
+		label.setStyleName(ValoTheme.LABEL_H2);
+		layout.addComponent(label);
 		HorizontalLayout hl = new HorizontalLayout();
 		addTimeSubTable(hl);
 		addPrepaidSubTable(hl);
@@ -43,6 +45,7 @@ public class SubscriptionReport extends CustomComponent {
 		countTable.addContainerProperty("name", String.class, null);
 		countTable.addContainerProperty("count", Long.class, 0);
 		countTable.setColumnHeaders(lang.get("Subscription"), lang.get("count"));
+		countTable.setPageLength(8);
 		Map<String, Long> counts = subsProvider.countValidTimesubscriptions();
 		for (Map.Entry<String, Long> ent : counts.entrySet()) {
 			Item i = countTable.addItem(ent.getKey());
@@ -57,6 +60,7 @@ public class SubscriptionReport extends CustomComponent {
 		countTable.addContainerProperty("name", String.class, null);
 		countTable.addContainerProperty("count", Long.class, 0);
 		countTable.setColumnHeaders(lang.get("Subscription"), lang.get("count"));
+		countTable.setPageLength(8);
 		Map<String, Long> counts = subsProvider.countValidPrepaidSubscriptions();
 		for (Map.Entry<String, Long> ent : counts.entrySet()) {
 			Item i = countTable.addItem(ent.getKey());

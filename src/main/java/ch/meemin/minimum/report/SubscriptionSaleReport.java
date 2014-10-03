@@ -5,21 +5,19 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.vaadin.maddon.label.Header;
-
 import ch.meemin.minimum.Minimum;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
-import ch.meemin.minimum.entities.subscriptions.Subscription_;
 import ch.meemin.minimum.lang.Lang;
 import ch.meemin.minimum.provider.SubscriptionProvider;
 
-import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.util.DefaultQueryModifierDelegate;
 import com.vaadin.data.Container.Filter;
@@ -33,16 +31,21 @@ import com.vaadin.data.util.filter.Not;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class SubscriptionSaleReport extends CustomComponent implements ValueChangeListener {
 
 	VerticalLayout layout = new VerticalLayout();
+	@Inject
 	SubscriptionProvider subsProvider;
+	@Inject
+	SubscriptionPopupContent popupContent;
 	JPAContainer<Subscription> soldContainer;
 	DateField from, to;
 	Filter fromFilter, toFilter;
@@ -50,18 +53,20 @@ public class SubscriptionSaleReport extends CustomComponent implements ValueChan
 	Table countTable = new Table();
 	private Lang lang;
 
-	public SubscriptionSaleReport() {
+	@PostConstruct
+	public void init() {
 		Minimum min = Minimum.getCurrent();
 		this.lang = min.getLang();
 
 		soldContainer = new JPAContainer(Subscription.class);
-		subsProvider = min.getSubscriptionProvider();
 		soldContainer.setEntityProvider(subsProvider);
 
 		setSizeUndefined();
 		setCaption(lang.get("Sales"));
 
-		layout.addComponent(new Header(lang.get("DateRange")).setHeaderLevel(2));
+		Label label = new Label(lang.get("DateRange"));
+		label.setStyleName(ValoTheme.LABEL_H2);
+		layout.addComponent(label);
 
 		from = new DateField(lang.get("From"));
 		from.addValueChangeListener(this);
@@ -79,10 +84,12 @@ public class SubscriptionSaleReport extends CustomComponent implements ValueChan
 		countTable.addContainerProperty("name", String.class, null);
 		countTable.addContainerProperty("count", Long.class, 0);
 		countTable.setColumnHeaders(lang.get("Subscription"), lang.get("count"));
+		countTable.setPageLength(8);
 		hl.addComponent(countTable);
 		fillCountTable();
-
-		layout.addComponent(new Header(lang.get("SoldSubscriptions")).setHeaderLevel(2));
+		label = new Label(lang.get("SoldSubscriptions"));
+		label.setStyleName(ValoTheme.LABEL_H2);
+		layout.addComponent(label);
 		layout.addComponent(hl);
 		setCompositionRoot(layout);
 	}
@@ -98,7 +105,7 @@ public class SubscriptionSaleReport extends CustomComponent implements ValueChan
 				Subquery<Subscription> subquery = query.subquery(Subscription.class);
 				subquery.distinct(true);
 				Root<Subscription> subRootEntity = subquery.from(Subscription.class);
-				subquery.where(criteriaBuilder.equal(subRootEntity.get(Subscription_.replacedBy), subRoot));
+				subquery.where(criteriaBuilder.equal(subRootEntity.get("replacedBy"), subRoot));
 				predicates.add(criteriaBuilder.not(criteriaBuilder.exists(subquery)));
 			}
 		});
@@ -108,13 +115,12 @@ public class SubscriptionSaleReport extends CustomComponent implements ValueChan
 		table.setVisibleColumns("typeName", "createdAt");
 		table.setSortContainerPropertyId("createdAt");
 		table.setSortAscending(false);
+		table.setPageLength(8);
 
 		table.addGeneratedColumn("info", new ColumnGenerator() {
 			@Override
 			public Object generateCell(Table source, Object itemId, Object columnId) {
-				PopupView pop = new PopupView(new SubscriptionPopupContent(lang, ((EntityItem<Subscription>) source
-						.getItem(itemId)).getEntity()));
-				return pop;
+				return new PopupView(popupContent.get((Long) itemId));
 			}
 		});
 

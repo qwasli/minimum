@@ -1,15 +1,20 @@
 package ch.meemin.minimum.customers;
 
-import ch.meemin.minimum.Minimum;
+import javax.inject.Inject;
+
+import ch.meemin.minimum.CurrentSettings;
+import ch.meemin.minimum.Minimum.SelectEvent;
 import ch.meemin.minimum.admin.ValidatePasswordWindow;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
 import ch.meemin.minimum.entities.subscriptions.PrepaidSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.entities.subscriptions.TimeSubscription;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.provider.SubscriptionProvider;
 import ch.meemin.minimum.utils.Props;
 
-import com.vaadin.addon.jpacontainer.EntityItem;
-import com.vaadin.addon.jpacontainer.EntityItemProperty;
+import com.vaadin.cdi.UIScoped;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -24,25 +29,33 @@ import com.vaadin.ui.Window;
  * This is the window used to add new contacts to the 'address book'. It does not do proper validation - you can add
  * weird stuff.
  */
+@UIScoped
 public class EditSubscriptionWin extends Window {
 	private static final long serialVersionUID = 1L;
 
-	private final Minimum minimum;
-	private final Lang lang;
-	private final Button markLostButton;
-	private final Button cancelButton;
+	@Inject
+	private Lang lang;
+	@Inject
+	private ValidatePasswordWindow pwWin;
+	@Inject
+	private SubscriptionProvider subProvider;
+	@Inject
+	private CurrentSettings currSet;
+	@Inject
+	private javax.enterprise.event.Event<SelectEvent> selectEvent;
+
+	private Button markLostButton;
+	private Button cancelButton;
 	private Button suspendButton;
 	private DateField dateField;
 	private TextField integerField;
 
-	private EntityItem<Subscription> subItem;
+	private Long id;
 
-	public EditSubscriptionWin(Minimum minimum, EntityItem<Subscription> subItem) {
-		super(minimum.getLang().getText("EditSub"));
-		this.minimum = minimum;
-		this.lang = minimum.getLang();
-		this.subItem = subItem;
-		this.subItem.refresh();
+	public void show(Long subId) {
+		this.id = subId;
+		Subscription s = subProvider.getSubscription(subId);
+		setCaption(lang.getText("EditSub"));
 		setModal(true);
 		setSizeUndefined();
 		cancelButton = new Button(lang.getText("Cancel"), new CancelClick());
@@ -51,32 +64,31 @@ public class EditSubscriptionWin extends Window {
 		markLostButton = new Button(lang.getText("MarkLost"), new MarkLostClick());
 		styleButton(markLostButton);
 		VerticalLayout layout;
-		if (subItem.getEntity() instanceof TimeSubscription) {
+		if (s instanceof TimeSubscription) {
 			integerField = null;
-			TimeSubscription sub = (TimeSubscription) subItem.getEntity();
+			TimeSubscription sub = (TimeSubscription) s;
 			suspendButton = new Button(lang.getText(sub.isSuspended() ? "Reactivate" : "Suspend"), new SuspendClick());
 			styleButton(suspendButton);
 			layout = new VerticalLayout(suspendButton, markLostButton, cancelButton);
 			if (!sub.isSuspended()) {
 				VerticalLayout hl = new VerticalLayout();
-				EntityItemProperty expiry = subItem.getItemProperty("expiry");
-				dateField = new DateField(expiry);
+				dateField = new DateField();
+				dateField.setValue(sub.getExpiry());
 				dateField.setStyleName(Props.MINIMUMDATEFIELD);
 				dateField.setWidth(250, Unit.PIXELS);
 				hl.addComponent(dateField);
-				Button mEButton = new Button(lang.getText("modifyExpiry"), new CommitItemClick());
+				Button mEButton = new Button(lang.getText("modifyExpiry"), new ModifyExpiry());
 				styleButton(mEButton);
 				hl.addComponent(mEButton);
 				layout.addComponent(hl, 1);
 			}
-		} else if (subItem.getEntity() instanceof PrepaidSubscription) {
+		} else if (s instanceof PrepaidSubscription) {
 			VerticalLayout hl = new VerticalLayout();
-			EntityItemProperty credit = subItem.getItemProperty("credit");
-			integerField = new TextField(credit);
+			integerField = new TextField(new ObjectProperty<Integer>(s.getCredit()));
 			integerField.setStyleName(Props.MINIMUMTEXTFIELD);
 			integerField.setWidth(250, Unit.PIXELS);
 			hl.addComponent(integerField);
-			Button modifyButton = new Button(lang.getText("modifyCredit"), new CommitItemClick());
+			Button modifyButton = new Button(lang.getText("modifyCredit"), new ModifyCredit());
 			styleButton(modifyButton);
 			hl.addComponent(modifyButton);
 			layout = new VerticalLayout(markLostButton, hl, cancelButton);
@@ -86,11 +98,11 @@ public class EditSubscriptionWin extends Window {
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		setContent(layout);
-		new ValidatePasswordWindow(minimum, this);
+		pwWin.show(this);
 	}
 
 	private void styleButton(Button button) {
-		button.setPrimaryStyleName(Props.MINIMUMBUTTON);
+		button.addStyleName(Props.MINIMUMBUTTON);
 		button.setWidth(250, Unit.PIXELS);
 		button.setHeight(50, Unit.PIXELS);
 	}
@@ -103,12 +115,18 @@ public class EditSubscriptionWin extends Window {
 			cancelButton.focus();
 	}
 
+	public void fireSelect(Subscription sub) {
+		if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD))
+			selectEvent.fire(new SelectEvent(sub.getId()));
+		else
+			selectEvent.fire(new SelectEvent(sub.getCustomer().getId()));
+	}
+
 	private class CancelClick implements ClickListener {
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			subItem.refresh();
 			EditSubscriptionWin.this.close();
 		}
 	}
@@ -118,13 +136,7 @@ public class EditSubscriptionWin extends Window {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			TimeSubscription sub = (TimeSubscription) subItem.getEntity();
-			if (sub.isSuspended())
-				sub.reactivate();
-			else
-				sub.suspend();
-			sub = (TimeSubscription) minimum.getSubscriptionProvider().updateEntity(sub);
-			minimum.selectSubscription(sub.getId(), true);
+			fireSelect(subProvider.toggleSuspended(id));
 			EditSubscriptionWin.this.close();
 		}
 	}
@@ -134,25 +146,30 @@ public class EditSubscriptionWin extends Window {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			Subscription sub = subItem.getEntity();
-			sub.replace();
-			sub = minimum.getSubscriptionProvider().updateEntity(sub);
-			minimum.selectSubscription(sub.getReplacedBy().getId(), true);
-			// subItem.refresh();
-			// minimum.getCustomerContainer().refreshItem(sub.getCustomer().getId());
+			fireSelect(subProvider.replace(id));
 			EditSubscriptionWin.this.close();
 			Notification.show(lang.getText("SubscriptionReplaced"));
 		}
+
 	}
 
-	private class CommitItemClick implements ClickListener {
+	private class ModifyExpiry implements ClickListener {
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			subItem.commit();
-			subItem.getContainer().commit();
-			subItem.refresh();
+			fireSelect(subProvider.updateExpiry(id, dateField.getValue()));
+			EditSubscriptionWin.this.close();
+
+		}
+	}
+
+	private class ModifyCredit implements ClickListener {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			fireSelect(subProvider.updateCredit(id, (int) integerField.getConvertedValue()));
 			EditSubscriptionWin.this.close();
 
 		}

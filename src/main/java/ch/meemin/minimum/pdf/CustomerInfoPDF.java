@@ -1,13 +1,23 @@
 package ch.meemin.minimum.pdf;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 
-import ch.meemin.minimum.Minimum;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.meemin.minimum.CurrentSettings;
+import ch.meemin.minimum.Minimum.SelectEvent;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.SettingImage;
 import ch.meemin.minimum.entities.settings.Settings.Flag;
@@ -15,6 +25,8 @@ import ch.meemin.minimum.entities.subscriptions.MasterSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.entities.subscriptions.TimeSubscription;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.provider.CustomerProvider;
+import ch.meemin.minimum.provider.SubscriptionProvider;
 
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
@@ -34,48 +46,103 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import com.vaadin.cdi.UIScoped;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinService;
 
+@UIScoped
 public class CustomerInfoPDF {
+	private static final Logger LOG = LoggerFactory.getLogger(CustomerInfoPDF.class);
+
+	public static final String DEFAULTFONT = "dejavu sans";
+
+	static {
+		try {
+			File basepath = VaadinService.getCurrent().getBaseDirectory();
+			FontFactory.registerDirectory(new File(basepath, "/FONTS").getAbsolutePath());
+		} catch (Exception e) {
+			LOG.error("Problem with BaseFont", e);
+		}
+	}
 
 	private static final float TOP_M = 35f;
 	private static final float BOTTOM_M = 35f;
 	private static final float RIGHT_M = 35f;
 	private static final float LEFT_M = 35f;
 
-	private Customer customer;
-	private Subscription subscription;
-	private final Minimum minimum;
+	@Inject
 	private Lang lang;
+	@Inject
+	private CurrentSettings currSet;
+	@Inject
+	private CustomerProvider customerProvider;
+	@Inject
+	private SubscriptionProvider subsProvider;
+
+	StreamResource sr;
 	// BaseFont bold, normal;
 	Font titleFont, infoFont;
 
-	private CustomerInfoPDF(Minimum minimum) {
-		this.minimum = minimum;
-		this.lang = minimum.getLang();
+	private Long id;
+
+	@PostConstruct
+	private void init() {
 
 		// bold = BaseFont.createFont(DEFAULTFONT, BaseFont.IDENTITY_H, true);
 		// normal = BaseFont.createFont(DEFAULTFONT, BaseFont.IDENTITY_H, true);
 
 		// titleFont = new Font(bold, 14f);
 		// infoFont = new Font(normal, 14f);
-		titleFont = FontFactory.getFont(PdfCreator.DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 14f, Font.BOLD);
-		infoFont = FontFactory.getFont(PdfCreator.DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 14f, Font.NORMAL);
+		titleFont = FontFactory.getFont(DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 14f, Font.BOLD);
+		infoFont = FontFactory.getFont(DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 14f, Font.NORMAL);
+
+		sr = new StreamResource(null, "info.pdf");
+		sr.setStreamSource(new StreamSource() {
+			@Override
+			public InputStream getStream() {
+				final PipedInputStream in = new PipedInputStream();
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						PipedOutputStream out = null;
+						try {
+							out = new PipedOutputStream(in);
+							sr.setFilename(id + ".pdf");
+							if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD)) {
+								Subscription sub = subsProvider.getSubscription(id);
+								writePDFProtocol(out, sub, sub.getCustomer());
+							} else {
+								Customer customer = customerProvider.getCustomer(id);
+								writePDFProtocol(out, customer.getCurrentSubscription(), customer);
+							}
+						} catch (Throwable e) {
+							LOG.warn("Problem crating PDF", e);
+							throw new RuntimeException(e);
+						} finally {
+							try {
+								if (out != null)
+									out.close();
+							} catch (IOException e1) {}
+						}
+					}
+				}).start();
+
+				return in;
+
+			}
+		});
 	}
 
-	public CustomerInfoPDF(Customer customer, Minimum minimum) {
-		this(minimum);
-		this.customer = customer;
-		this.subscription = customer.getCurrentSubscription();
+	public void select(@Observes SelectEvent event) {
+		this.id = event.getId();
+		sr.setFilename(id + ".pdf");
 	}
 
-	public CustomerInfoPDF(Subscription subscription, Minimum minimum) {
-		this(minimum);
-		this.subscription = subscription;
-		this.customer = subscription.getCustomer();
-	}
-
-	public void writePDFProtocol(PipedOutputStream out) throws DocumentException, MalformedURLException, IOException {
+	public void writePDFProtocol(PipedOutputStream out, Subscription subscription, Customer customer)
+			throws DocumentException, MalformedURLException, IOException {
 		Rectangle pageSize = PageSize.A4;
 
 		Document document = new Document(pageSize, LEFT_M, RIGHT_M, TOP_M, BOTTOM_M);
@@ -92,7 +159,7 @@ public class CustomerInfoPDF {
 		}
 		pdfWriter.getDirectContentUnder().addImage(background, pageSize.getWidth(), 0, 0, pageSize.getHeight(), 0, 0);
 
-		Font tF = FontFactory.getFont(PdfCreator.DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 24f, Font.BOLD);
+		Font tF = FontFactory.getFont(DEFAULTFONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 24f, Font.BOLD);
 		Phrase title = new Phrase(customer.getName(), tF);
 		Paragraph pg = new Paragraph(customer.getName(), tF);
 		pg.setLeading(0f, 0f);
@@ -100,14 +167,14 @@ public class CustomerInfoPDF {
 		pg.setSpacingBefore(0f);
 		document.add(pg);
 
-		addInfoTable(document);
+		addInfoTable(document, subscription, customer);
 
-		addPhoto(document);
+		addPhoto(document, customer);
 
 		PdfContentByte cb = pdfWriter.getDirectContent();
 
-		Integer cHmm = minimum.getSettings().getCardHeight();
-		Integer cWmm = minimum.getSettings().getCardWidth();
+		Integer cHmm = currSet.getSettings().getCardHeight();
+		Integer cWmm = currSet.getSettings().getCardWidth();
 		Float cHp, cWp;
 		if (cHmm == null || cHmm == 0)
 			cHp = PageSize.ID_1.getHeight();
@@ -119,8 +186,8 @@ public class CustomerInfoPDF {
 			cWp = Utilities.millimetersToPoints(cWmm);
 		Rectangle cardSize = new Rectangle(cWp, cHp);
 
-		Integer cXmm = minimum.getSettings().getCardX();
-		Integer cYmm = minimum.getSettings().getCardY();
+		Integer cXmm = currSet.getSettings().getCardX();
+		Integer cYmm = currSet.getSettings().getCardY();
 		Float cX, cY;
 		if (cYmm == null || cXmm == 0)
 			cX = LEFT_M;
@@ -130,12 +197,13 @@ public class CustomerInfoPDF {
 			cY = BOTTOM_M;
 		else
 			cY = Utilities.millimetersToPoints(cYmm);
-		addCard(cardSize, minimum.getSettings().is(Flag.PRINTCARDBORDER), cX, cY, tF.getBaseFont(), cb);
+		addCard(subscription, customer, cardSize, currSet.getSettings().is(Flag.PRINTCARDBORDER), cX, cY, tF.getBaseFont(),
+				cb);
 
 		document.close();
 	}
 
-	private void addInfoTable(Document document) throws DocumentException {
+	private void addInfoTable(Document document, Subscription subscription, Customer customer) throws DocumentException {
 		PdfPTable table = new PdfPTable(2);
 		table.setSpacingBefore(0f);
 
@@ -150,10 +218,10 @@ public class CustomerInfoPDF {
 		if (!StringUtils.isBlank(customer.getPhone()))
 			addInfo(lang.getText("phone"), customer.getPhone(), table);
 
-		if (minimum.getSettings().is(Flag.USE_BIRTHDAY) && customer.getBirthDate() != null)
+		if (currSet.getSettings().is(Flag.USE_BIRTHDAY) && customer.getBirthDate() != null)
 			addInfo(lang.getText("birthDate"), lang.formatDate(customer.getBirthDate()), table);
 
-		if (minimum.getSettings().is(Flag.USE_STUDENT))
+		if (currSet.getSettings().is(Flag.USE_STUDENT))
 			addInfo(lang.getText("student"), lang.getText(customer.isStudent() ? "Yes" : "No"), table);
 
 		if (subscription instanceof MasterSubscription)
@@ -167,8 +235,8 @@ public class CustomerInfoPDF {
 		document.add(table);
 	}
 
-	private void addPhoto(Document document) throws BadElementException, MalformedURLException, IOException,
-			DocumentException {
+	private void addPhoto(Document document, Customer customer) throws BadElementException, MalformedURLException,
+			IOException, DocumentException {
 		PdfPTable table;
 		if (customer.getPhoto() != null) {
 			Image photo = Image.getInstance(customer.getPhoto().getContent());
@@ -192,8 +260,9 @@ public class CustomerInfoPDF {
 		}
 	}
 
-	private void addCard(Rectangle cardSize, boolean printBorder, Float cX, Float cY, BaseFont font, PdfContentByte cb)
-			throws BadElementException, MalformedURLException, IOException, DocumentException {
+	private void addCard(Subscription subscription, Customer customer, Rectangle cardSize, boolean printBorder, Float cX,
+			Float cY, BaseFont font, PdfContentByte cb) throws BadElementException, MalformedURLException, IOException,
+			DocumentException {
 		if (printBorder) {
 			cb.setColorStroke(Color.BLACK);
 			cb.setLineWidth(Utilities.millimetersToPoints(0.3f));
@@ -230,7 +299,7 @@ public class CustomerInfoPDF {
 			cb.endText();
 		}
 
-		if (minimum.getSettings().is(Flag.PHOTOONCARD) && customer.getPhoto() != null) {
+		if (currSet.getSettings().is(Flag.PHOTOONCARD) && customer.getPhoto() != null) {
 			float maxH = namePos - 5f;
 			float maxW = (cardSize.getWidth() / 2);
 			Image photo = Image.getInstance(customer.getPhoto().getContent());
@@ -241,13 +310,14 @@ public class CustomerInfoPDF {
 			cb.addImage(photo, w, 0f, 0f, fact * photo.getHeight(), cX + cardSize.getWidth() - w - 5f, cY + 2f);
 		}
 
-		addBarcode(cb, cardSize, cX, cY);
+		addBarcode(customer, cb, cardSize, cX, cY);
 	}
 
-	private void addBarcode(PdfContentByte cb, Rectangle cardSize, Float cardX, Float cardY) throws DocumentException {
+	private void addBarcode(Customer customer, PdfContentByte cb, Rectangle cardSize, Float cardX, Float cardY)
+			throws DocumentException {
 		BarcodeInter25 i25 = new BarcodeInter25();
 		String code = "";
-		if (minimum.getSettings().is(Flag.SUBSCRIPTIONIDONCARD))
+		if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD))
 			code += customer.getCurrentSubscription().getId().toString();
 		else
 			code += customer.getId().toString();
@@ -273,4 +343,19 @@ public class CustomerInfoPDF {
 		table.addCell(new Phrase(info, infoFont));
 	}
 
+	public FileDownloader getCustomerInfoDownloader() {
+		StreamResource streamResource = getCustomerInfoStream();
+		return prepareStream(streamResource);
+	}
+
+	protected FileDownloader prepareStream(StreamResource streamResource) {
+		streamResource.setCacheTime(5000); // no cache (<=0) does not work with IE8
+		streamResource.setMIMEType("application/pdf"); //$NON-NLS-1$
+		FileDownloader fd = new FileDownloader(streamResource);
+		return fd;
+	}
+
+	public StreamResource getCustomerInfoStream() {
+		return sr;
+	}
 }

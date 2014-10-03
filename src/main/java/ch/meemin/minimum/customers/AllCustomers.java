@@ -1,60 +1,85 @@
 package ch.meemin.minimum.customers;
 
-import ch.meemin.minimum.Minimum;
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+
+import ch.meemin.minimum.CurrentSettings;
+import ch.meemin.minimum.Minimum.LoggedInEvent;
+import ch.meemin.minimum.Minimum.SelectEvent;
 import ch.meemin.minimum.entities.Customer;
+import ch.meemin.minimum.entities.settings.Settings.Flag;
+import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.lang.Lang;
+import ch.meemin.minimum.provider.SubscriptionProvider;
 
 import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.ui.CustomComponent;
+import com.vaadin.cdi.UIScoped;
+import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.themes.ValoTheme;
 
-public class AllCustomers extends CustomComponent {
-	JPAContainer<Customer> container;
+@UIScoped
+public class AllCustomers extends Table {
+	@Inject
+	Containers containers;
+	@Inject
+	private SubscriptionProvider subsProvider;
+	@Inject
 	private Lang lang;
-	private ShowCustomer showCustomer;
-	private Table table;
+	@Inject
+	private CurrentSettings currSet;
 
-	public AllCustomers(Minimum minimum, JPAContainer<Customer> container) {
-		this.lang = minimum.getLang();
-		this.container = container;
-		table = new Table("Users", container);
-		table.setVisibleColumns(new String[] { "name", "email", "currentSubscription" });
-		table.addGeneratedColumn("currentSubscription", new ColumnGenerator() {
+	@Inject
+	private javax.enterprise.event.Event<SelectEvent> selectEvent;
+
+	@PostConstruct
+	public void init() {
+		this.setContainerDataSource(containers.getCustContainer());
+		addGeneratedColumn("currentSubscription", new ColumnGenerator() {
 			@Override
 			public Object generateCell(Table source, Object itemId, Object columnId) {
 				return lang.getText(source.getItem(itemId).getItemProperty(columnId).getValue().getClass().getSimpleName());
 			}
 		});
-		table.setSizeFull();
-		table.setImmediate(true);
-		table.setSelectable(true);
-		table.addValueChangeListener(new SelectUser());
-		table.setPageLength(5);
-		setCompositionRoot(table);
+		setVisibleColumns("name", "email", "currentSubscription");
+		setSizeFull();
+		setImmediate(true);
+		setSelectable(true);
+		addValueChangeListener(new SelectUser());
+		setSortContainerPropertyId("name");
+		setPageLength(5);
+		addStyleName(ValoTheme.TABLE_NO_HEADER);
+		addStyleName(ValoTheme.TABLE_COMPACT);
+		addStyleName(ValoTheme.TABLE_SMALL);
 	}
 
 	public void setFilter(String filter) {
+		JPAContainer<Customer> container = containers.getCustContainer();
 		container.removeAllContainerFilters();
 		container.addContainerFilter("name", filter, true, false);
-		table.select(container.firstItemId());
+		select(container.firstItemId());
 	}
 
 	public void clearFilter() {
-		container.removeAllContainerFilters();
+		containers.getCustContainer().removeAllContainerFilters();
 	}
 
-	private class SelectUser implements ValueChangeListener {
+	public void setNullValue(@Observes LoggedInEvent event) {
+		setValue(null);
+	}
+
+	private class SelectUser implements Property.ValueChangeListener {
 		@Override
-		public void valueChange(ValueChangeEvent event) {
-			Long id = (Long) table.getValue();
+		public void valueChange(Property.ValueChangeEvent event) {
+			Long id = (Long) getValue();
 			if (id != null) {
-				Minimum minimum = (Minimum) getUI();
-				minimum.selectCustomer(id, true);
+				if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD)) {
+					Subscription sub = subsProvider.getByCustomer(id);
+					selectEvent.fire(new SelectEvent(sub.getId()));
+				} else
+					selectEvent.fire(new SelectEvent(id));
 			}
-			table.setValue(id);
 
 		}
 	}

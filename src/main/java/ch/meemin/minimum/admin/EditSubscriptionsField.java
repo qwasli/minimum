@@ -25,7 +25,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.ValoTheme;
 
 public class EditSubscriptionsField<T extends Subscriptions> extends CustomField<List> {
 
@@ -65,7 +65,7 @@ public class EditSubscriptionsField<T extends Subscriptions> extends CustomField
 						table.removeItem(itemId);
 					}
 				});
-				b.addStyleName(Reindeer.BUTTON_SMALL);
+				b.addStyleName(ValoTheme.BUTTON_SMALL);
 				return b;
 			}
 		});

@@ -34,7 +34,7 @@ import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("rawtypes")
 public class BackgroundsField extends CustomField<List> implements Receiver, SucceededListener {
@@ -58,7 +58,7 @@ public class BackgroundsField extends CustomField<List> implements Receiver, Suc
 		StreamResource sr = getStreamResource(null);
 		FileDownloader fileDownloader = new FileDownloader(sr);
 		fileDownloader.extend(downloadButton);
-		downloadButton.setStyleName(Reindeer.BUTTON_LINK);
+		downloadButton.setStyleName(ValoTheme.BUTTON_LINK);
 		preview.setHeight(200, Unit.PIXELS);
 		nameField.setCaption(lang.getText("Add"));
 		nameField.setNullRepresentation("");

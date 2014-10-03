@@ -30,5 +30,5 @@ public class TimeSubscriptions extends Subscriptions implements Serializable {
 	public Subscription createSubscription(Customer customer) {
 		return new TimeSubscription(customer, this);
 	}
-	
+
 }

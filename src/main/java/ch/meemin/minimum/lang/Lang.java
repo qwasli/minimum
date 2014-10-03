@@ -10,7 +10,10 @@ import java.util.ResourceBundle;
 
 import lombok.Getter;
 
+import com.vaadin.cdi.UIScoped;
+
 @SuppressWarnings("serial")
+@UIScoped
 public class Lang implements Serializable {
 	public static final Locale DE_CH = new Locale("de", "CH");
 	@Getter
@@ -18,46 +21,46 @@ public class Lang implements Serializable {
 	@Getter
 	private String dateFormatWithTime;
 	@Getter
-	private final Locale locale = DE_CH;
+	private Locale locale = DE_CH;
 
 	private ResourceBundle resourceBundle = ResourceBundle.getBundle(Lang.class.getCanonicalName(), locale);
 
-	private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", DE_CH);
-	private final SimpleDateFormat sdfwt = new SimpleDateFormat("dd.MM.yyyy kk:mm", DE_CH);
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", DE_CH);
+	private SimpleDateFormat sdfwt = new SimpleDateFormat("dd.MM.yyyy kk:mm", DE_CH);
 
-	public final String get(final String key) {
+	public String get(String key) {
 		return getText(key);
 	}
 
-	public final String getText(final String key, final Object... params) {
+	public String getText(String key, Object... params) {
 		String value;
 		if (resourceBundle == null) {
 			value = "No bundle!";
 		} else {
 			try {
 				value = MessageFormat.format(resourceBundle.getString(key), params);
-			} catch (final MissingResourceException e) {
+			} catch (MissingResourceException e) {
 				value = "!" + key;
 			}
 		}
 		return value;
 	}
 
-	public final void setLocale(final Locale locale) {
+	public void setLocale(Locale locale) {
 		try {
 			resourceBundle = ResourceBundle.getBundle(Lang.class.getCanonicalName(), locale);
 			this.dateFormatNoTime = getText("dateFormatNoTime");
 			this.dateFormatWithTime = getText("dateFormatWithTime");
-		} catch (final MissingResourceException e) {
+		} catch (MissingResourceException e) {
 			// NOP
 		}
 	}
 
-	public final String formatDate(Date date) {
+	public String formatDate(Date date) {
 		return formatDate(date, false);
 	}
 
-	public final String formatDate(Date date, boolean withtime) {
+	public String formatDate(Date date, boolean withtime) {
 		if (date == null)
 			return "";
 		else if (withtime)

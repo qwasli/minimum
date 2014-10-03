@@ -1,9 +1,14 @@
 package ch.meemin.minimum.customers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import lombok.Getter;
-import ch.meemin.minimum.Minimum;
+import ch.meemin.minimum.CurrentSettings;
+import ch.meemin.minimum.Minimum.SelectEvent;
 import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.settings.PrepaidSubscriptions;
 import ch.meemin.minimum.entities.settings.Settings;
@@ -19,6 +24,7 @@ import ch.meemin.minimum.utils.FormLayout;
 import ch.meemin.minimum.utils.Props;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
+import com.vaadin.cdi.UIScoped;
 import com.vaadin.data.Buffered.SourceException;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
@@ -29,6 +35,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -36,21 +43,34 @@ import com.vaadin.ui.Window;
  * This is the window used to add new contacts to the 'address book'. It does not do proper validation - you can add
  * weird stuff.
  */
+@UIScoped
 public class SellSubscriptionWin extends Window {
 	private static final long serialVersionUID = 1L;
 
-	// private final JPAContainer<Customer> container;
-	private final Lang lang;
+	@Inject
+	private Lang lang;
 
-	private final FieldGroup form = new EntityFieldGroup<Customer>(Customer.class) {
+	@Inject
+	private CurrentSettings currSet;
+	@Inject
+	private Containers containers;
+	CreateSubscriptionButtons csf;
+
+	@Inject
+	private javax.enterprise.event.Event<SelectEvent> selectEvent;
+
+	private FieldGroup form = new EntityFieldGroup<Customer>(Customer.class) {
 		private static final long serialVersionUID = -1026191871445717584L;
 
 		@Override
 		public void commit() throws CommitException {
 			super.commit();
-			((EntityItem<Customer>) getItemDataSource()).commit();
-			Minimum minimum = (Minimum) getUI();
-			minimum.selectCustomer(getEntity().getId(), true);
+			EntityItem<Customer> item = (EntityItem<Customer>) getItemDataSource();
+			item.commit();
+			if (currSet.getSettings().is(Flag.SUBSCRIPTIONIDONCARD))
+				selectEvent.fire(new SelectEvent(item.getEntity().getCurrentSubscription().getId()));
+			else
+				selectEvent.fire(new SelectEvent((Long) item.getItemId()));
 			close();
 		}
 
@@ -61,25 +81,15 @@ public class SellSubscriptionWin extends Window {
 		};
 	};
 
-	public SellSubscriptionWin(Minimum minimum, EntityItem<Customer> item) {
-		super(minimum.getLang().getText("SellSub"));
-		this.lang = minimum.getLang();
-		setModal(true);
-		setSizeUndefined();
-
-		item.refresh();
-		item.setBuffered(false);
-		Customer customer = item.getEntity();
-
+	@PostConstruct
+	public void init() {
 		FormLayout formLayout = new FormLayout();
 		formLayout.setSizeUndefined();
 		formLayout.setDescription(lang.getText("SellSubscriptionFormDescription"));
-		CreateSubscriptionButtons csf = new CreateSubscriptionButtons(lang, minimum.getSettings(), customer);
+		csf = new CreateSubscriptionButtons(lang, currSet.getSettings());
 
 		formLayout.addComponent(csf);
 		form.bind(csf, "currentSubscription");
-
-		form.setItemDataSource(item);
 
 		HorizontalLayout footer = formLayout.createDefaultFooter();
 		Button cancelButton = new Button(lang.getText("Cancel"), new DiscardClickListener(form));
@@ -88,14 +98,39 @@ public class SellSubscriptionWin extends Window {
 
 		setContent(formLayout);
 
-		minimum.addWindow(this);
+	}
+
+	public void show(long customerId) {
+		setModal(true);
+		setSizeUndefined();
+		EntityItem<Customer> item = containers.getCustContainer().getItem(customerId);
+
+		item.refresh();
+		item.setBuffered(false);
+		Customer customer = item.getEntity();
+		csf.setCustomer(customer);
+
+		form.setItemDataSource(item);
+
+		UI.getCurrent().addWindow(this);
 	}
 
 	private class CreateSubscriptionButtons extends CustomField<Subscription> implements ClickListener {
-		private final VerticalLayout layout = new VerticalLayout();
-		private final Customer customer;
+		private VerticalLayout layout = new VerticalLayout();
+		private Customer customer;
 
-		public CreateSubscriptionButtons(Lang lang, Settings settings, Customer customer) {
+		private ArrayList<SelectButton> buttons = new ArrayList<>();
+
+		public void setCustomer(Customer customer) {
+			this.customer = customer;
+			Settings settings = currSet.getSettings();
+			for (SelectButton sb : buttons) {
+				Subscriptions subs = sb.getSubs();
+				sb.setCaption(subs.getName() + " (" + subs.getPrice(settings, customer) + ")");
+			}
+		}
+
+		public CreateSubscriptionButtons(Lang lang, Settings settings) {
 			this.customer = customer;
 			final List<TimeSubscriptions> tSubs = settings.getTimeSubscriptions();
 			final List<PrepaidSubscriptions> pSubs = settings.getPrepaidSubscriptions();
@@ -108,7 +143,9 @@ public class SellSubscriptionWin extends Window {
 			if (!tSubs.isEmpty()) {
 				HorizontalLayout hl = new HorizontalLayout();
 				for (TimeSubscriptions ts : tSubs) {
-					hl.addComponent(new SelectButton(ts, ts.getName() + " (" + ts.getPrice(settings, customer) + ")", this));
+					SelectButton sb = new SelectButton(ts, ts.getName(), this);
+					buttons.add(sb);
+					hl.addComponent(sb);
 				}
 				layout.addComponent(hl);
 				hl.setSpacing(true);
@@ -116,7 +153,9 @@ public class SellSubscriptionWin extends Window {
 			if (!pSubs.isEmpty()) {
 				HorizontalLayout hl = new HorizontalLayout();
 				for (PrepaidSubscriptions ps : pSubs) {
-					hl.addComponent(new SelectButton(ps, ps.getName() + " (" + ps.getPrice(settings, customer) + ")", this));
+					SelectButton sb = new SelectButton(ps, ps.getName(), this);
+					buttons.add(sb);
+					hl.addComponent(sb);
 				}
 				layout.addComponent(hl);
 				hl.setSpacing(true);
@@ -130,7 +169,7 @@ public class SellSubscriptionWin extends Window {
 			public SelectButton(Subscriptions subs, String caption, ClickListener listener) {
 				super(caption, listener);
 				this.subs = subs;
-				setPrimaryStyleName(Props.MINIMUMBUTTON);
+				addStyleName(Props.MINIMUMBUTTON);
 				setHeight(100, Unit.PIXELS);
 			}
 		}
