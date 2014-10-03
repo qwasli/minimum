@@ -34,4 +34,9 @@ public class CustomerProvider extends MutableLocalEntityProvider<Customer> {
 		setTransactionsHandledByProvider(false);
 		setEntitiesDetached(false);
 	}
+
+	public Customer getCustomer(Long customerID) {
+		return em.find(Customer.class, customerID);
+	}
+
 }

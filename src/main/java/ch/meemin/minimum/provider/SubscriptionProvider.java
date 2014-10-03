@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import ch.meemin.minimum.entities.Customer;
 import ch.meemin.minimum.entities.subscriptions.PrepaidSubscription;
 import ch.meemin.minimum.entities.subscriptions.Subscription;
 import ch.meemin.minimum.entities.subscriptions.TimeSubscription;
@@ -83,5 +84,54 @@ public class SubscriptionProvider extends MutableLocalEntityProvider<Subscriptio
 		for (Object[] x : q.getResultList())
 			res.put((String) x[0], (Long) x[1]);
 		return res;
+	}
+
+	public Subscription getSubscription(Long id) {
+		return em.find(Subscription.class, id);
+	}
+
+	public Subscription getByCustomer(Long id) {
+		Customer cust = em.find(Customer.class, id);
+		if (cust == null)
+			return null;
+		return cust.getCurrentSubscription();
+	}
+
+	public Subscription getBySetting(Long id, boolean isSub) {
+		if (isSub)
+			return getSubscription(id);
+		else
+			return getByCustomer(id);
+	}
+
+	public Subscription toggleSuspended(Long id) {
+		Subscription sub = getSubscription(id);
+		if (sub.isSuspended())
+			sub.reactivate();
+		else
+			sub.suspend();
+		em.flush();
+		return sub;
+	}
+
+	public Subscription replace(Long id) {
+		Subscription sub = getSubscription(id);
+		sub.replace();
+		em.flush();
+		return sub.getReplacedBy();
+	}
+
+	public Subscription updateExpiry(Long id, Date expiry) {
+		TimeSubscription sub = em.find(TimeSubscription.class, id);
+		sub.setExpiry(expiry);
+		em.flush();
+		return sub;
+	}
+
+	public Subscription updateCredit(Long id, int credit) {
+		PrepaidSubscription sub = em.find(PrepaidSubscription.class, id);
+		sub.setCredit(credit);
+		em.flush();
+		return sub;
 	}
 }
