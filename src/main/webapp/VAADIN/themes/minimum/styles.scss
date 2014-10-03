@@ -1,5 +1,13 @@
+$v-font-family: "Source Sans Pro", sans-serif;
+$v-font-size: 16px;
+$v-line-height: 1.4;
+$v-focus-color: #000080;
+$v-unit-size: 36px;
+
+@import "../valo/valo";
 @import "minimum.scss";
  
 .minimum {
+ @include valo;
  @include minimum;
 }

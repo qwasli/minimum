@@ -1,99 +1,52 @@
-@import "../reindeer/reindeer.scss";
-
 @mixin minimum {
-  @include reindeer;
 
-.minimumbutton {
-	-moz-box-shadow:inset 0px 1px 0px 0px #e184f3;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #e184f3;
-	box-shadow:inset 0px 1px 0px 0px #e184f3;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c123de), color-stop(1, #a20dbd) );
-	background:-moz-linear-gradient( center top, #c123de 5%, #a20dbd 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c123de', endColorstr='#a20dbd');
-	background-color:#c123de;
-	-webkit-border-top-left-radius:10px;
-	-moz-border-radius-topleft:10px;
-	border-top-left-radius:10px;
-	-webkit-border-top-right-radius:10px;
-	-moz-border-radius-topright:10px;
-	border-top-right-radius:10px;
-	-webkit-border-bottom-right-radius:10px;
-	-moz-border-radius-bottomright:10px;
-	border-bottom-right-radius:10px;
-	-webkit-border-bottom-left-radius:10px;
-	-moz-border-radius-bottomleft:10px;
-	border-bottom-left-radius:10px;
-	padding: 3px;
-	text-indent:0px;
-	border:1px solid #a511c0;
-	display:table-cell;
-	vertical-align:middle;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:17px;
-	font-weight:bold;
-	font-style:normal;
-	height:100px;
-	text-decoration:none;
-	text-align:center;
-	text-shadow:1px 1px 0px #9b14b3;
-	min-width: 100px;
+.h1, .h2, .h3 {
+	margin: 0;
 }
-.minimumbutton:hover {
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #a20dbd), color-stop(1, #c123de) );
-	background:-moz-linear-gradient( center top, #a20dbd 5%, #c123de 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#a20dbd', endColorstr='#c123de');
-	background-color:#a20dbd;
+.minimumbutton{
+	height: 50px;
 }
 
-.minimumbutton:active {
-	position:relative;
-	top:1px;
+.logininfo {
+	position: relative;
+	.minimumbutton {
+		position: absolute;
+		bottom: 0;
+	}
+	.v-label {
+		position: absolute;
+		bottom: 50px;
+	}
 }
 
-input.minimumtextfield {
-	font-size: 20px;
-	height: 48px !important;
-    padding: 3px 3px 4px;   
+.photo {
+	max-height: 100%;
+	max-width: 100%;
 }
 
-.minimumdatefield{
-    padding-right: 48px;
+.photocomp {
+	padding-left: 5px;
 }
 
-.minimumdatefield input.v-datefield-textfield{
-	font-size:20px;
-	height: 48px;
-    padding: 3px 3px 4px;
+.statusicon {
+    font-family: FontAwesome;
+    font-size: 200px;
+    position: absolute;
+    top: 0px;
+    line-height: 1;
     
+    &.ok:before {
+    	content: '\f00c';
+    	color: green;
+    }
+    &.notok:before{
+    	content:'\f0e7';
+    	color: red;
+    }
+    &.warn:before{
+    	content: '\f017';
+    	color: orange;
+    }
 }
-
-.minimumdatefield button.v-datefield-button {
-	width: 48px;
-	margin-right: -48px;
-	height: 48px;
-	background: transparent;
-	border: none;
-	padding: 0;
-	background-image: url(popup-btn-pressed.png);/** sprite-ref: verticals */
-	background-repeat:no-repeat;
-	cursor: pointer;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
-}
-.minimumdatefield button.v-datefield-button:active {
-	background-image: url(popup-btn-pressed.png);/** sprite-ref: verticals */
-}
-
-.v-Notification-warning {
-    background: none repeat scroll 0 0 #B40000;;
-    border-radius: 4px 4px 4px 4px;
-    color: #FFFFFF;
-    font-size: 16px;
-    font-weight: bold;
-    border: 3px solid #CA3030;
-}
-
 }
  
