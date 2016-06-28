@@ -27,7 +27,12 @@ public class TimeSubscriptions extends Subscriptions implements Serializable {
 	private Duration duration = new Duration(0, TimeSpan.YEARS);
 
 	@Override
-	public Subscription createSubscription(Customer customer) {
+	public boolean mayKeepId(Customer customer) {
+		return false;
+	}
+
+	@Override
+	public Subscription createSubscription(Customer customer, boolean keepId) {
 		return new TimeSubscription(customer, this);
 	}
 

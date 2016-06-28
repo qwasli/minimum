@@ -5,7 +5,7 @@
  * @param {value} $var - the value to search for
  * @param {bool} $recursive (false) - should any contained lists be checked for the value
  * 
- * @return {bool}��true if the value is found from the list, false otherwise
+ * @return {bool} true if the value is found from the list, false otherwise
  * 
  * @group lists
  */
@@ -70,6 +70,9 @@
 @keyframes valo-animate-in-slide-down {
 		0% {
 		-webkit-transform: translateY(-100%);
+		-moz-transform: translateY(-100%);
+		-ms-transform: translateY(-100%);
+		-o-transform: translateY(-100%);
 		transform: translateY(-100%);
 	}
 	}
@@ -89,6 +92,9 @@
 @keyframes valo-animate-in-slide-up {
 		0% {
 		-webkit-transform: translateY(100%);
+		-moz-transform: translateY(100%);
+		-ms-transform: translateY(100%);
+		-o-transform: translateY(100%);
 		transform: translateY(100%);
 	}
 	}
@@ -108,6 +114,9 @@
 @keyframes valo-animate-in-slide-left {
 		0% {
 		-webkit-transform: translateX(100%);
+		-moz-transform: translateX(100%);
+		-ms-transform: translateX(100%);
+		-o-transform: translateX(100%);
 		transform: translateX(100%);
 	}
 	}
@@ -127,6 +136,9 @@
 @keyframes valo-animate-in-slide-right {
 		0% {
 		-webkit-transform: translateX(-100%);
+		-moz-transform: translateX(-100%);
+		-ms-transform: translateX(-100%);
+		-o-transform: translateX(-100%);
 		transform: translateX(-100%);
 	}
 	}
@@ -146,6 +158,9 @@
 @keyframes valo-animate-out-slide-down {
 		100% {
 		-webkit-transform: translateY(100%);
+		-moz-transform: translateY(100%);
+		-ms-transform: translateY(100%);
+		-o-transform: translateY(100%);
 		transform: translateY(100%);
 	}
 	}
@@ -165,6 +180,9 @@
 @keyframes valo-animate-out-slide-up {
 		100% {
 		-webkit-transform: translateY(-100%);
+		-moz-transform: translateY(-100%);
+		-ms-transform: translateY(-100%);
+		-o-transform: translateY(-100%);
 		transform: translateY(-100%);
 	}
 	}
@@ -184,6 +202,9 @@
 @keyframes valo-animate-out-slide-left {
 		100% {
 		-webkit-transform: translateX(-100%);
+		-moz-transform: translateX(-100%);
+		-ms-transform: translateX(-100%);
+		-o-transform: translateX(-100%);
 		transform: translateX(-100%);
 	}
 	}
@@ -203,6 +224,9 @@
 @keyframes valo-animate-out-slide-right {
 		100% {
 		-webkit-transform: translateX(100%);
+		-moz-transform: translateX(100%);
+		-ms-transform: translateX(100%);
+		-o-transform: translateX(100%);
 		transform: translateX(100%);
 	}
 	}
@@ -224,6 +248,9 @@
 @keyframes valo-overlay-animate-in {
 		0% {
 		-webkit-transform: translatey(-4px);
+		-moz-transform: translatey(-4px);
+		-ms-transform: translatey(-4px);
+		-o-transform: translatey(-4px);
 		transform: translatey(-4px);
 		opacity: 0;
 	}
@@ -247,6 +274,9 @@
 		100% {
 		opacity: 0;
 		-webkit-transform: translatey(30%);
+		-moz-transform: translatey(30%);
+		-ms-transform: translatey(30%);
+		-o-transform: translatey(30%);
 		transform: translatey(30%);
 	}
 	}
@@ -258,7 +288,7 @@
  * 
  * @param {color} $color ($v-background-color) - The base color for the gradient color stops
  * @param {list} $gradient ($v-gradient) - Valo-specific gradient value. See the documentation for $v-gradient.
- * @param {color}��$fallback (null) - A fallback color for browser which do not support linear gradients (IE8 and IE9 in particular). If null, the base $color is used instead.
+ * @param {color} $fallback (null) - A fallback color for browser which do not support linear gradients (IE8 and IE9 in particular). If null, the base $color is used instead.
  * @param {string} $direction (to bottom) - the direction of the linear gradient. The color stops are by default so that a lighter shade is at the start and a darker shade is at the end.
  */
 
@@ -267,7 +297,7 @@
  *
  * @group style
  *
- * @param {list}��$border ($v-border) - CSS border value which can contain any of the color keywords
+ * @param {list} $border ($v-border) - CSS border value which can contain any of the color keywords
  * @param {color} $color ($v-background-color) - the base color to which the color keywords are applied to
  * @param {color} $context (null) - context/surrounding color where the border is expected to appear. The color of the final border is the darker of the two parameters passed to this function.
  * @param {number} $strength (1) - adjustment for the border contrast
@@ -280,10 +310,28 @@
  * 
  * @param {string} $to-align (()) - The selector to match the elements which you wish to align vertically. The targeted elements should be inline or inline-block elements.
  * @param {string} $align (middle) - The vertical-align value, e.g. top, middle, bottom
- * @param {string}��$pseudo-element (after) - Which pseudo element to use for the vertical align guide
+ * @param {string} $pseudo-element (after) - Which pseudo element to use for the vertical align guide
  * 
  * @group util
  */
+
+@font-face {
+	font-family: ThemeIcons;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../base/fonts/themeicons-webfont.eot);
+	src: url(../valo/util/bourbon/css3/../../../../base/fonts/themeicons-webfont.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../base/fonts/themeicons-webfont.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../base/fonts/themeicons-webfont.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../base/fonts/themeicons-webfont.svg#ThemeIcons) format("svg");
+}
+
+.ThemeIcons {
+	font-family: ThemeIcons;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
+}
 
 @font-face {
 	font-family: FontAwesome;
@@ -547,7 +595,7 @@
  * Outputs the selectors and properties for the Accordion component.
  *
  * @param {string} $primary-stylename (v-accordion) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  * @group accordion
  */
 
@@ -555,7 +603,7 @@
  * Outputs the selectors and properties for the Button component.
  *
  * @param {string} $primary-stylename (v-button) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group button
  */
@@ -578,7 +626,7 @@
  * Outputs the selectors and properties for the CheckBox component.
  *
  * @param {string} $primary-stylename (v-checkbox) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group checkbox
  */
@@ -596,7 +644,7 @@
  * Outputs the selectors and properties for the ComboBox component.
  *
  * @param {string} $primary-stylename (v-filterselect) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group combobox
  */
@@ -628,7 +676,7 @@
  * Outputs the selectors and properties for the DateField component.
  *
  * @param {string} $primary-stylename (v-datefield) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group datefield
  */
@@ -653,18 +701,60 @@
  * Outputs the selectors and properties for the FormLayout component.
  *
  * @param {string} $primary-stylename (v-formlayout) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group formlayout
  */
 
 /**
  *
- *
- * @param {string} $primaryStyleName (v-escalator) - 
- *
- * @group escalator
+ * @group table
  */
+
+@-webkit-keyframes valo-grid-editor-footer-animate-in {
+		0% {
+		margin-top: -36px;
+	}
+	}
+
+@-moz-keyframes valo-grid-editor-footer-animate-in {
+		0% {
+		margin-top: -36px;
+	}
+	}
+
+@keyframes valo-grid-editor-footer-animate-in {
+		0% {
+		margin-top: -36px;
+	}
+	}
+
+@-webkit-keyframes valo-grid-editor-footer-animate-in-alt {
+		0% {
+		margin-bottom: -37px;
+	}
+		100% {
+		margin-bottom: -1px;
+	}
+	}
+
+@-moz-keyframes valo-grid-editor-footer-animate-in-alt {
+		0% {
+		margin-bottom: -37px;
+	}
+		100% {
+		margin-bottom: -1px;
+	}
+	}
+
+@keyframes valo-grid-editor-footer-animate-in-alt {
+		0% {
+		margin-bottom: -37px;
+	}
+		100% {
+		margin-bottom: -1px;
+	}
+	}
 
 /**
  *
@@ -759,6 +849,9 @@
 @keyframes v-popupview-animate-in {
 		0% {
 		-webkit-transform: scale(0);
+		-moz-transform: scale(0);
+		-ms-transform: scale(0);
+		-o-transform: scale(0);
 		transform: scale(0);
 	}
 	}
@@ -807,7 +900,7 @@
  * Outputs the selectors and properties for the TextArea component.
  *
  * @param {string} $primary-stylename (v-textarea) - the primary style name for the selectors
- * @param {bool}��$include-additional-styles - should the mixin output all the different style variations of the component
+ * @param {bool} $include-additional-styles - should the mixin output all the different style variations of the component
  *
  * @group textarea
  */
@@ -836,7 +929,7 @@
 /**
  *
  *
- * @param {string} $primary-stylename (v-upload) - 
+ * @param {string} $primary-stylename (v-upload) -
  *
  * @group upload
  */
@@ -893,6 +986,9 @@
 @keyframes valo-animate-out-scale-down-fade {
 		100% {
 		-webkit-transform: scale(0.8);
+		-moz-transform: scale(0.8);
+		-ms-transform: scale(0.8);
+		-o-transform: scale(0.8);
 		transform: scale(0.8);
 		opacity: 0;
 	}
@@ -903,7 +999,7 @@
  */
 
 .v-vaadin-version:after {
-	content: "7.3.2";
+	content: "7.6.5";
 }
 
 .v-widget {
@@ -991,6 +1087,11 @@
 	-webkit-overflow-scrolling: none;
 }
 
+.v-webkit.v-ios .v-browserframe {
+	-webkit-overflow-scrolling: touch;
+	overflow: auto;
+}
+
 .v-assistive-device-only {
 	position: absolute;
 	top: -2000px;
@@ -1056,6 +1157,10 @@ div.v-layout.v-horizontal.v-widget {
 
 .v-horizontal > .v-slot, .v-horizontal > .v-expand > .v-slot {
 	height: 100%;
+}
+
+.v-horizontal > .v-expand > .v-slot {
+	position: relative;
 }
 
 .v-vertical > .v-spacing, .v-vertical > .v-expand > .v-spacing {
@@ -1637,6 +1742,11 @@ div.v-layout.v-horizontal.v-widget {
 	color: #0000b3;
 }
 
+.minimum a.v-disabled {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
 .minimum .v-disabled {
 	cursor: default !important;
 }
@@ -1766,6 +1876,60 @@ div.v-layout.v-horizontal.v-widget {
 	background-image: linear-gradient(to bottom,#00008a 2%, #000070 98%);
 	color: #e1e1f6;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.minimum .v-reconnect-dialog {
+	color: white;
+	top: 12px;
+	right: 12px;
+	max-width: 100%;
+	border-radius: 0;
+	-webkit-box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.25);
+	box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.25);
+	padding: 12px 14px;
+	background-color: #444;
+	background-color: rgba(68, 68, 68, 0.9);
+	line-height: 22px;
+	text-align: center;
+}
+
+.minimum .v-reconnect-dialog .text {
+	display: inline-block;
+	padding-left: 10px;
+}
+
+.minimum .v-reconnect-dialog .spinner {
+	height: 24px !important;
+	width: 24px !important;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 2px solid rgba(0, 0, 128, 0.2);
+	border-top-color: #000080;
+	border-right-color: #000080;
+	border-radius: 100%;
+	-webkit-animation: v-rotate-360 500ms infinite linear;
+	-moz-animation: v-rotate-360 500ms infinite linear;
+	animation: v-rotate-360 500ms infinite linear;
+	pointer-events: none;
+	display: none;
+	vertical-align: middle;
+}
+
+.v-ie8 .minimum .v-reconnect-dialog .spinner, .v-ie9 .minimum .v-reconnect-dialog .spinner {
+	border: none;
+	border-radius: 4px;
+	background: #fff url(../valo/shared/img/spinner.gif) no-repeat 50% 50%;
+	background-size: 80%;
+}
+
+.v-ie8 .minimum .v-reconnect-dialog .spinner {
+	min-width: 30px;
+	min-height: 30px;
+}
+
+.minimum .v-reconnect-dialog.active .spinner {
+	display: inline-block;
 }
 
 .minimum .v-absolutelayout-wrapper {
@@ -2199,6 +2363,11 @@ div.v-layout.v-horizontal.v-widget {
 	color: #0000b3;
 }
 
+.minimum .v-button-link.v-disabled {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
 .minimum .v-button-tiny {
 	height: 27px;
 	padding: 0 12px;
@@ -2296,6 +2465,8 @@ div.v-layout.v-horizontal.v-widget {
 
 .minimum .v-button-icon-align-top .v-icon {
 	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .minimum .v-button-icon-align-top .v-icon  + span:not(:empty) {
@@ -2403,31 +2574,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 18px;
 }
 
-:root .minimum .v-checkbox > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-checkbox > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-checkbox > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-checkbox > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-checkbox > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -2442,23 +2591,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-checkbox > input[disabled]  ~ label, :root .minimum .v-checkbox > input[disabled]  ~ label .v-icon, :root .minimum .v-checkbox > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-checkbox > input[disabled]  ~ label:before, :root .minimum .v-checkbox > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-checkbox > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-checkbox > .v-icon, .minimum .v-checkbox > label .v-icon {
 	margin: 0 6px 0 3px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-checkbox.v-disabled  > label, .minimum .v-checkbox.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-checkbox.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-checkbox.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-checkbox.v-readonly  > label, .minimum .v-checkbox.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-checkbox.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-checkbox.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-checkbox.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 .minimum .v-checkbox-small {
@@ -2537,31 +2704,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 16px;
 }
 
-:root .minimum .v-checkbox-small > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-checkbox-small > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-checkbox-small > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-checkbox-small > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-checkbox-small > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -2576,23 +2721,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-checkbox-small > input[disabled]  ~ label, :root .minimum .v-checkbox-small > input[disabled]  ~ label .v-icon, :root .minimum .v-checkbox-small > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-checkbox-small > input[disabled]  ~ label:before, :root .minimum .v-checkbox-small > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-checkbox-small > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-checkbox-small > .v-icon, .minimum .v-checkbox-small > label .v-icon {
 	margin: 0 5px 0 3px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-checkbox-small.v-disabled  > label, .minimum .v-checkbox-small.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-checkbox-small.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-checkbox-small.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-checkbox-small.v-readonly  > label, .minimum .v-checkbox-small.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-checkbox-small.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-checkbox-small.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-checkbox-small.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 .minimum .v-checkbox-large {
@@ -2671,31 +2834,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 22px;
 }
 
-:root .minimum .v-checkbox-large > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-checkbox-large > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-checkbox-large > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-checkbox-large > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-checkbox-large > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -2710,23 +2851,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-checkbox-large > input[disabled]  ~ label, :root .minimum .v-checkbox-large > input[disabled]  ~ label .v-icon, :root .minimum .v-checkbox-large > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-checkbox-large > input[disabled]  ~ label:before, :root .minimum .v-checkbox-large > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-checkbox-large > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-checkbox-large > .v-icon, .minimum .v-checkbox-large > label .v-icon {
 	margin: 0 7px 0 4px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-checkbox-large.v-disabled  > label, .minimum .v-checkbox-large.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-checkbox-large.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-checkbox-large.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-checkbox-large.v-readonly  > label, .minimum .v-checkbox-large.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-checkbox-large.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-checkbox-large.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-checkbox-large.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 .minimum .v-filterselect {
@@ -2768,7 +2927,7 @@ div.v-layout.v-horizontal.v-widget {
 	transition: box-shadow 180ms, border 180ms;
 	width: 100% !important;
 	height: 100%;
-	padding-right: 43px;
+	padding-right: 37px;
 	border-radius: inherit;
 }
 
@@ -2824,11 +2983,10 @@ div.v-layout.v-horizontal.v-widget {
 	-webkit-touch-callout: none;
 	cursor: pointer;
 	position: absolute;
+	width: 36px;
 	top: 1px;
 	right: 1px;
 	bottom: 1px;
-	width: 36px;
-	cursor: pointer;
 	border-left: 1px solid #e4e4e4;
 	color: #a3a3a3;
 	border-radius: 0 3px 3px 0;
@@ -2839,7 +2997,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-filterselect [class$="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f078";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -3032,7 +3190,7 @@ div.v-layout.v-horizontal.v-widget {
 	height: 24px;
 	line-height: 24px;
 	text-align: center;
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	-webkit-transform: scale(0.8);
 	-moz-transform: scale(0.8);
 	-ms-transform: scale(0.8);
@@ -3224,7 +3382,7 @@ div.v-layout.v-horizontal.v-widget {
 	transition: box-shadow 180ms, border 180ms;
 	width: 100% !important;
 	height: 100%;
-	padding-right: 32px;
+	padding-right: 28px;
 	border-radius: inherit;
 }
 
@@ -3255,16 +3413,12 @@ div.v-layout.v-horizontal.v-widget {
 	-webkit-touch-callout: none;
 	cursor: pointer;
 	position: absolute;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
 	width: 27px;
-	cursor: pointer;
-	border-radius: 0 3px 3px 0;
+	border-radius: 0 4px 4px 0;
 }
 
 .minimum .v-filterselect-tiny [class$="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f078";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -3355,7 +3509,7 @@ div.v-layout.v-horizontal.v-widget {
 	transition: box-shadow 180ms, border 180ms;
 	width: 100% !important;
 	height: 100%;
-	padding-right: 37px;
+	padding-right: 32px;
 	border-radius: inherit;
 }
 
@@ -3386,16 +3540,12 @@ div.v-layout.v-horizontal.v-widget {
 	-webkit-touch-callout: none;
 	cursor: pointer;
 	position: absolute;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
 	width: 31px;
-	cursor: pointer;
-	border-radius: 0 3px 3px 0;
+	border-radius: 0 4px 4px 0;
 }
 
 .minimum .v-filterselect-compact [class$="button"]:before, .minimum .v-filterselect-small [class$="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f078";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -3491,7 +3641,7 @@ div.v-layout.v-horizontal.v-widget {
 	transition: box-shadow 180ms, border 180ms;
 	width: 100% !important;
 	height: 100%;
-	padding-right: 52px;
+	padding-right: 44px;
 	border-radius: inherit;
 }
 
@@ -3522,16 +3672,12 @@ div.v-layout.v-horizontal.v-widget {
 	-webkit-touch-callout: none;
 	cursor: pointer;
 	position: absolute;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
 	width: 43px;
-	cursor: pointer;
-	border-radius: 0 3px 3px 0;
+	border-radius: 0 4px 4px 0;
 }
 
 .minimum .v-filterselect-large [class$="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f078";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -3623,7 +3769,7 @@ div.v-layout.v-horizontal.v-widget {
 	transition: box-shadow 180ms, border 180ms;
 	width: 100% !important;
 	height: 100%;
-	padding-right: 70px;
+	padding-right: 59px;
 	border-radius: inherit;
 }
 
@@ -3654,16 +3800,12 @@ div.v-layout.v-horizontal.v-widget {
 	-webkit-touch-callout: none;
 	cursor: pointer;
 	position: absolute;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
 	width: 58px;
-	cursor: pointer;
-	border-radius: 0 3px 3px 0;
+	border-radius: 0 4px 4px 0;
 }
 
 .minimum .v-filterselect-huge [class$="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f078";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -3841,19 +3983,27 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum [class*="margin-top"] > tbody > [class*="firstrow"] > td {
-	padding-top: 0;
+	padding-top: 36px;
 }
 
 .minimum [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
-	padding-bottom: 0;
+	padding-bottom: 36px;
 }
 
 .minimum [class*="margin-left"] > tbody > [class*="row"] > [class*="captioncell"] {
-	padding-left: 0;
+	padding-left: 36px;
+}
+
+.minimum [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .minimum [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .minimum [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	left: 36px;
 }
 
 .minimum [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"] {
-	padding-right: 0;
+	padding-right: 36px;
+}
+
+.minimum [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .minimum [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .minimum [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	right: 36px;
 }
 
 .minimum .v-formlayout > table {
@@ -3889,6 +4039,8 @@ div.v-layout.v-horizontal.v-widget {
 .minimum .v-formlayout-contentcell  > .v-label-h2, .minimum .v-formlayout-contentcell  > .v-label-h3, .minimum .v-formlayout-contentcell  > .v-label-h4 {
 	position: absolute;
 	left: 0;
+	right: 0;
+	width: auto !important;
 	margin-top: -0.5em;
 	padding-bottom: 0.5em;
 	border-bottom: 1px solid #dfdfdf;
@@ -3898,7 +4050,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 }
 
-.minimum .v-formlayout.light  > table > tbody > [class*="row"] > td {
+.minimum .v-formlayout.light  > table > tbody > tr > td {
 	padding-top: 0;
 	height: 36px;
 	border-bottom: 1px solid #eaeaea;
@@ -3908,11 +4060,15 @@ div.v-layout.v-horizontal.v-widget {
 	border-bottom: none;
 }
 
-.minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="captioncell"] {
+.minimum .v-formlayout.light  > table > tbody > tr > [class*="captioncell"] {
 	color: #7d7d7d;
 	text-align: right;
 	padding-left: 12px;
 	line-height: 36px;
+}
+
+.minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"] {
+	padding-right: 0;
 }
 
 .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-textfield, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-textarea, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-filterselect, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-datefield, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-filterselect-input, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-datefield-textfield {
@@ -3985,6 +4141,8 @@ div.v-layout.v-horizontal.v-widget {
 
 .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
 	border-bottom: none;
+	left: 0;
+	right: 0;
 }
 
 .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .minimum .v-formlayout.light  > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
@@ -4012,18 +4170,20 @@ div.v-layout.v-horizontal.v-widget {
 	margin-left: 6px;
 }
 
-.minimum .v-escalator {
+.minimum .v-grid {
 	position: relative;
-	background-color: white;
 }
 
-.minimum .v-escalator-scroller {
+.minimum .v-grid-scroller {
 	position: absolute;
-	overflow: auto;
-	z-index: 20;
+	z-index: 1;
+	outline: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
-.minimum .v-escalator-scroller-horizontal {
+.minimum .v-grid-scroller-horizontal {
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -4031,7 +4191,7 @@ div.v-layout.v-horizontal.v-widget {
 	-ms-overflow-y: hidden;
 }
 
-.minimum .v-escalator-scroller-vertical {
+.minimum .v-grid-scroller-vertical {
 	right: 0;
 	top: 0;
 	bottom: 0;
@@ -4039,74 +4199,815 @@ div.v-layout.v-horizontal.v-widget {
 	-ms-overflow-x: hidden;
 }
 
-.minimum .v-escalator-tablewrapper {
+.minimum .v-grid-tablewrapper {
 	position: absolute;
 	overflow: hidden;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	z-index: 5;
 }
 
-.minimum .v-escalator-tablewrapper > table {
+.minimum .v-grid-tablewrapper > table {
 	border-spacing: 0;
 	table-layout: fixed;
 	width: inherit;
 }
 
-.minimum .v-escalator-header, .minimum .v-escalator-body, .minimum .v-escalator-footer {
+.minimum .v-grid-header-deco, .minimum .v-grid-footer-deco {
+	position: absolute;
+	right: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.minimum .v-grid-horizontal-scrollbar-deco {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.minimum .v-grid-header, .minimum .v-grid-body, .minimum .v-grid-footer {
 	position: absolute;
 	left: 0;
 	width: inherit;
 	z-index: 10;
 }
 
-.minimum .v-escalator-header {
+.minimum .v-grid-header, .minimum .v-grid-header-deco {
 	top: 0;
 }
 
-.minimum .v-escalator-footer {
+.minimum .v-grid-footer, .minimum .v-grid-footer-deco {
 	bottom: 0;
 }
 
-.minimum .v-escalator-body {
+.minimum .v-grid-body {
 	z-index: 0;
 	top: 0;
 }
 
-.minimum .v-escalator-body .v-escalator-row {
+.minimum .v-grid-body .v-grid-row {
 	position: absolute;
 	top: 0;
 	left: 0;
 }
 
-.minimum .v-escalator-row {
+.minimum .v-grid-row {
 	display: block;
 }
 
-.v-ie8 .minimum .v-escalator-row {
+.v-ie8 .minimum .v-grid-row, .v-ie9 .minimum .v-grid-row {
 	float: left;
 	clear: left;
 	margin-top: 0;
 }
 
-.minimum .v-escalator-row  > td, .minimum .v-escalator-row  > th {
+.minimum .v-grid-row  > td, .minimum .v-grid-row  > th {
 	background-color: white;
 }
 
-.minimum .v-escalator-row {
+.minimum .v-grid-row {
 	width: inherit;
 }
 
-.minimum .v-escalator-cell {
+.minimum .v-grid-cell {
 	display: block;
 	float: left;
-	border: 1px solid #aaa;
 	padding: 2px;
 	white-space: nowrap;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	overflow: hidden;
+	font-size: 16px;
+}
+
+.minimum .v-grid-cell.frozen {
+	position: relative;
+	z-index: 1;
+}
+
+.minimum .v-grid-spacer {
+	position: absolute;
+	display: block;
+	background-color: white;
+}
+
+.minimum .v-grid-spacer  > td {
+	width: 100%;
+	height: 100%;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
-.minimum .v-escalator-cell.frozen {
+.v-ie8 .minimum .v-grid-spacer, .v-ie9 .minimum .v-grid-spacer {
+	margin-top: 0;
+}
+
+.minimum .v-grid {
+	outline: none;
+}
+
+.minimum .v-grid-scroller-vertical, .minimum .v-grid-scroller-horizontal {
+	border: 1px solid #d4d4d4;
+}
+
+.minimum .v-grid-scroller-vertical {
+	border-left: none;
+}
+
+.minimum .v-grid-scroller-horizontal {
+	border-top: none;
+}
+
+.minimum .v-grid-tablewrapper {
+	border: 1px solid #d4d4d4;
+}
+
+.minimum .v-grid .header-drag-table {
+	border-spacing: 0;
 	position: relative;
-	z-index: 0;
+	table-layout: fixed;
+	width: inherit;
+}
+
+.minimum .v-grid .header-drag-table .v-grid-header {
+	position: absolute;
+}
+
+.minimum .v-grid .header-drag-table .v-grid-header  > .v-grid-cell {
+	border: 1px solid #d4d4d4;
+	margin-top: -10px;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	z-index: 30000;
+}
+
+.minimum .v-grid .header-drag-table .v-grid-header  > .v-grid-drop-marker {
+	background-color: #000080;
+	position: absolute;
+	width: 3px;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border-radius: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #fafafa;
+	border: 1px solid #d4d4d4;
+	padding: 0;
+	z-index: 5;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu.v-grid-sidebar-popup {
+	right: auto;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu .v-grid-sidebar-button {
+	background: transparent;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	outline: none;
+	padding: 0 4px;
+	text-align: right;
+	line-height: 1;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu .v-grid-sidebar-button[disabled] {
+	cursor: default;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu .v-grid-sidebar-button::-moz-focus-inner {
+	border: 0;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu .v-grid-sidebar-button:after {
+	content: "\f0c9";
+	display: block;
+	font-family: ThemeIcons, sans-serif;
+	font-size: 14px;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu.closed {
+	border-radius: 0;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu.open .v-grid-sidebar-button {
+	width: 100%;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu.open .v-grid-sidebar-button:after {
+	content: "\f0c9";
+	font-size: 14px;
+	line-height: 1;
+}
+
+.v-ie .minimum .v-grid-sidebar.v-contextmenu.open .v-grid-sidebar-button {
+	vertical-align: middle;
+}
+
+.v-ie8 .minimum .v-grid-sidebar.v-contextmenu.open .v-grid-sidebar-button:after {
+	vertical-align: middle;
+	text-align: center;
+	display: inline;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu .v-grid-sidebar-content {
+	padding: 4px 0;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu .v-grid-sidebar-content .gwt-MenuBar .gwt-MenuItem .column-hiding-toggle {
+	text-shadow: none;
+}
+
+.minimum .v-grid-cell {
+	background-color: white;
+	padding: 0 18px;
+	line-height: 36px;
+	text-overflow: ellipsis;
+}
+
+.minimum .v-grid-cell  > * {
+	line-height: 1.4;
+	vertical-align: middle;
+}
+
+.minimum .v-grid-cell  > div {
+	display: inline-block;
+}
+
+.minimum .v-grid-cell.frozen {
+	-webkit-box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
+	box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
+	border-right: 1px solid #d4d4d4;
+}
+
+.minimum .v-grid-cell.frozen  + th, .minimum .v-grid-cell.frozen  + td {
+	border-left: none;
+}
+
+.minimum .v-grid-row > td, .minimum .v-grid-editor-cells > div {
+	border-left: 1px solid #d4d4d4;
+	border-bottom: 1px solid #d4d4d4;
+}
+
+.minimum .v-grid-row > td:first-child, .minimum .v-grid-editor-cells > div:first-child {
+	border-left: none;
+}
+
+.minimum .v-grid-editor-cells.frozen > div {
+	-webkit-box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
+	box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
+	border-right: 1px solid #d4d4d4;
+	border-left: none;
+}
+
+.minimum .v-grid-row-stripe > td {
+	background-color: #f5f5f5;
+}
+
+.minimum .v-grid-row-selected > td {
+	background: #000080;
+}
+
+.minimum .v-grid-row-focused > td {
+	
+}
+
+.minimum .v-grid-header th {
+	position: relative;
+	background-color: #fafafa;
+	font-size: 14px;
+	font-weight: inherit;
+	border-left: 1px solid #d4d4d4;
+	border-bottom: 1px solid #d4d4d4;
+	
+	text-align: left;
+}
+
+.minimum .v-grid-header th:first-child {
+	border-left: none;
+}
+
+.minimum .v-grid-header .sort-asc, .minimum .v-grid-header .sort-desc {
+	padding-right: 35px;
+}
+
+.minimum .v-grid-header .sort-asc:after, .minimum .v-grid-header .sort-desc:after {
+	font-family: ThemeIcons, sans-serif;
+	content: "\f0de" " " attr(sort-order);
+	position: absolute;
+	right: 18px;
+	font-size: 12px;
+}
+
+.minimum .v-grid-header .sort-desc:after {
+	content: "\f0dd" " " attr(sort-order);
+}
+
+.minimum .v-grid-column-resize-handle {
+	position: absolute;
+	width: 36px;
+	right: -18px;
+	top: 0px;
+	bottom: 0px;
+	cursor: col-resize;
+	z-index: 10;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.minimum .v-grid-footer td {
+	background-color: #fafafa;
+	font-size: 14px;
+	font-weight: inherit;
+	border-left: 1px solid #d4d4d4;
+	border-top: 1px solid #d4d4d4;
+	border-bottom: none;
+	
+}
+
+.minimum .v-grid-footer td:first-child {
+	border-left: none;
+}
+
+.minimum .v-grid-header .v-grid-cell, .minimum .v-grid-footer .v-grid-cell {
+	overflow: visible;
+}
+
+.minimum .v-grid-column-header-content, .minimum .v-grid-column-footer-content {
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 36px;
+	vertical-align: baseline;
+}
+
+.minimum .v-grid-header-deco {
+	border-top: 1px solid #d4d4d4;
+	border-right: 1px solid #d4d4d4;
+	background-color: #fafafa;
+}
+
+.minimum .v-grid-footer-deco {
+	border-bottom: 1px solid #d4d4d4;
+	border-right: 1px solid #d4d4d4;
+	background-color: #fafafa;
+}
+
+.minimum .v-grid-horizontal-scrollbar-deco {
+	background-color: #fafafa;
+	border: 1px solid #d4d4d4;
+	border-top: none;
+}
+
+.minimum .v-grid-cell-focused {
+	position: relative;
+}
+
+.minimum .v-grid-cell-focused:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	border: 2px solid #000080;
+	display: none;
+	pointer-events: none;
+}
+
+.ie8 .minimum .v-grid-cell-focused:before, .ie9 .minimum .v-grid-cell-focused:before, .ie10 .minimum .v-grid-cell-focused:before {
+	content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
+}
+
+.minimum .v-grid:focus .v-grid-cell-focused:before {
+	display: block;
+}
+
+.minimum .v-grid.v-disabled:focus .v-grid-cell-focused:before {
+	display: none;
+}
+
+.minimum .v-grid-editor {
+	position: absolute;
+	z-index: 20;
+	overflow: hidden;
+	left: 0;
+	right: 0;
+	border: 1px solid #d4d4d4;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	margin-top: -1px;
+	-webkit-box-shadow: 0 0 9px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 9px rgba(0, 0, 0, 0.2);
+}
+
+.minimum .v-grid-editor.unbuffered .v-grid-editor-footer {
+	width: 100%;
+}
+
+.minimum .v-grid-editor-cells {
+	position: relative;
+	white-space: nowrap;
+}
+
+.minimum .v-grid-editor-cells.frozen {
+	z-index: 2;
+}
+
+.minimum .v-grid-editor-cells  > div {
+	display: inline-block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	vertical-align: middle;
+	background: white;
+}
+
+.minimum .v-grid-editor-cells  > div:first-child {
+	border-left: none;
+}
+
+.minimum .v-grid-editor-cells  > div  > * {
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.minimum .v-grid-editor-cells  > div .v-filterselect {
+	padding-left: 0;
+}
+
+.minimum .v-grid-editor-cells  > div input[type="text"], .minimum .v-grid-editor-cells  > div input[type="text"].v-filterselect-input, .minimum .v-grid-editor-cells  > div input[type="password"] {
+	padding-left: 18px;
+}
+
+.minimum .v-grid-editor-cells  > div input[type="text"]:not(.v-filterselect-input), .minimum .v-grid-editor-cells  > div input[type="password"] {
+	padding-right: 9px;
+}
+
+.minimum .v-grid-editor-cells  > div input[type="checkbox"] {
+	margin-left: 18px;
+}
+
+.minimum .v-grid-editor-cells  > div .v-textfield, .minimum .v-grid-editor-cells  > div .v-datefield, .minimum .v-grid-editor-cells  > div .v-filterselect {
+	min-width: 100%;
+	max-width: 100%;
+	min-height: 100%;
+	max-height: 100%;
+}
+
+.v-ie8 .minimum .v-grid-editor-cells  > div .v-datefield-button {
+	margin-left: -37px;
+}
+
+.v-ie8 .minimum .v-grid-editor-cells  > div .v-filterselect-button {
+	margin-left: -25px;
+}
+
+.minimum .v-grid-editor-cells  > div .v-select, .minimum .v-grid-editor-cells  > div .v-select-select {
+	min-width: 100%;
+	max-width: 100%;
+}
+
+.minimum .v-grid-editor-cells  > div.not-editable.v-grid-cell {
+	float: none;
+}
+
+.minimum .v-grid-editor-cells .error::before {
+	position: absolute;
+	display: block;
+	height: 0;
+	width: 0;
+	content: "";
+	border-top: 5px solid red;
+	border-right: 5px solid transparent;
+}
+
+.minimum .v-grid-editor-cells .error, .minimum .v-grid-editor-cells .error > input {
+	background-color: #fee;
+}
+
+.minimum .v-grid-editor-footer {
+	display: table;
+	height: 36px;
+	border-top: 1px solid #d4d4d4;
+	margin-top: -1px;
+	background: white;
+	padding: 0 5px;
+}
+
+.minimum .v-grid-editor-footer  + .v-grid-editor-cells > div {
+	border-bottom: none;
+	border-top: 1px solid #d4d4d4;
+}
+
+.minimum .v-grid-editor-footer:first-child {
+	border-top: none;
+	margin-top: 0;
+	border-bottom: 1px solid #d4d4d4;
+	margin-bottom: -1px;
+}
+
+.minimum .v-grid-editor-message, .minimum .v-grid-editor-buttons {
+	display: table-cell;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.minimum .v-grid-editor-message {
+	width: 100%;
+	position: relative;
+}
+
+.minimum .v-grid-editor-message  > div {
+	position: absolute;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 36px;
+	top: 0;
+}
+
+.minimum .v-grid-editor-save {
+	margin-right: 4px;
+}
+
+.minimum .v-grid-spacer {
+	padding-left: 1px;
+}
+
+.minimum .v-grid-spacer > td {
+	display: block;
+	padding: 0;
+	background-color: white;
+	border-top: 1px solid #eeeeee;
+	border-bottom: 1px solid #d4d4d4;
+}
+
+.minimum .v-grid-spacer.stripe > td {
+	background-color: #f5f5f5;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #d4d4d4;
+}
+
+.minimum .v-grid-spacer-deco-container {
+	border-top: 1px solid transparent;
+	position: relative;
+	top: 0;
+	z-index: 5;
+}
+
+.minimum .v-grid-spacer-deco {
+	top: 0;
+	left: 0;
+	width: 2px;
+	background-color: #000080;
+	position: absolute;
+	height: 100%;
+	pointer-events: none;
+}
+
+.ie8 .minimum .v-grid-spacer-deco:before, .ie9 .minimum .v-grid-spacer-deco:before, .ie10 .minimum .v-grid-spacer-deco:before {
+	content: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==);
+}
+
+.minimum .v-grid-cell > .v-progressbar {
+	width: 100%;
+}
+
+.minimum .v-grid {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+	background-color: #fafafa;
+}
+
+.minimum .v-grid.v-disabled {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-grid-header .v-grid-cell {
+	background-color: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
+	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.minimum .v-grid-header .v-grid-cell.dragged {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+	-webkit-transition: opacity 0.3s ease-in-out;
+	-moz-transition: opacity 0.3s ease-in-out;
+	transition: opacity 0.3s ease-in-out;
+}
+
+.minimum .v-grid-header .v-grid-cell.dragged-column-header {
+	margin-top: -18px;
+}
+
+.minimum .v-grid-footer .v-grid-cell {
+	background-color: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
+	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.minimum .v-grid-header-deco {
+	background-color: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
+	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+}
+
+.minimum .v-grid-footer-deco, .minimum .v-grid-horizontal-scrollbar-deco {
+	background-color: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
+	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+}
+
+.minimum .v-grid-row-selected  > .v-grid-cell {
+	background-color: #000080;
+	background-image: -webkit-linear-gradient(top, #00008a 2%, #000070 98%);
+	background-image: linear-gradient(to bottom,#00008a 2%, #000070 98%);
+	color: #a7a7ec;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05);
+	border-color: #030354;
+}
+
+.minimum .v-grid-row-selected  > .v-grid-cell-focused:before {
+	border-color: #0000e6;
+}
+
+.minimum .v-grid-editor {
+	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
+	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
+	border-color: #000080;
+}
+
+.minimum .v-grid-editor-footer {
+	font-size: 14px;
+	padding: 0 6px;
+	background: #fafafa;
+	-webkit-animation: valo-grid-editor-footer-animate-in 200ms 120ms backwards;
+	-moz-animation: valo-grid-editor-footer-animate-in 200ms 120ms backwards;
+	animation: valo-grid-editor-footer-animate-in 200ms 120ms backwards;
+}
+
+.minimum .v-grid-editor-footer:first-child {
+	-webkit-animation: valo-grid-editor-footer-animate-in-alt 200ms 120ms backwards;
+	-moz-animation: valo-grid-editor-footer-animate-in-alt 200ms 120ms backwards;
+	animation: valo-grid-editor-footer-animate-in-alt 200ms 120ms backwards;
+}
+
+.minimum .v-grid-editor-cells {
+	z-index: 1;
+}
+
+.minimum .v-grid-editor-cells > div:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.minimum .v-grid-editor-cells > div.not-editable.v-grid-cell {
+	float: none;
+}
+
+.minimum .v-grid-editor-cells > div .error::before {
+	border-top: 9px solid #ed473b;
+	border-right: 9px solid transparent;
+}
+
+.minimum .v-grid-editor-cells > div .error, .minimum .v-grid-editor-cells > div .error > input {
+	background-color: #fffbfb;
+}
+
+.minimum .v-grid-editor-cells > div .v-textfield, .minimum .v-grid-editor-cells > div .v-textfield-focus, .minimum .v-grid-editor-cells > div .v-datefield, .minimum .v-grid-editor-cells > div .v-datefield .v-textfield-focus, .minimum .v-grid-editor-cells > div .v-filterselect-input, .minimum .v-grid-editor-cells > div .v-filterselect-input:focus {
+	border: none;
+	border-radius: 0;
+	background: transparent;
+	-webkit-box-shadow: inset 0 1px 0 #f2f2f2;
+	box-shadow: inset 0 1px 0 #f2f2f2;
+}
+
+.minimum .v-grid-editor-cells > div input[type="text"].v-datefield-textfield {
+	padding-left: 43.2px;
+}
+
+.v-ie8 .minimum .v-grid-editor-cells > div .v-datefield-button {
+	margin-left: 0px;
+}
+
+.v-ie8 .minimum .v-grid-editor-cells > div .v-filterselect-button {
+	margin-left: 0px;
+}
+
+.minimum .v-grid-editor-cells > div .v-textfield-focus, .minimum .v-grid-editor-cells > div .v-datefield .v-textfield-focus, .minimum .v-grid-editor-cells > div .v-filterselect-input:focus {
+	position: relative;
+}
+
+.minimum .v-grid-editor-cells > div .v-select {
+	padding-left: 9px;
+	padding-right: 9px;
+}
+
+.minimum .v-grid-editor-cells > div .v-checkbox {
+	margin: 0 9px 0 18px;
+}
+
+.minimum .v-grid-editor-cells > div .v-checkbox  > input[type="checkbox"] {
+	margin-left: 0;
+}
+
+.minimum .v-grid-editor-cells > div .v-checkbox  > label {
+	white-space: nowrap;
+}
+
+.minimum .v-grid-editor-message > div:before {
+	display: inline-block;
+	color: #ed473b;
+	font-weight: 600;
+	width: 18px;
+	text-align: center;
+	content: "!";
+}
+
+.minimum .v-grid-editor-save, .minimum .v-grid-editor-cancel {
+	cursor: pointer;
+	color: #000080;
+	text-decoration: underline;
+	font-weight: inherit;
+	-webkit-transition: color 140ms;
+	-moz-transition: color 140ms;
+	transition: color 140ms;
+	font-weight: 400;
+	text-decoration: none;
+	border: none;
+	background: transparent;
+	padding: 6px 6px;
+	margin: 0;
+	outline: none;
+}
+
+.minimum .v-grid-editor-save:hover, .minimum .v-grid-editor-cancel:hover {
+	color: #0000b3;
+}
+
+.minimum .v-grid-editor-save.v-disabled, .minimum .v-grid-editor-cancel.v-disabled {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-grid-spacer {
+	margin-top: -1px;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu.open .v-grid-sidebar-content {
+	margin: 0 0 2px;
+	padding: 4px 4px 2px;
+}
+
+.minimum .v-grid-sidebar.v-contextmenu.closed {
+	background-color: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
+	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
+}
+
+.minimum .v-grid-scroller::-webkit-scrollbar {
+	border: none;
+}
+
+.minimum .v-grid-scroller::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	border: 4px solid transparent;
+	background: rgba(0, 0, 0, 0.3);
+	-webkit-background-clip: content-box;
+	background-clip: content-box;
+}
+
+.minimum .v-grid-scroller-vertical::-webkit-scrollbar-thumb {
+	min-height: 30px;
+}
+
+.minimum .v-grid-scroller-horizontal::-webkit-scrollbar-thumb {
+	min-width: 30px;
 }
 
 .minimum .v-textfield {
@@ -4934,20 +5835,19 @@ div.v-layout.v-horizontal.v-widget {
 	cursor: pointer;
 	-webkit-appearance: none;
 	background: transparent;
-	border: none;
 	padding: 0;
 	position: absolute;
 	z-index: 10;
-	top: 1px;
-	bottom: 1px;
-	left: 1px;
 	width: 36px;
 	line-height: 34px;
 	text-align: center;
-	cursor: pointer;
 	font: inherit;
 	outline: none;
 	margin: 0;
+	top: 1px;
+	bottom: 1px;
+	left: 1px;
+	border: none;
 	border-right: 1px solid #e4e4e4;
 	color: #a3a3a3;
 	border-radius: 3px 0 0 3px;
@@ -4958,7 +5858,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-datefield [class*="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f073";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -5050,6 +5950,8 @@ div.v-layout.v-horizontal.v-widget {
 	-ms-backface-visibility: hidden;
 	backface-visibility: hidden;
 	margin-top: 5px !important;
+	margin-bottom: 5px !important;
+	margin-right: 5px !important;
 	cursor: default;
 	width: auto;
 }
@@ -5141,6 +6043,11 @@ div.v-layout.v-horizontal.v-widget {
 	border-color: #000080;
 }
 
+.minimum .v-datefield-popup .v-datefield-calendarpanel-day.v-datefield-calendarpanel-day-outside-range, .minimum .v-datefield-popup .v-datefield-calendarpanel-day.v-datefield-calendarpanel-day-outside-range:hover {
+	color: #a0a0a0;
+	cursor: not-allowed;
+}
+
 .minimum .v-datefield-popup .v-datefield-calendarpanel-weekdays {
 	height: 25px;
 	color: rgba(133, 133, 133, 0.85);
@@ -5155,7 +6062,7 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: nowrap;
 }
 
-.minimum .v-datefield-popup td[class$="year"] button, .minimum .v-datefield-popup td[class$="month"] button {
+.minimum .v-datefield-popup td[class*="year"] button, .minimum .v-datefield-popup td[class*="month"] button {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	-ms-appearance: none;
@@ -5175,7 +6082,7 @@ div.v-layout.v-horizontal.v-widget {
 	vertical-align: middle;
 }
 
-.minimum .v-datefield-popup td[class$="year"] button:before, .minimum .v-datefield-popup td[class$="month"] button:before {
+.minimum .v-datefield-popup td[class*="year"] button:before, .minimum .v-datefield-popup td[class*="month"] button:before {
 	color: #a0a0a0;
 	font-size: 21px;
 	line-height: 24px;
@@ -5184,32 +6091,37 @@ div.v-layout.v-horizontal.v-widget {
 	transition: color 200ms;
 }
 
-.minimum .v-datefield-popup td[class$="year"] button:hover, .minimum .v-datefield-popup td[class$="month"] button:hover {
-	opacity: 1;
-	filter: none ;
-}
-
-.minimum .v-datefield-popup td[class$="year"] button:hover:before, .minimum .v-datefield-popup td[class$="month"] button:hover:before {
+.minimum .v-datefield-popup td[class*="year"] button:hover:before, .minimum .v-datefield-popup td[class*="month"] button:hover:before {
 	color: #000080;
 }
 
+.minimum .v-datefield-popup td[class*="year"] button.outside-range, .minimum .v-datefield-popup td[class*="month"] button.outside-range {
+	cursor: default;
+	opacity: 0.3;
+	filter: alpha(opacity=30.0) ;
+}
+
+.minimum .v-datefield-popup td[class*="year"] button.outside-range:hover:before, .minimum .v-datefield-popup td[class*="month"] button.outside-range:hover:before {
+	color: #a0a0a0;
+}
+
 .minimum .v-datefield-popup .v-button-prevyear:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f100";
 }
 
 .minimum .v-datefield-popup .v-button-prevmonth:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f104";
 }
 
 .minimum .v-datefield-popup .v-button-nextyear:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f101";
 }
 
 .minimum .v-datefield-popup .v-button-nextmonth:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f105";
 }
 
@@ -5324,6 +6236,11 @@ div.v-layout.v-horizontal.v-widget {
 	border-color: #000080;
 }
 
+.minimum .v-datefield-calendarpanel-day.v-datefield-calendarpanel-day-outside-range, .minimum .v-datefield-calendarpanel-day.v-datefield-calendarpanel-day-outside-range:hover {
+	color: #a0a0a0;
+	cursor: not-allowed;
+}
+
 .minimum .v-datefield-calendarpanel-weekdays {
 	height: 25px;
 	color: rgba(133, 133, 133, 0.85);
@@ -5338,7 +6255,7 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: nowrap;
 }
 
-.minimum td[class$="year"] button, .minimum td[class$="month"] button {
+.minimum td[class*="year"] button, .minimum td[class*="month"] button {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	-ms-appearance: none;
@@ -5358,7 +6275,7 @@ div.v-layout.v-horizontal.v-widget {
 	vertical-align: middle;
 }
 
-.minimum td[class$="year"] button:before, .minimum td[class$="month"] button:before {
+.minimum td[class*="year"] button:before, .minimum td[class*="month"] button:before {
 	color: #a0a0a0;
 	font-size: 21px;
 	line-height: 24px;
@@ -5367,32 +6284,37 @@ div.v-layout.v-horizontal.v-widget {
 	transition: color 200ms;
 }
 
-.minimum td[class$="year"] button:hover, .minimum td[class$="month"] button:hover {
-	opacity: 1;
-	filter: none ;
-}
-
-.minimum td[class$="year"] button:hover:before, .minimum td[class$="month"] button:hover:before {
+.minimum td[class*="year"] button:hover:before, .minimum td[class*="month"] button:hover:before {
 	color: #000080;
 }
 
+.minimum td[class*="year"] button.outside-range, .minimum td[class*="month"] button.outside-range {
+	cursor: default;
+	opacity: 0.3;
+	filter: alpha(opacity=30.0) ;
+}
+
+.minimum td[class*="year"] button.outside-range:hover:before, .minimum td[class*="month"] button.outside-range:hover:before {
+	color: #a0a0a0;
+}
+
 .minimum .v-button-prevyear:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f100";
 }
 
 .minimum .v-button-prevmonth:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f104";
 }
 
 .minimum .v-button-nextyear:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f101";
 }
 
 .minimum .v-button-nextmonth:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f105";
 }
 
@@ -5531,13 +6453,9 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 	position: absolute;
 	z-index: 10;
-	top: 0;
-	bottom: 0;
-	left: 0;
 	width: 27px;
 	line-height: 27px;
 	text-align: center;
-	cursor: pointer;
 	font: inherit;
 	outline: none;
 	margin: 0;
@@ -5545,7 +6463,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-datefield-tiny [class*="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f073";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -5650,13 +6568,9 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 	position: absolute;
 	z-index: 10;
-	top: 0;
-	bottom: 0;
-	left: 0;
 	width: 31px;
 	line-height: 31px;
 	text-align: center;
-	cursor: pointer;
 	font: inherit;
 	outline: none;
 	margin: 0;
@@ -5664,7 +6578,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-datefield-compact [class*="button"]:before, .minimum .v-datefield-small [class*="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f073";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -5774,13 +6688,9 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 	position: absolute;
 	z-index: 10;
-	top: 0;
-	bottom: 0;
-	left: 0;
 	width: 43px;
 	line-height: 43px;
 	text-align: center;
-	cursor: pointer;
 	font: inherit;
 	outline: none;
 	margin: 0;
@@ -5788,7 +6698,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-datefield-large [class*="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f073";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -5894,13 +6804,9 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0;
 	position: absolute;
 	z-index: 10;
-	top: 0;
-	bottom: 0;
-	left: 0;
 	width: 58px;
 	line-height: 58px;
 	text-align: center;
-	cursor: pointer;
 	font: inherit;
 	outline: none;
 	margin: 0;
@@ -5908,7 +6814,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-datefield-huge [class*="button"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f073";
 	-webkit-transition: color 140ms;
 	-moz-transition: color 140ms;
@@ -6025,6 +6931,11 @@ div.v-layout.v-horizontal.v-widget {
 	border-color: #000080;
 }
 
+.minimum .v-inline-datefield-calendarpanel-day.v-inline-datefield-calendarpanel-day-outside-range, .minimum .v-inline-datefield-calendarpanel-day.v-inline-datefield-calendarpanel-day-outside-range:hover {
+	color: #a0a0a0;
+	cursor: not-allowed;
+}
+
 .minimum .v-inline-datefield-calendarpanel-weekdays {
 	height: 25px;
 	color: rgba(133, 133, 133, 0.85);
@@ -6039,7 +6950,7 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: nowrap;
 }
 
-.minimum td[class$="year"] button, .minimum td[class$="month"] button {
+.minimum td[class*="year"] button, .minimum td[class*="month"] button {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	-ms-appearance: none;
@@ -6059,7 +6970,7 @@ div.v-layout.v-horizontal.v-widget {
 	vertical-align: middle;
 }
 
-.minimum td[class$="year"] button:before, .minimum td[class$="month"] button:before {
+.minimum td[class*="year"] button:before, .minimum td[class*="month"] button:before {
 	color: #a0a0a0;
 	font-size: 21px;
 	line-height: 24px;
@@ -6068,32 +6979,37 @@ div.v-layout.v-horizontal.v-widget {
 	transition: color 200ms;
 }
 
-.minimum td[class$="year"] button:hover, .minimum td[class$="month"] button:hover {
-	opacity: 1;
-	filter: none ;
-}
-
-.minimum td[class$="year"] button:hover:before, .minimum td[class$="month"] button:hover:before {
+.minimum td[class*="year"] button:hover:before, .minimum td[class*="month"] button:hover:before {
 	color: #000080;
 }
 
+.minimum td[class*="year"] button.outside-range, .minimum td[class*="month"] button.outside-range {
+	cursor: default;
+	opacity: 0.3;
+	filter: alpha(opacity=30.0) ;
+}
+
+.minimum td[class*="year"] button.outside-range:hover:before, .minimum td[class*="month"] button.outside-range:hover:before {
+	color: #a0a0a0;
+}
+
 .minimum .v-button-prevyear:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f100";
 }
 
 .minimum .v-button-prevmonth:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f104";
 }
 
 .minimum .v-button-nextyear:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f101";
 }
 
 .minimum .v-button-nextmonth:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f105";
 }
 
@@ -6389,7 +7305,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-menubar .v-menubar-submenu-indicator  + .v-menubar-menuitem-caption:after {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f078";
 	font-size: 0.7em;
 	vertical-align: 0.15em;
@@ -6473,7 +7389,7 @@ div.v-layout.v-horizontal.v-widget {
 .minimum .v-menubar-popup .v-menubar-submenu-indicator  + .v-menubar-menuitem-caption:after {
 	position: absolute;
 	right: 9px;
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f054";
 	line-height: 28px;
 }
@@ -6496,7 +7412,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .minimum .v-menubar-popup [class*="checked"] .v-menubar-menuitem-caption:before {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	position: absolute;
 	left: 9px;
 }
@@ -6507,12 +7423,6 @@ div.v-layout.v-horizontal.v-widget {
 
 .minimum .v-menubar-popup [class*="disabled"] {
 	cursor: default;
-}
-
-.minimum .v-menubar-popup.v-menubar-popup-animate-out {
-	-webkit-animation: none;
-	-moz-animation: none;
-	animation: none;
 }
 
 .minimum .v-menubar-small {
@@ -6687,31 +7597,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 18px;
 }
 
-:root .minimum .v-radiobutton > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-radiobutton > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-radiobutton > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-radiobutton > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-radiobutton > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -6726,23 +7614,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-radiobutton > input[disabled]  ~ label, :root .minimum .v-radiobutton > input[disabled]  ~ label .v-icon, :root .minimum .v-radiobutton > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-radiobutton > input[disabled]  ~ label:before, :root .minimum .v-radiobutton > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-radiobutton > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-radiobutton > .v-icon, .minimum .v-radiobutton > label .v-icon {
 	margin: 0 6px 0 3px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-radiobutton.v-disabled  > label, .minimum .v-radiobutton.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-radiobutton.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-radiobutton.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-radiobutton.v-readonly  > label, .minimum .v-radiobutton.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-radiobutton.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-radiobutton.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-radiobutton.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 :root .minimum .v-radiobutton > input:checked ~ label:after {
@@ -6854,31 +7760,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 16px;
 }
 
-:root .minimum .v-select-optiongroup-small .v-checkbox > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-select-optiongroup-small .v-checkbox > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-select-optiongroup-small .v-checkbox > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-select-optiongroup-small .v-checkbox > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-select-optiongroup-small .v-checkbox > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -6893,23 +7777,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-select-optiongroup-small .v-checkbox > input[disabled]  ~ label, :root .minimum .v-select-optiongroup-small .v-checkbox > input[disabled]  ~ label .v-icon, :root .minimum .v-select-optiongroup-small .v-checkbox > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-select-optiongroup-small .v-checkbox > input[disabled]  ~ label:before, :root .minimum .v-select-optiongroup-small .v-checkbox > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-select-optiongroup-small .v-checkbox > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-select-optiongroup-small .v-checkbox > .v-icon, .minimum .v-select-optiongroup-small .v-checkbox > label .v-icon {
 	margin: 0 5px 0 3px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-select-optiongroup-small .v-checkbox.v-disabled  > label, .minimum .v-select-optiongroup-small .v-checkbox.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-select-optiongroup-small .v-checkbox.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-small .v-checkbox.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-select-optiongroup-small .v-checkbox.v-readonly  > label, .minimum .v-select-optiongroup-small .v-checkbox.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-select-optiongroup-small .v-checkbox.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-small .v-checkbox.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-select-optiongroup-small .v-checkbox.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 .minimum .v-select-optiongroup-small .v-radiobutton {
@@ -6987,31 +7889,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 16px;
 }
 
-:root .minimum .v-select-optiongroup-small .v-radiobutton > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-select-optiongroup-small .v-radiobutton > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-select-optiongroup-small .v-radiobutton > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-select-optiongroup-small .v-radiobutton > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-select-optiongroup-small .v-radiobutton > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -7026,23 +7906,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-select-optiongroup-small .v-radiobutton > input[disabled]  ~ label, :root .minimum .v-select-optiongroup-small .v-radiobutton > input[disabled]  ~ label .v-icon, :root .minimum .v-select-optiongroup-small .v-radiobutton > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-select-optiongroup-small .v-radiobutton > input[disabled]  ~ label:before, :root .minimum .v-select-optiongroup-small .v-radiobutton > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-select-optiongroup-small .v-radiobutton > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-select-optiongroup-small .v-radiobutton > .v-icon, .minimum .v-select-optiongroup-small .v-radiobutton > label .v-icon {
 	margin: 0 5px 0 3px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-select-optiongroup-small .v-radiobutton.v-disabled  > label, .minimum .v-select-optiongroup-small .v-radiobutton.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-select-optiongroup-small .v-radiobutton.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-small .v-radiobutton.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-select-optiongroup-small .v-radiobutton.v-readonly  > label, .minimum .v-select-optiongroup-small .v-radiobutton.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-select-optiongroup-small .v-radiobutton.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-small .v-radiobutton.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-select-optiongroup-small .v-radiobutton.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 :root .minimum .v-select-optiongroup-small .v-radiobutton > input:checked ~ label:after {
@@ -7154,31 +8052,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 22px;
 }
 
-:root .minimum .v-select-optiongroup-large .v-checkbox > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-select-optiongroup-large .v-checkbox > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-select-optiongroup-large .v-checkbox > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-select-optiongroup-large .v-checkbox > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-select-optiongroup-large .v-checkbox > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -7193,23 +8069,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-select-optiongroup-large .v-checkbox > input[disabled]  ~ label, :root .minimum .v-select-optiongroup-large .v-checkbox > input[disabled]  ~ label .v-icon, :root .minimum .v-select-optiongroup-large .v-checkbox > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-select-optiongroup-large .v-checkbox > input[disabled]  ~ label:before, :root .minimum .v-select-optiongroup-large .v-checkbox > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-select-optiongroup-large .v-checkbox > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-select-optiongroup-large .v-checkbox > .v-icon, .minimum .v-select-optiongroup-large .v-checkbox > label .v-icon {
 	margin: 0 7px 0 4px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-select-optiongroup-large .v-checkbox.v-disabled  > label, .minimum .v-select-optiongroup-large .v-checkbox.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-select-optiongroup-large .v-checkbox.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-large .v-checkbox.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-select-optiongroup-large .v-checkbox.v-readonly  > label, .minimum .v-select-optiongroup-large .v-checkbox.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-select-optiongroup-large .v-checkbox.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-large .v-checkbox.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-select-optiongroup-large .v-checkbox.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 .minimum .v-select-optiongroup-large .v-radiobutton {
@@ -7287,31 +8181,9 @@ div.v-layout.v-horizontal.v-widget {
 	height: 22px;
 }
 
-:root .minimum .v-select-optiongroup-large .v-radiobutton > input ~ label:before:after {
-	border: inherit;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-}
-
-:root .minimum .v-select-optiongroup-large .v-radiobutton > input ~ label:before:hover:after {
-	background-color: rgba(186, 186, 186, 0.1);
-}
-
-:root .minimum .v-select-optiongroup-large .v-radiobutton > input ~ label:before:focus:after {
-	border-color: #000080;
-	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
-}
-
-:root .minimum .v-select-optiongroup-large .v-radiobutton > input ~ label:before:active:after {
-	background-color: rgba(125, 125, 125, 0.2);
-}
-
 :root .minimum .v-select-optiongroup-large .v-radiobutton > input ~ label:after {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	color: transparent;
 	-webkit-transition: color 100ms;
 	-moz-transition: color 100ms;
@@ -7326,23 +8198,41 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
-:root .minimum .v-select-optiongroup-large .v-radiobutton > input[disabled]  ~ label, :root .minimum .v-select-optiongroup-large .v-radiobutton > input[disabled]  ~ label .v-icon, :root .minimum .v-select-optiongroup-large .v-radiobutton > input[disabled]  ~ .v-icon {
-	cursor: default;
-}
-
-:root .minimum .v-select-optiongroup-large .v-radiobutton > input[disabled]  ~ label:before, :root .minimum .v-select-optiongroup-large .v-radiobutton > input[disabled]  ~ label:after {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-:root .minimum .v-select-optiongroup-large .v-radiobutton > input[disabled]:active ~ label:after {
-	background: transparent;
-}
-
 .minimum .v-select-optiongroup-large .v-radiobutton > .v-icon, .minimum .v-select-optiongroup-large .v-radiobutton > label .v-icon {
 	margin: 0 7px 0 4px;
 	min-width: 1em;
 	cursor: pointer;
+}
+
+.minimum .v-select-optiongroup-large .v-radiobutton.v-disabled  > label, .minimum .v-select-optiongroup-large .v-radiobutton.v-disabled  > .v-icon {
+	cursor: default;
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
+.minimum .v-select-optiongroup-large .v-radiobutton.v-disabled  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-large .v-radiobutton.v-disabled > input:active ~ label:after {
+	background: transparent;
+}
+
+.minimum .v-select-optiongroup-large .v-radiobutton.v-readonly  > label, .minimum .v-select-optiongroup-large .v-radiobutton.v-readonly  > .v-icon {
+	cursor: default;
+}
+
+.minimum .v-select-optiongroup-large .v-radiobutton.v-readonly  > label > .v-icon {
+	cursor: default;
+}
+
+:root .minimum .v-select-optiongroup-large .v-radiobutton.v-readonly > input:active ~ label:after {
+	background: transparent;
+}
+
+:root .minimum .v-select-optiongroup-large .v-radiobutton.v-readonly > input ~ label:after {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 :root .minimum .v-select-optiongroup-large .v-radiobutton > input:checked ~ label:after {
@@ -7403,6 +8293,11 @@ div.v-layout.v-horizontal.v-widget {
 
 .minimum .v-link:hover {
 	color: #0000b3;
+}
+
+.minimum .v-link.v-disabled {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
 }
 
 .minimum .v-link a {
@@ -7478,9 +8373,9 @@ div.v-layout.v-horizontal.v-widget {
 	background-image: radial-gradient(  circle at 50% 50%, #222, #0e0e0e);
 	opacity: 0.72;
 	filter: alpha(opacity=72) ;
-	-webkit-animation: valo-animate-in-fade 400ms 100ms;
-	-moz-animation: valo-animate-in-fade 400ms 100ms;
-	animation: valo-animate-in-fade 400ms 100ms;
+	-webkit-animation: valo-animate-in-fade 400ms 100ms backwards;
+	-moz-animation: valo-animate-in-fade 400ms 100ms backwards;
+	animation: valo-animate-in-fade 400ms 100ms backwards;
 }
 
 .v-op12 .minimum .v-window-modalitycurtain {
@@ -7500,6 +8395,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-window-outerheader {
+	cursor: move;
 	position: absolute;
 	z-index: 2;
 	top: 0;
@@ -7524,7 +8420,6 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-window-header {
-	cursor: move;
 	line-height: 35px;
 	padding-left: 12px;
 	margin-right: 72px;
@@ -7532,6 +8427,14 @@ div.v-layout.v-horizontal.v-widget {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	color: #7e7e7e;
+}
+
+.minimum .v-window-restorebox-disabled  ~ .v-window-closebox ~ .v-window-header, .minimum .v-window-maximizebox-disabled  ~ .v-window-closebox ~ .v-window-header {
+	margin-right: 36px;
+}
+
+.minimum .v-window-restorebox-disabled  ~ .v-window-closebox-disabled ~ .v-window-header, .minimum .v-window-maximizebox-disabled  ~ .v-window-closebox-disabled ~ .v-window-header {
+	margin-right: 12px;
 }
 
 .minimum .v-window-closebox, .minimum .v-window-maximizebox, .minimum .v-window-restorebox {
@@ -7588,11 +8491,11 @@ div.v-layout.v-horizontal.v-widget {
 	border-bottom-left-radius: 0;
 }
 
-.minimum .v-window-restorebox-disabled, .minimum .v-window-maximizebox-disabled {
+.minimum .v-window-closebox-disabled, .minimum .v-window-resizebox-disabled, .minimum .v-window-restorebox-disabled, .minimum .v-window-maximizebox-disabled {
 	display: none;
 }
 
-.minimum .v-window-restorebox-disabled  + .v-window-closebox, .minimum .v-window-maximizebox-disabled  + .v-window-closebox {
+.minimum .v-window-closebox-disabled  + .v-window-closebox, .minimum .v-window-resizebox-disabled  + .v-window-closebox, .minimum .v-window-restorebox-disabled  + .v-window-closebox, .minimum .v-window-maximizebox-disabled  + .v-window-closebox {
 	width: 36px;
 	padding-right: 0;
 	border-bottom-left-radius: 4px;
@@ -7650,8 +8553,16 @@ div.v-layout.v-horizontal.v-widget {
 	padding-left: 12px;
 }
 
+.minimum .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .minimum .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .minimum .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-left"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	left: 12px;
+}
+
 .minimum .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"] {
 	padding-right: 12px;
+}
+
+.minimum .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h2, .minimum .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h3, .minimum .v-window-contents  > .v-scrollable  > .v-formlayout [class*="margin-right"] > tbody > [class*="row"] > [class*="contentcell"]  > .v-label-h4 {
+	right: 12px;
 }
 
 .minimum .v-window-contents  > .v-scrollable:focus {
@@ -7698,10 +8609,6 @@ div.v-layout.v-horizontal.v-widget {
 
 .v-ie8 .minimum .v-window-resizebox, .v-ie9 .minimum .v-window-resizebox {
 	cursor: se-resize;
-}
-
-.minimum .v-window-resizebox-disabled {
-	display: none;
 }
 
 .minimum .v-window-modalitycurtain:active  ~ .v-window {
@@ -7799,7 +8706,7 @@ div.v-layout.v-horizontal.v-widget {
 	margin-left: -1.9em;
 	vertical-align: top;
 	content: "\f0da";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	text-align: center;
 	background: transparent;
 }
@@ -7825,7 +8732,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .minimum .v-tree-node-caption > div:before {
 	content: "\f0da";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	display: inline-block;
 	width: 0.5em;
 	text-align: center;
@@ -7888,12 +8795,12 @@ div.v-layout.v-horizontal.v-widget {
 	-o-transform: rotate(90deg);
 	transform: rotate(90deg);
 	content: "\f0da";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 }
 
 .v-ie8 .minimum .v-tree-node-expanded:before {
 	content: "\f0d7";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 }
 
 .minimum .v-tree-node-leaf:before, .minimum .v-tree-node-leaf > .v-tree-node-caption > div:before {
@@ -7979,6 +8886,7 @@ div.v-layout.v-horizontal.v-widget {
 	position: relative;
 	background: #fafafa;
 	color: #464646;
+	overflow: hidden;
 }
 
 .minimum .v-table-header table, .minimum .v-table-footer table, .minimum .v-table-table {
@@ -8016,9 +8924,14 @@ div.v-layout.v-horizontal.v-widget {
 .minimum .v-table-footer-container, .minimum .v-table-caption-container {
 	overflow: hidden;
 	line-height: 1;
+	min-height: 36px;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+.v-ie8 .minimum .v-table-footer-container, .v-ie8 .minimum .v-table-caption-container {
+	min-height: 15px;
 }
 
 .minimum .v-table-footer-container {
@@ -8054,6 +8967,7 @@ div.v-layout.v-horizontal.v-widget {
 	border-left: 1px solid #d4d4d4;
 	overflow: hidden;
 	height: 36px;
+	vertical-align: middle;
 }
 
 .minimum .v-table-cell-content:first-child {
@@ -8104,16 +9018,22 @@ div.v-layout.v-horizontal.v-widget {
 	border-top: 1px solid #d4d4d4;
 }
 
-.minimum .v-table-table tr:first-child td {
+.minimum .v-table-table tr:first-child > td {
 	border-top: none;
 }
 
 .minimum .v-table-row {
 	background-color: white;
+	cursor: pointer;
 }
 
 .minimum .v-table-row-odd {
 	background-color: #f5f5f5;
+	cursor: pointer;
+}
+
+.minimum .v-table-body-noselection .v-table-row, .minimum .v-table-body-noselection .v-table-row-odd {
+	cursor: default;
 }
 
 .minimum .v-table [class*="-row"].v-selected {
@@ -8157,13 +9077,13 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-table-header-cell-asc .v-table-sort-indicator:before {
-	content: "\f0dd";
-	font-family: FontAwesome;
+	content: "\f0de";
+	font-family: ThemeIcons;
 }
 
 .minimum .v-table-header-cell-desc .v-table-sort-indicator:before {
-	content: "\f0de";
-	font-family: FontAwesome;
+	content: "\f0dd";
+	font-family: ThemeIcons;
 }
 
 .minimum [class*="rowheader"] span.v-icon {
@@ -8191,7 +9111,7 @@ div.v-layout.v-horizontal.v-widget {
 .minimum .v-table-focus-slot-right {
 	border-right: 3px solid #000080;
 	right: -2px;
-	margin-left: -11px;
+	margin-left: -11px !important;
 }
 
 .minimum .v-table-focus-slot-left {
@@ -8217,25 +9137,27 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: #fafafa;
 	background-image: -webkit-linear-gradient(top, #fafafa 2%, #efefef 98%);
 	background-image: linear-gradient(to bottom,#fafafa 2%, #efefef 98%);
-	-webkit-box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #e7e7e7, 0 2px 3px rgba(0, 0, 0, 0.05);
-	box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #e7e7e7, 0 2px 3px rgba(0, 0, 0, 0.05);
+	-webkit-box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #e7e7e7;
+	box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #e7e7e7;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
 	position: absolute;
 	z-index: 2;
-	top: -9px;
-	right: -9px;
+	top: 0;
+	right: 0;
+	width: 18px;
 	height: 18px;
 	line-height: 18px;
-	width: 18px;
 	padding: 0;
-	border-radius: 50%;
+	border-top-width: 0;
+	border-right-width: 0;
+	border-radius: 0 0 0 4px;
 	cursor: pointer;
 	text-align: center;
 	opacity: 0;
 	filter: alpha(opacity=0) ;
-	-webkit-transition: opacity 200ms 1s;
-	-moz-transition: opacity 200ms 1s;
-	transition: opacity 200ms 1s;
+	-webkit-transition: opacity 200ms 2s;
+	-moz-transition: opacity 200ms 2s;
+	transition: opacity 200ms 2s;
 }
 
 .minimum .v-table-column-selector:after {
@@ -8263,11 +9185,11 @@ div.v-layout.v-horizontal.v-widget {
 .minimum .v-table-column-selector:after {
 	content: "";
 	position: absolute;
-	top: -1px;
-	right: -1px;
-	bottom: -1px;
-	left: -1px;
-	border-radius: inherit;
+	border: none;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }
 
 .minimum .v-table-column-selector:active:after {
@@ -8275,34 +9197,21 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-table-column-selector:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f013";
-}
-
-.minimum .v-scrollable > .v-table .v-table-column-selector {
-	right: 0;
-	top: 0;
-	border-top: none;
-	border-right: none;
-	border-radius: 0 0 0 50%;
-}
-
-.minimum .v-scrollable > .v-table .v-table-column-selector:after {
-	top: 0;
-	right: 0;
 }
 
 .minimum .v-table-header-wrap:hover .v-table-column-selector {
 	opacity: 1;
 	filter: none ;
-	-webkit-transition-delay: 100ms;
-	-moz-transition-delay: 100ms;
-	transition-delay: 100ms;
+	-webkit-transition-delay: 200ms;
+	-moz-transition-delay: 200ms;
+	transition-delay: 200ms;
 }
 
 .minimum .v-on:before, .minimum .v-off:before {
 	content: "\f00c";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	font-size: 0.9em;
 	margin-right: 6px;
 }
@@ -8353,6 +9262,10 @@ div.v-layout.v-horizontal.v-widget {
 	text-align: center;
 }
 
+.minimum .v-table-drag {
+	overflow: visible;
+}
+
 .minimum .v-table-drag .v-table-body {
 	-webkit-box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
 	box-shadow: 0 0 0 2px rgba(0, 0, 128, 0.5);
@@ -8367,44 +9280,27 @@ div.v-layout.v-horizontal.v-widget {
 	outline: none;
 }
 
-.minimum .v-table-row-drag-middle td:first-child:before {
-	content: "";
-	display: block;
-	position: absolute;
-	z-index: 1;
-	height: 37px;
-	left: 0;
-	right: 0;
-	background: #000080;
-	opacity: 0.2;
-	filter: alpha(opacity=20) ;
+.minimum .v-table-row-drag-middle .v-table-cell-content {
+	background-color: #cccce5;
+	color: #303049;
 }
 
-.minimum .v-table-row-drag-top td:first-child:before, .minimum .v-table-row-drag-bottom td:first-child:after {
-	content: "\2022";
-	display: block;
-	position: absolute;
-	height: 2px;
-	left: 0;
-	right: 0;
-	background: #000080;
-	font-size: 32px;
-	line-height: 2px;
-	color: #000080;
-	text-indent: -4px;
-	text-shadow: 0 0 1px white, 0 0 1px white;
+.minimum .v-table-row-drag-bottom td.v-table-cell-content {
+	border-bottom: 2px solid #000080;
+	height: 34px;
 }
 
-.minimum .v-table-row-drag-top td:first-child:before {
+.minimum .v-table-row-drag-bottom .v-table-cell-wrapper {
+	margin-bottom: -2px;
+}
+
+.minimum .v-table-row-drag-top td.v-table-cell-content {
+	border-top: 2px solid #000080;
+	height: 35px;
+}
+
+.minimum .v-table-row-drag-top .v-table-cell-wrapper {
 	margin-top: -1px;
-}
-
-.v-ff .minimum .v-table-row-drag-top td:first-child:before, .v-ff .minimum .v-table-row-drag-bottom td:first-child:after {
-	line-height: 1px;
-}
-
-.v-ie .minimum .v-table-row-drag-top td:first-child:before, .v-ie .minimum .v-table-row-drag-bottom td:first-child:after {
-	line-height: 0;
 }
 
 .minimum .v-table-no-stripes .v-table-row, .minimum .v-table-no-stripes .v-table-row-odd {
@@ -8423,6 +9319,10 @@ div.v-layout.v-horizontal.v-widget {
 .minimum .v-table-no-horizontal-lines .v-table-cell-content {
 	border-top: none;
 	border-bottom: none;
+}
+
+.minimum .v-table-no-horizontal-lines .v-table-row-drag-top .v-table-cell-content, .minimum .v-table-no-horizontal-lines .v-table-row-drag-bottom .v-table-cell-content {
+	height: 35px;
 }
 
 .minimum .v-table-no-header .v-table-header-wrap {
@@ -8495,10 +9395,6 @@ div.v-layout.v-horizontal.v-widget {
 	margin-top: -16px;
 }
 
-.minimum .v-table-compact .v-table-row-drag-middle td:first-child:before, .minimum .v-table-small .v-table-row-drag-middle td:first-child:before {
-	height: 32px;
-}
-
 .minimum .v-table-compact.v-treetable .v-table-cell-wrapper, .minimum .v-table-small.v-treetable .v-table-cell-wrapper {
 	padding-left: 0;
 	padding-right: 0;
@@ -8519,6 +9415,10 @@ div.v-layout.v-horizontal.v-widget {
 	padding-right: 6px;
 }
 
+.minimum .v-table-compact .v-table-row-drag-top .v-table-cell-content, .minimum .v-table-compact .v-table-row-drag-bottom .v-table-cell-content, .minimum .v-table-small .v-table-row-drag-top .v-table-cell-content, .minimum .v-table-small .v-table-row-drag-bottom .v-table-cell-content {
+	height: 30px;
+}
+
 .minimum .v-table-small {
 	font-size: 14px;
 }
@@ -8533,6 +9433,10 @@ div.v-layout.v-horizontal.v-widget {
 	box-sizing: content-box;
 	padding-left: 0;
 	padding-right: 0;
+}
+
+.minimum .v-treetable [class*="caption-container"], .minimum .v-treetable [class*="footer-container"] {
+	min-height: 15px;
 }
 
 .minimum .v-treetable [class*="cell-wrapper"] {
@@ -8571,12 +9475,12 @@ div.v-layout.v-horizontal.v-widget {
 
 .minimum .v-treetable-node-closed:before {
 	content: "\f0da";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 }
 
 .minimum .v-treetable-node-open:before {
 	content: "\f0d7";
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 }
 
 .minimum .v-splitpanel-horizontal  > div > .v-splitpanel-hsplitter {
@@ -9205,6 +10109,7 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	border-bottom: 2px solid transparent;
+	position: relative;
 	-webkit-transition: border-bottom 200ms, color 200ms;
 	-moz-transition: border-bottom 200ms, color 200ms;
 	transition: border-bottom 200ms, color 200ms;
@@ -9227,7 +10132,6 @@ div.v-layout.v-horizontal.v-widget {
 	filter: alpha(opacity=50) ;
 	cursor: default;
 	color: inherit !important;
-	border-bottom: none;
 }
 
 .minimum .v-tabsheet-tabitemcell:first-child .v-caption, .minimum .v-tabsheet-tabitemcell[aria-hidden="true"] + td .v-caption {
@@ -9247,14 +10151,23 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000080;
 }
 
+.minimum .v-tabsheet-tabitemcell .v-caption-closable {
+	padding-right: 22px;
+}
+
+.minimum .v-tabsheet-tabitemcell.icons-on-top .v-caption-closable {
+	padding-right: 4px;
+}
+
 .minimum .v-tabsheet-tabitemcell .v-tabsheet-caption-close {
-	display: inline-block;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	margin: -8px 0 0;
 	font-size: 18px;
 	line-height: 18px;
 	width: 18px;
-	vertical-align: middle;
 	text-align: center;
-	margin: 0 -4px 0 8px;
 	border-radius: 2px;
 	color: #969696;
 }
@@ -9344,7 +10257,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-tabsheet-scroller [class*="Next"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f054";
 }
 
@@ -9353,7 +10266,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-tabsheet-scroller [class*="Prev"]:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f053";
 }
 
@@ -9365,9 +10278,9 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-tabsheet-tabsheetpanel > .v-scrollable > .v-widget {
-	-webkit-animation: valo-animate-in-fade 300ms;
-	-moz-animation: valo-animate-in-fade 300ms;
-	animation: valo-animate-in-fade 300ms;
+	-webkit-animation: valo-animate-in-fade 300ms backwards;
+	-moz-animation: valo-animate-in-fade 300ms backwards;
+	animation: valo-animate-in-fade 300ms backwards;
 }
 
 .minimum .v-tabsheet-deco {
@@ -9428,9 +10341,9 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption {
-	position: relative;
 	margin-left: 4px;
 	padding: 0 12px;
+	background-color: #fafafa;
 	border: 1px solid transparent;
 	line-height: 35px;
 	border-radius: 4px 4px 0 0;
@@ -9443,6 +10356,20 @@ div.v-layout.v-horizontal.v-widget {
 .minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption:hover {
 	background-color: #f2f2f2;
 	border-bottom-color: #dfdfdf;
+}
+
+.minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption.v-disabled:hover {
+	background-color: #fafafa;
+}
+
+.minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption-closable {
+	padding-right: 30px;
+}
+
+.minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-tabsheet-caption-close {
+	top: 4px;
+	right: 4px;
+	margin-top: 0;
 }
 
 .minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer td:first-child .v-caption, .minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer [aria-hidden="true"] + td .v-caption {
@@ -9458,17 +10385,6 @@ div.v-layout.v-horizontal.v-widget {
 	border-color: #dfdfdf;
 	border-bottom: none;
 	padding-bottom: 1px;
-}
-
-.minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-caption-closable {
-	padding-right: 30px;
-}
-
-.minimum .v-tabsheet-framed  > .v-tabsheet-tabcontainer .v-tabsheet-caption-close {
-	position: absolute;
-	top: 4px;
-	right: 4px;
-	margin: 0;
 }
 
 .minimum .v-tabsheet-framed  > .v-tabsheet-content {
@@ -9487,8 +10403,8 @@ div.v-layout.v-horizontal.v-widget {
 	padding-top: 6px;
 }
 
-.minimum .v-tabsheet-framed.icons-on-top .v-caption-closable {
-	padding-right: 12px;
+.minimum .v-tabsheet-framed.icons-on-top  > .v-tabsheet-tabcontainer .v-tabsheet-tabitem-selected .v-caption {
+	padding-bottom: 7px;
 }
 
 .minimum .v-tabsheet-centered-tabs  > .v-tabsheet-tabcontainer {
@@ -9503,22 +10419,27 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0 9px;
 }
 
-.minimum .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-caption {
+.minimum .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-caption {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	line-height: 1.2;
 }
 
-.minimum .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-tabsheet-tabitem-selected .v-caption {
-	padding-bottom: 7px;
-}
-
-.minimum .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-icon {
+.minimum .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-icon {
 	display: block;
 }
 
-.minimum .v-tabsheet-icons-on-top  > div > .v-tabsheet-tabs .v-icon  + .v-captiontext.v-captiontext {
+.minimum .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-icon  + .v-captiontext.v-captiontext {
 	margin-left: 0;
+}
+
+.minimum .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-caption-closable {
+	padding-right: 12px;
+}
+
+.minimum .v-tabsheet-icons-on-top  > .v-tabsheet-tabcontainer .v-tabsheet-caption-close {
+	top: 4px;
+	margin-top: 0;
 }
 
 .minimum .v-tabsheet-compact-tabbar  > .v-tabsheet-tabcontainer-compact-tabbar .v-caption {
@@ -9603,8 +10524,8 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-colorpicker-popup .resize-button:before {
-	font-family: FontAwesome;
-	content: "\F141";
+	font-family: ThemeIcons;
+	content: "\f141";
 }
 
 .minimum .v-colorpicker-popup .resize-button-caption {
@@ -9639,7 +10560,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-colorpicker {
-	width: auto !important;
+	width: auto;
 }
 
 .minimum .v-colorpicker-button-color {
@@ -10007,12 +10928,12 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-select-twincol-buttons .v-button-wrap:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f053";
 }
 
 .minimum .v-select-twincol-buttons .v-button:first-child .v-button-wrap:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f054";
 }
 
@@ -10082,12 +11003,12 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-calendar-header-week .v-calendar-back:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f053";
 }
 
 .minimum .v-calendar-header-week .v-calendar-next:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f054";
 }
 
@@ -10537,6 +11458,10 @@ div.v-layout.v-horizontal.v-widget {
 	margin-top: 16px;
 }
 
+.minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell h1, .minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell .v-label-h1, .minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell h2, .minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell .v-label-h2, .minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell h3, .minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell .v-label-h3, .minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell h4, .minimum .v-verticallayout > .v-slot:first-child .v-formlayout-contentcell .v-label-h4, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell h1, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell .v-label-h1, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell h2, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell .v-label-h2, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell h3, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell .v-label-h3, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell h4, .minimum .v-verticallayout > div > .v-slot:first-child .v-formlayout-contentcell .v-label-h4 {
+	margin-top: -0.5em;
+}
+
 .minimum h1.no-margin, .minimum .v-label-h1.no-margin, .minimum h2.no-margin, .minimum .v-label-h2.no-margin, .minimum h3.no-margin, .minimum .v-label-h3.no-margin, .minimum h4.no-margin, .minimum .v-label-h4.no-margin {
 	margin: 0 !important;
 }
@@ -10617,7 +11542,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-label-success:before, .minimum .v-label-failure:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 	content: "\f00c";
 	margin-right: 0.5em;
 	margin-left: -18px;
@@ -10776,6 +11701,11 @@ div.v-layout.v-horizontal.v-widget {
 	color: #0000b3;
 }
 
+.minimum .v-popupview.v-disabled {
+	opacity: 0.5;
+	filter: alpha(opacity=50) ;
+}
+
 .minimum .v-popupview-popup {
 	padding: 4px 4px;
 	border-radius: 4px;
@@ -10919,7 +11849,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .minimum .v-richtextarea .gwt-RichTextToolbar-top div:before {
-	font-family: FontAwesome;
+	font-family: ThemeIcons;
 }
 
 .minimum .v-richtextarea .gwt-RichTextToolbar-top div[title="Toggle Bold"]:before {
@@ -11024,10 +11954,14 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: normal;
 }
 
+.minimum .v-upload-immediate .v-button {
+	width: 100%;
+}
+
 .minimum .v-upload-immediate input[type="file"] {
 	opacity: 0;
 	filter: alpha(opacity=0) ;
-	z-index: 2;
+	z-index: -1;
 	position: absolute;
 	right: 0;
 	height: 36px;
@@ -11101,7 +12035,17 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 18px 21px;
 }
 
-.minimum .v-Notification h1 {
+.minimum .v-Notification .v-Notification-caption {
+	color: #000080;
+	font-size: 19px;
+	line-height: 1;
+}
+
+.minimum .v-Notification .v-Notification-description {
+	line-height: 1.4;
+}
+
+.minimum .v-Notification-caption {
 	margin: 0;
 	display: inline-block;
 	text-align: left;
@@ -11111,7 +12055,7 @@ div.v-layout.v-horizontal.v-widget {
 	letter-spacing: 0;
 }
 
-.minimum .v-Notification p {
+.minimum .v-Notification-description, .minimum .v-Notification-details {
 	margin: 0;
 	display: inline-block;
 	vertical-align: middle;
@@ -11121,22 +12065,12 @@ div.v-layout.v-horizontal.v-widget {
 	overflow: auto;
 }
 
-.minimum .v-Notification h1 ~ p {
+.minimum .v-Notification-caption ~ .v-Notification-description, .minimum .v-Notification-caption ~ .v-Notification-details {
 	margin-left: 24px;
 }
 
-.minimum .v-Notification .v-icon + h1 {
+.minimum .v-icon + .v-Notification-caption {
 	margin-left: 16px;
-}
-
-.minimum .v-Notification h1 {
-	color: #000080;
-	font-size: 19px;
-	line-height: 1;
-}
-
-.minimum .v-Notification p {
-	line-height: 1.4;
 }
 
 .minimum .v-Notification-system {
@@ -11154,7 +12088,7 @@ div.v-layout.v-horizontal.v-widget {
 	line-height: 22px;
 }
 
-.minimum .v-Notification-system p {
+.minimum .v-Notification-system .v-Notification-description, .minimum .v-Notification-system .v-Notification-details {
 	max-width: 50em;
 }
 
@@ -11190,12 +12124,12 @@ div.v-layout.v-horizontal.v-widget {
 	animation: valo-animate-out-slide-down 200ms;
 }
 
-.minimum .v-Notification-system h1 {
+.minimum .v-Notification-system .v-Notification-caption {
 	color: #fff;
 	vertical-align: middle;
 }
 
-.minimum .v-Notification-system p {
+.minimum .v-Notification-system .v-Notification-description, .minimum .v-Notification-system .v-Notification-details {
 	color: #e6e6e6;
 }
 
@@ -11207,7 +12141,7 @@ div.v-layout.v-horizontal.v-widget {
 	text-align: left;
 }
 
-.minimum .v-Notification.tray h1 + p {
+.minimum .v-Notification.tray .v-Notification-caption + .v-Notification-description {
 	display: block;
 	margin: 0.5em 0 0;
 }
@@ -11216,11 +12150,11 @@ div.v-layout.v-horizontal.v-widget {
 	background: #FFF3D2;
 }
 
-.minimum .v-Notification.warning h1 {
+.minimum .v-Notification.warning .v-Notification-caption {
 	color: #AC7C00;
 }
 
-.minimum .v-Notification.warning p {
+.minimum .v-Notification.warning .v-Notification-description {
 	color: #9D874D;
 }
 
@@ -11231,11 +12165,11 @@ div.v-layout.v-horizontal.v-widget {
 	box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.25);
 }
 
-.minimum .v-Notification.error h1 {
+.minimum .v-Notification.error .v-Notification-caption {
 	color: white;
 }
 
-.minimum .v-Notification.error p {
+.minimum .v-Notification.error .v-Notification-description {
 	color: #f4e0df;
 }
 
@@ -11246,12 +12180,12 @@ div.v-layout.v-horizontal.v-widget {
 	line-height: 22px;
 }
 
-.minimum .v-Notification.dark h1 {
+.minimum .v-Notification.dark .v-Notification-caption {
 	color: #fff;
 	vertical-align: middle;
 }
 
-.minimum .v-Notification.dark p {
+.minimum .v-Notification.dark .v-Notification-description, .minimum .v-Notification.dark .v-Notification-details {
 	color: #e6e6e6;
 }
 
@@ -11266,7 +12200,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 12px 14px;
 }
 
-.minimum .v-Notification.bar p {
+.minimum .v-Notification.bar .v-Notification-description, .minimum .v-Notification.bar .v-Notification-details {
 	max-width: 50em;
 }
 
@@ -11306,11 +12240,11 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 11px 13px;
 }
 
-.minimum .v-Notification.small h1 {
+.minimum .v-Notification.small .v-Notification-caption {
 	font-size: 16px;
 }
 
-.minimum .v-Notification.small p {
+.minimum .v-Notification.small .v-Notification-description {
 	font-size: 14px;
 }
 
@@ -11380,13 +12314,13 @@ div.v-layout.v-horizontal.v-widget {
 	border: 2px solid #2c9720;
 }
 
-.minimum .v-Notification.success h1, .minimum .v-Notification.failure h1 {
+.minimum .v-Notification.success .v-Notification-caption, .minimum .v-Notification.failure .v-Notification-caption {
 	color: #2c9720;
 	font-weight: 400;
 }
 
-.minimum .v-Notification.success h1:before, .minimum .v-Notification.failure h1:before {
-	font-family: FontAwesome;
+.minimum .v-Notification.success .v-Notification-caption:before, .minimum .v-Notification.failure .v-Notification-caption:before {
+	font-family: ThemeIcons;
 	content: "\f00c";
 	margin-right: 0.5em;
 }
@@ -11399,11 +12333,11 @@ div.v-layout.v-horizontal.v-widget {
 	border-color: #ed473b;
 }
 
-.minimum .v-Notification.failure h1 {
+.minimum .v-Notification.failure .v-Notification-caption {
 	color: #ed473b;
 }
 
-.minimum .v-Notification.failure h1:before {
+.minimum .v-Notification.failure .v-Notification-caption:before {
 	content: "\f05e";
 }
 
@@ -11611,6 +12545,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 0 36px 0 18px;
 	cursor: pointer;
 	position: relative;
+	overflow: hidden;
 	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
 	-webkit-transition: background-color 300ms, color 60ms;
 	-moz-transition: background-color 300ms, color 60ms;
@@ -11792,32 +12727,32 @@ div.v-layout.v-horizontal.v-widget {
 	outline: none;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part {
 	background-color: #4b4b4b;
 	min-width: 72px;
 	max-width: 108px;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-title {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-title {
 	font-size: 12px;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-title .v-label-undef-w {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-title .v-label-undef-w {
 	white-space: normal;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .v-menubar-user-menu {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .v-menubar-user-menu {
 	margin-left: 0;
 	margin-right: 0;
 	font-size: 11px;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .v-menubar-user-menu img.v-icon {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .v-menubar-user-menu img.v-icon {
 	width: 28px;
 	height: 28px;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part [class*="subtitle"] {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part [class*="subtitle"] {
 	margin: 9px 0 0;
 	padding: 7px 24px 7px 9px;
 	line-height: 1;
@@ -11829,15 +12764,15 @@ div.v-layout.v-horizontal.v-widget {
 	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part [class*="subtitle"] [class*="badge"] {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part [class*="subtitle"] [class*="badge"] {
 	right: 9px;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part [class*="subtitle"]  + .valo-menu-item {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part [class*="subtitle"]  + .valo-menu-item {
 	border-top: none;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item {
 	display: block;
 	font-size: 26px;
 	line-height: 1;
@@ -11846,11 +12781,11 @@ div.v-layout.v-horizontal.v-widget {
 	border-top: 1px solid #555555;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item:first-child {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item:first-child {
 	border-top: none;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item [class*="caption"] {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item [class*="caption"] {
 	display: block;
 	width: auto;
 	margin: 0.3em 0 0;
@@ -11859,27 +12794,27 @@ div.v-layout.v-horizontal.v-widget {
 	line-height: 1.3;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item .v-icon {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item .v-icon {
 	margin: 0;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item span.v-icon {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item span.v-icon {
 	opacity: 0.8;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item.selected {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item.selected {
 	background: #434343;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item.selected .v-icon {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item.selected .v-icon {
 	opacity: 1;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item.selected [class*="badge"] {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item.selected [class*="badge"] {
 	border-color: #434343;
 }
 
-.minimum .v-ui[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item [class*="badge"] {
+.minimum .valo-menu-responsive[width-range~="801px-1100px"] .valo-menu-part .valo-menu-item [class*="badge"] {
 	padding-left: 4px;
 	padding-right: 4px;
 	top: 7px;
@@ -11887,33 +12822,33 @@ div.v-layout.v-horizontal.v-widget {
 	border: 2px solid #4b4b4b;
 }
 
-.minimum .v-ui[width-range~="0-800px"] {
+.minimum .valo-menu-responsive[width-range~="0-800px"] {
 	padding-top: 36px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .v-loading-indicator {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .v-loading-indicator {
 	top: 36px;
 }
 
-.minimum .v-ui[width-range~="0-800px"]  > .v-widget {
+.minimum .valo-menu-responsive[width-range~="0-800px"]  > .v-widget {
 	position: relative !important;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu {
 	border-right: none;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu-part {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu-part {
 	overflow: visible;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu-toggle {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu-toggle {
 	display: inline-block;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu-title {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu-title {
 	position: fixed;
 	z-index: 100;
 	top: 0;
@@ -11922,9 +12857,10 @@ div.v-layout.v-horizontal.v-widget {
 	height: 36px !important;
 	padding-top: 0;
 	padding-bottom: 0;
+	-webkit-backface-visibility: hidden;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu .v-menubar-user-menu {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu .v-menubar-user-menu {
 	position: fixed;
 	z-index: 100;
 	top: 0;
@@ -11934,14 +12870,15 @@ div.v-layout.v-horizontal.v-widget {
 	height: 36px;
 	color: #5858e7;
 	max-width: 30%;
+	-webkit-backface-visibility: hidden;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu .v-menubar-user-menu .v-menubar-menuitem {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu .v-menubar-user-menu .v-menubar-menuitem {
 	line-height: 35px;
 	white-space: nowrap;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu .v-menubar-user-menu img.v-icon {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu .v-menubar-user-menu img.v-icon {
 	display: inline-block;
 	margin: 0 6px 0 0;
 	width: 18px;
@@ -11950,7 +12887,7 @@ div.v-layout.v-horizontal.v-widget {
 	border: none;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menuitems {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menuitems {
 	height: 100%;
 	background-color: #4b4b4b;
 	background-image: -webkit-linear-gradient(right, #414141 0%, #4b4b4b 9px);
@@ -11961,7 +12898,7 @@ div.v-layout.v-horizontal.v-widget {
 	border-right: 1px solid #3b3b3b;
 	white-space: nowrap;
 	position: fixed;
-	z-index: 200;
+	z-index: 9000;
 	top: 36px;
 	bottom: 0;
 	height: auto;
@@ -11978,7 +12915,7 @@ div.v-layout.v-horizontal.v-widget {
 	transition: all 300ms;
 }
 
-.minimum .v-ui[width-range~="0-800px"] .valo-menu-visible .valo-menuitems {
+.minimum .valo-menu-responsive[width-range~="0-800px"] .valo-menu-visible .valo-menuitems {
 	-webkit-transform: translatex(0%);
 	-moz-transform: translatex(0%);
 	-ms-transform: translatex(0%);
@@ -11986,11 +12923,11 @@ div.v-layout.v-horizontal.v-widget {
 	transform: translatex(0%);
 }
 
-.minimum .v-ui[width-range~="0-500px"] .valo-menu-toggle .v-button-caption {
+.minimum .valo-menu-responsive[width-range~="0-500px"] .valo-menu-toggle .v-button-caption {
 	display: none;
 }
 
-.minimum .v-ui[width-range~="0-500px"] .valo-menu .v-menubar-user-menu .v-menubar-menuitem-caption {
+.minimum .valo-menu-responsive[width-range~="0-500px"] .valo-menu .v-menubar-user-menu .v-menubar-menuitem-caption {
 	display: inline-block;
 	width: 18px;
 	overflow: hidden;

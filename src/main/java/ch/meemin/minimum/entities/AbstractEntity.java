@@ -12,6 +12,7 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
@@ -23,6 +24,7 @@ public abstract class AbstractEntity {
 	private Long id = ID.incrementAndGet();
 
 	@Getter
+	@Setter
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt = new Date();

@@ -1,6 +1,7 @@
 package ch.meemin.minimum.entities.settings;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
@@ -23,8 +24,29 @@ public class PrepaidSubscriptions extends Subscriptions implements Serializable 
 	private Integer credit;
 
 	@Override
-	public Subscription createSubscription(Customer customer) {
-		return new PrepaidSubscription(customer, this);
+	public boolean mayKeepId(Customer customer) {
+		Subscription sub = customer.getCurrentSubscription();
+		if (sub != null && sub instanceof PrepaidSubscription)
+			return true;
+		return false;
+	}
 
+	@Override
+	public Subscription createSubscription(Customer customer, boolean keepId) {
+		if (keepId && mayKeepId(customer))
+			return fillSubscription(customer);
+		return new PrepaidSubscription(customer, this);
+	}
+
+	public Subscription fillSubscription(Customer customer) {
+		Subscription cs = customer.getCurrentSubscription();
+		PrepaidSubscription ps = new PrepaidSubscription(customer, this);
+		cs.setCredit(ps.getCredit());
+		ps.setCredit(0);
+		Date tmp = ps.getCreatedAt();
+		ps.setCreatedAt(cs.getCreatedAt());
+		cs.setCreatedAt(tmp);
+		customer.getSubscriptions().add(ps);
+		return cs;
 	}
 }

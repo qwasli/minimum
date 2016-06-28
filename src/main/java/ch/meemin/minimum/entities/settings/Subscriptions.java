@@ -43,7 +43,9 @@ public abstract class Subscriptions {
 		return name;
 	}
 
-	public abstract Subscription createSubscription(Customer customer);
+	public abstract Subscription createSubscription(Customer customer, boolean keepId);
+
+	public abstract boolean mayKeepId(Customer customer);
 
 	public String getPrice(Settings settings, Customer customer) {
 		String price;
