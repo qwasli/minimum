@@ -74,6 +74,14 @@ public class ShowCustomer extends HorizontalLayout {
 		pdfButton = new Button(lang.getText("PDF"), FontAwesome.FILE_PDF_O);
 		pdfButton.addStyleName(Props.MINIMUMBUTTON);
 		pdfButton.setHeight(50, Unit.PIXELS);
+		pdfButton.addClickListener(new ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				pdfButton.setEnabled(true);
+			}
+		});
+		pdfButton.setDisableOnClick(true);
 		pdf.getCustomerInfoDownloader().extend(pdfButton);
 
 		editButton = new Button(lang.getText("Edit"), new ClickListener() {
